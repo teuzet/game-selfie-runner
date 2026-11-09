@@ -21,6 +21,7 @@ namespace Game.Core
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
         public CharacterData CharacterData { get; }
+        public ActionData ActionData { get; }
         /// <summary>RunnerData по местам с применённым персонажем (скорость, перк выносливости).</summary>
         private readonly RunnerData[] _seatData;
 
@@ -37,6 +38,7 @@ namespace Game.Core
             RunnerData = data.RunnerData;
             BullData = data.BullData;
             CharacterData = data.CharacterData;
+            ActionData = data.ActionData;
             _seatData = new RunnerData[RaceConfig.SeatCount];
             for (int i = 0; i < _seatData.Length; i++)
                 _seatData[i] = Characters.ForSeat(RunnerData, CharacterData.Get(config.GetSeat(i).CharacterId));
@@ -44,8 +46,8 @@ namespace Game.Core
             State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData);
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, RunnerData[] seatData)
-        { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; _seatData = seatData; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, RunnerData[] seatData)
+        { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
 
         /// <summary>Набор параметров персонажа места (SeatConfig.CharacterId).</summary>
         public CharacterDef CharacterOf(int seat) => CharacterData.Get(Config.GetSeat(seat).CharacterId);
@@ -53,7 +55,7 @@ namespace Game.Core
         /// <summary>RunnerData места с применённым персонажем.</summary>
         public RunnerData SeatData(int seat) => _seatData[seat];
 
-        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, _seatData);
+        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, _seatData);
 
         public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
 
@@ -73,6 +75,7 @@ namespace Game.Core
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
             MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);
             Collisions.After(RunnerData, Street, st);
+            Actions.Step(ActionData, CharacterData, _seatData, Street, st, Config, inputs);
             BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
