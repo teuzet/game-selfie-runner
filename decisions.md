@@ -407,3 +407,27 @@
 - Выбрано: вправо (+1)
 - Почему: детерминированная развязка
 - Откат: правка Actions.Shove
+
+## F-017: Где хранить факты «подброшен»/«встал», если RunnerState не в owned_files?
+- Выбрано: Отдельная структура TossState[seat] в RaceState.Tosses (определена в BullCharge.cs) плюс BullChargeState в RaceState.Charge; оба в Clone/CopyFrom/StateHash.
+- Почему: RunnerState.cs вне owned_files F-017; F-019 читает Tosses[seat].
+- Затрагивает: Game.Core/RaceState.cs, Game.Core/Bull/BullCharge.cs
+- Откат: Перенести поля в RunnerState и убрать TossState.
+
+## F-017: Числа рывка без JSON (GameData вне owned_files).
+- Выбрано: Константы в BullCharge.cs с комментарием-источником (overview).
+- Почему: Правило: новый JSON требует GameData.cs и GameDataTests.cs в owned_files.
+- Затрагивает: Game.Core/Bull/BullCharge.cs
+- Откат: Вынести в bull.json отдельной фичей с GameData.
+
+## F-017: Как гарантировать «никого позади быка» и ≥6 с между подбросами?
+- Выбрано: Любой незащищённый бегун, оказавшийся позади быка или ≤1 м, подбрасывается (и вне рывка); защищённый (нет сигнала/неуязвим) позади быка — бык останавливается на его s. Неуязвимость = max(3 с, 6 с − noSignal): у атлета (2.5 с) 3.5 с.
+- Почему: Иначе атлет с noSignal 2.5 даёт 5.5 с между подбросами, а бык мог бы обогнать остановившегося неуязвимого.
+- Затрагивает: Game.Core/Bull/BullCharge.cs
+- Откат: Убрать добор неуязвимости и клэмп в Contacts.
+
+## F-017: Движение быка в рывке и поперечное наведение.
+- Выбрано: BullCharge.Step идёт после BullMovement.Step и переопределяет S/X/Speed на время рывка (разгон accel к 11 м/с, поперёк 6 м/с к цели); рывок прерывается, если цель стала защищённой, и при входе в арену.
+- Почему: BullMovement.cs вне owned_files.
+- Затрагивает: Game.Core/Bull/BullCharge.cs, Game.Core/Simulation.cs
+- Откат: Перенести режим рывка внутрь BullMovement отдельной фичей.
