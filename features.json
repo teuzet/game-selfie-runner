@@ -17,11 +17,11 @@
       "attempts": 2,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 10,
+      "touches": [
         "Game.Core/Math/",
         "Game.Core.Tests/MathTests.cs"
-      ],
-      "priority": 10
+      ]
     },
     {
       "id": "F-002",
@@ -42,7 +42,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 20,
+      "touches": [
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core/RaceConfig.cs",
@@ -51,8 +52,7 @@
         "Game.Core.Tests/SimulationTests.cs",
         "Directory.Build.props",
         ".gitignore"
-      ],
-      "priority": 20
+      ]
     },
     {
       "id": "F-003",
@@ -73,10 +73,10 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
-      "owned_files": [
+      "priority": 10,
+      "touches": [
         "design/F-003.md"
-      ],
-      "priority": 10
+      ]
     },
     {
       "id": "F-004",
@@ -95,12 +95,12 @@
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "gamedesigner-feature",
-      "owned_files": [
+      "priority": 20,
+      "touches": [
         "design/F-004.md",
         "design/chat/",
         "brainstorm/"
-      ],
-      "priority": 20
+      ]
     },
     {
       "id": "F-005",
@@ -118,10 +118,10 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
-      "owned_files": [
+      "priority": 30,
+      "touches": [
         "design/F-005.md"
-      ],
-      "priority": 30
+      ]
     },
     {
       "id": "F-010",
@@ -144,13 +144,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 30,
+      "touches": [
         "Game.Core/Street/StreetData.cs",
         "Game.Core/Street/Defs.cs",
         "Game.Core/Data/street.json",
         "Game.Core.Tests/StreetDataTests.cs"
-      ],
-      "priority": 30
+      ]
     },
     {
       "id": "F-011",
@@ -174,14 +174,14 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 40,
+      "touches": [
         "Game.Core/Street/StreetGenerator.cs",
         "Game.Core/Street/Street.cs",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/StreetGeneratorTests.cs"
-      ],
-      "priority": 40
+      ]
     },
     {
       "id": "F-012",
@@ -200,15 +200,15 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 50,
+      "touches": [
         "Game.Core/Runners/RunnerMovement.cs",
         "Game.Core/Runners/RunnerState.cs",
         "Game.Core/Data/runners.json",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/RunnerMovementTests.cs"
-      ],
-      "priority": 50
+      ]
     },
     {
       "id": "F-013",
@@ -229,14 +229,14 @@
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 60,
+      "touches": [
         "Game.Core/Runners/Collisions.cs",
         "Game.Core/Street/MovingObstacles.cs",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/CollisionTests.cs"
-      ],
-      "priority": 60
+      ]
     },
     {
       "id": "F-014",
@@ -258,7 +258,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 70,
+      "touches": [
         "Game.Core/Runners/Characters.cs",
         "Game.Core/Data/characters.json",
         "Game.Core/GameData.cs",
@@ -267,8 +268,7 @@
         "Game.Core.Tests/CharacterTests.cs",
         "Game.Core.Tests/GameDataTests.cs",
         "Game.Core.Tests/CollisionTests.cs"
-      ],
-      "priority": 70
+      ]
     },
     {
       "id": "F-015",
@@ -289,7 +289,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 80,
+      "touches": [
         "Game.Core/Runners/Actions.cs",
         "Game.Core/Data/actions.json",
         "Game.Core/GameData.cs",
@@ -297,8 +298,7 @@
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/ActionTests.cs",
         "Game.Core.Tests/GameDataTests.cs"
-      ],
-      "priority": 80
+      ]
     },
     {
       "id": "F-016",
@@ -318,15 +318,15 @@
       "attempts": 2,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 55,
+      "touches": [
         "Game.Core/Bull/BullMovement.cs",
         "Game.Core/Bull/BullState.cs",
         "Game.Core/Data/bull.json",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/BullMovementTests.cs"
-      ],
-      "priority": 55
+      ]
     },
     {
       "id": "F-017",
@@ -346,13 +346,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 90,
+      "touches": [
         "Game.Core/Bull/BullCharge.cs",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/BullChargeTests.cs"
-      ],
-      "priority": 90
+      ]
     },
     {
       "id": "F-018",
@@ -372,7 +372,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 100,
+      "touches": [
         "Game.Core/Economy/Viewers.cs",
         "Game.Core/Data/economy.json",
         "Game.Core/GameData.cs",
@@ -380,8 +381,7 @@
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/ViewersTests.cs",
         "Game.Core.Tests/GameDataTests.cs"
-      ],
-      "priority": 100
+      ]
     },
     {
       "id": "F-019",
@@ -402,7 +402,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 110,
+      "touches": [
         "Game.Core/Events/",
         "Game.Core/Economy/EventBonuses.cs",
         "Game.Core/Economy/FrameSteal.cs",
@@ -410,7 +411,7 @@
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/EventsTests.cs"
       ],
-      "priority": 110
+      "iteration": 1
     },
     {
       "id": "F-020",
@@ -429,14 +430,15 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 120,
+      "touches": [
         "Game.Core/Race/Phases.cs",
         "Game.Core/Race/Results.cs",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/PhasesTests.cs"
       ],
-      "priority": 120
+      "iteration": 1
     },
     {
       "id": "F-021",
@@ -455,13 +457,14 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 130,
+      "touches": [
         "Game.Core/Hints/",
         "Game.Core/Simulation.cs",
         "Game.Core/RaceState.cs",
         "Game.Core.Tests/HintTests.cs"
       ],
-      "priority": 130
+      "iteration": 2
     },
     {
       "id": "F-022",
@@ -481,7 +484,8 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 140,
+      "touches": [
         "Game.Core/Quests/",
         "Game.Core/Data/quests.json",
         "Game.Core/GameData.cs",
@@ -490,17 +494,16 @@
         "Game.Core.Tests/QuestTests.cs",
         "Game.Core.Tests/GameDataTests.cs"
       ],
-      "priority": 140
+      "iteration": 3
     },
     {
       "id": "F-023",
-      "title": "Боты: IBotBrain, наблюдения, задержка реакции, характер «трус»",
+      "title": "Боты: IBotBrain, наблюдения, задержка реакции, характер «трус» (без подсказок и квестов)",
       "layer": "core",
       "milestone": "M1",
       "depends_on": [
         "F-005",
-        "F-021",
-        "F-022"
+        "F-020"
       ],
       "acceptance": [
         "IBotBrain.Decide(in BotView, ref BotMemory) → PlayerInput внутри Simulation для мест типа бот; BotView — только наблюдения из design/F-005.md §2.1 (свои подсказки с шумом, соседи сзади и сбоку, память о соседе впереди до 1 с, бык: дистанция, x, рывок на меня; выносливость, квест, тип блока); цикл решения по §2.2: задержка реакции R на событие из диапазона характера через DetRandom, период пересмотра темпа и действия, гистерезис порогов по d, руль к целевому x с мёртвой зоной 0.15 м; общий руль по §2.3 (рывок → подсказка → соседи → память о блоке).",
@@ -509,13 +512,15 @@
         "design/F-005.md §5, п. 2: решение бота зависит только от наблюдений §2.1 — тест подменяет в состоянии всё вне списка (препятствия впереди без подсказки, чужая выносливость), входы бота за забег не меняются.",
         "design/F-005.md §5, п. 3: таблица чисел §3 лежит в bots.json 1:1 для всех трёх характеров (адреналинщик и тролль — данные здесь, код поведения в F-024), у каждого числа комментарий-источник; задержка между подсказкой и первым рулём в 6–10 тиков у всех трёх.",
         "GameData получает поле BotData и аргумент Parse, GameData.Load читает bots.json, GameDataTests.Parsed() передаёт его.",
-        "Тесты: трус уворачивается от препятствий по подсказкам ≥ 60% при соседе впереди; никогда не толкает; детерминизм забега с 4 трусами."
+        "Тесты: трус уворачивается от препятствий по подсказкам ≥ 60% при соседе впереди; никогда не толкает; детерминизм забега с 4 трусами.",
+        "Подсказок чата и квестов ещё нет (итерация 2+): бот решает по тому, что видит сам (бык, препятствия рядом, соседи); вход от подсказок — заглушка, которую подключит F-021"
       ],
       "status": "todo",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 150,
+      "touches": [
         "Game.Core/Bots/BotBrain.cs",
         "Game.Core/Bots/BotView.cs",
         "Game.Core/Bots/Coward.cs",
@@ -525,7 +530,7 @@
         "Game.Core.Tests/BotCowardTests.cs",
         "Game.Core.Tests/GameDataTests.cs"
       ],
-      "priority": 150
+      "iteration": 1
     },
     {
       "id": "F-024",
@@ -547,38 +552,44 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 160,
+      "touches": [
         "Game.Core/Bots/Adrenaline.cs",
         "Game.Core/Bots/Troll.cs",
         "Game.Core/Data/bots.json",
         "Game.Core.Tests/BotCharacterTests.cs"
       ],
-      "priority": 160
+      "iteration": 1
     },
     {
       "id": "F-025",
-      "title": "Прогон забега без Unity: RaceRunner, метрики, балансный тест",
+      "title": "Прогон забега без Unity: консольный Game.Sim, метрики, хроники, playtest/sim.json",
       "layer": "core",
       "milestone": "M1",
       "depends_on": [
-        "F-024"
+        "F-024",
+        "F-020"
       ],
       "acceptance": [
-        "RaceRunner.Run(RaceConfig) → RaceMetrics: донаты, зрители, подбросы, время в зонах, столкновения, действия, квесты по местам, победитель; полный забег 4 ботов < 5 с.",
-        "Балансный тест по design/F-005.md §5, п. 4: 300 сидов, 4 бота, два прогона (персонажи — ботаник у всех; персонажи переставлены по местам по сиду); места 0–2: трус, адреналинщик, тролль; место 3 по сид mod 3 (0 → трус, 1 → адреналинщик, 2 → тролль), по 400 экземпляров-забегов на характер. Все метрики на экземпляр (сумма по ботам характера / число его экземпляров): побед трусов / экземпляров трусов ≤ 0.20; подбросов на экземпляр у адреналинщика и у тролля — каждый в 1.5–3.0 раза больше, чем у труса, и средние донаты на экземпляр у обоих больше, чем у труса; максимум / минимум средних донатов по трём характерам ≤ 1.5.",
-        "При падении печатает таблицу метрик по характерам (донаты, подбросы, победы, время в зонах, столкновения, толчки и подножки) и в notes результата — предложения чисел для тюнинга в порядке рычагов из design/F-005.md §5: коридоры адреналинщика и тролля → зоны зрителей и частота рывков (overview) → задержка R → точность подсказок (hintNoise); характер молча не правится.",
-        "RaceMetrics.ToMarkdown() для отчётов геймдизайнеру."
+        "Проект `Game.Sim/` (консоль, net8+, ссылается на Game.Core) в Game.sln: `dotnet run --project Game.Sim -- --seeds N --from S --out DIR` прогоняет N забегов 4 ботов на сидах S..S+N-1, без Unity, весь прогон 40 сидов укладывается в пару минут",
+        "`playtest/sim.json` для тула `race-sim` фабрики: `{\"command\": [\"dotnet\", \"run\", \"--project\", \"Game.Sim\", \"-c\", \"Release\", \"--\", \"--seeds\", \"{seeds}\", \"--from\", \"{first_seed}\", \"--out\", \"{out}\"]}`",
+        "DIR/metrics.json: по каждому забегу и в сумме — длительность, победитель (персонаж, характер), донаты и зрители на финише у каждого места, число подбросов, столкновений, толчков и подножек по месту, время в каждой зоне дистанции до быка, смены лидера, самая долгая пауза без событий (с), разрыв донатов 1-го и 2-го места",
+        "DIR/chronicle-<seed>.md: забег как текст стрима по секундам: `0:42 Бабуля (тролль) толкнула Курьера: +50 зрителей; бык в 6 м от Курьера`, плюс строка состояния каждые 5 с (места, дистанции до быка, зрители, донаты) и итог — чтобы геймдизайнер мог «посмотреть» забег, не открывая Unity",
+        "Тест: два прогона одного сида дают побайтово одинаковые metrics.json и хронику; балансный тест из старого критерия переезжает сюда как проверка, что метрики считаются (без порогов: пороги задаёт плейтест)"
       ],
       "status": "todo",
       "attempts": 0,
       "budget_tokens": 500000,
       "owner_role": "developer-core",
-      "owned_files": [
-        "Game.Core/RaceRunner.cs",
+      "priority": 170,
+      "touches": [
+        "Game.Sim/",
+        "Game.sln",
+        "playtest/sim.json",
         "Game.Core/RaceMetrics.cs",
-        "Game.Core.Tests/BalanceTests.cs"
+        "Game.Core.Tests/"
       ],
-      "priority": 170
+      "iteration": 1
     },
     {
       "id": "F-026",
@@ -596,12 +607,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 165,
+      "touches": [
         "Game.Core/Bots/SeatReplacement.cs",
         "Game.Core/Simulation.cs",
         "Game.Core.Tests/SeatReplacementTests.cs"
       ],
-      "priority": 165
+      "iteration": 3
     },
     {
       "id": "F-027",
@@ -620,12 +632,12 @@
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 62,
+      "touches": [
         "Game.Core/GameData.cs",
         "Game.Core/Simulation.cs",
         "Game.Core.Tests/GameDataTests.cs"
-      ],
-      "priority": 62
+      ]
     },
     {
       "id": "F-030",
@@ -644,13 +656,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 900,
+      "touches": [
         "Game.Net/",
         "Game.sln",
         "Game.Core.Tests/Game.Core.Tests.csproj",
         "Game.Core.Tests/NetTransportTests.cs"
-      ],
-      "priority": 900
+      ]
     },
     {
       "id": "F-031",
@@ -669,12 +681,12 @@
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 910,
+      "touches": [
         "Game.Net/RollbackSession.cs",
         "Game.Net/Prediction.cs",
         "Game.Core.Tests/RollbackTests.cs"
-      ],
-      "priority": 910
+      ]
     },
     {
       "id": "F-032",
@@ -694,12 +706,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
-      "owned_files": [
+      "priority": 920,
+      "touches": [
         "Game.Net/HashSync.cs",
         "Game.Net/PeerDrop.cs",
         "Game.Core.Tests/NetResilienceTests.cs"
       ],
-      "priority": 920
+      "iteration": 4
     },
     {
       "id": "F-006",
@@ -714,10 +727,10 @@
       "attempts": 0,
       "budget_tokens": 100000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 199,
+      "touches": [
         "ENVIRONMENT.md"
-      ],
-      "priority": 199
+      ]
     },
     {
       "id": "F-040",
@@ -742,7 +755,8 @@
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 200,
+      "touches": [
         "Unity/",
         "Game.Core/package.json",
         "Game.Core/Game.Core.asmdef",
@@ -750,7 +764,7 @@
         "Game.Core/Game.Core.csproj",
         ".gitignore"
       ],
-      "priority": 200
+      "iteration": 2
     },
     {
       "id": "F-049",
@@ -773,7 +787,8 @@
       "attempts": 0,
       "budget_tokens": 500000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 205,
+      "touches": [
         "Unity/Assets/Scripts/Sim/",
         "Unity/Assets/Scenes/Race.unity",
         "Unity/Assets/Scenes/Race.unity.meta",
@@ -781,7 +796,7 @@
         "Unity/Assets/Tests/EditMode/SimTests.cs.meta",
         "Unity/ProjectSettings/EditorBuildSettings.asset"
       ],
-      "priority": 205
+      "iteration": 2
     },
     {
       "id": "F-041",
@@ -801,12 +816,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 210,
+      "touches": [
         "Unity/Assets/Scripts/World/",
         "Unity/Assets/Materials/World/",
         "Unity/Assets/Tests/WorldTests.cs"
       ],
-      "priority": 210
+      "iteration": 2
     },
     {
       "id": "F-042",
@@ -826,13 +842,14 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 220,
+      "touches": [
         "Unity/Assets/Scripts/Actors/",
         "Unity/Assets/Scripts/Camera/",
         "Unity/Assets/Materials/Actors/",
         "Unity/Assets/Tests/ActorTests.cs"
       ],
-      "priority": 220
+      "iteration": 2
     },
     {
       "id": "F-043",
@@ -853,12 +870,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 230,
+      "touches": [
         "Unity/Assets/Scripts/Stream/Overlay/",
         "Unity/Assets/UI/",
         "Unity/Assets/Tests/OverlayTests.cs"
       ],
-      "priority": 230
+      "iteration": 3
     },
     {
       "id": "F-044",
@@ -880,12 +898,13 @@
       "attempts": 0,
       "budget_tokens": 500000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 240,
+      "touches": [
         "Unity/Assets/Scripts/Stream/Chat/",
         "Unity/Assets/Data/chat/",
         "Unity/Assets/Tests/ChatTests.cs"
       ],
-      "priority": 240
+      "iteration": 3
     },
     {
       "id": "F-045",
@@ -904,12 +923,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 250,
+      "touches": [
         "Unity/Assets/Scripts/Stream/Face/",
         "Unity/Assets/Data/faces.json",
         "Unity/Assets/Tests/FaceTests.cs"
       ],
-      "priority": 250
+      "iteration": 3
     },
     {
       "id": "F-046",
@@ -931,14 +951,15 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 260,
+      "touches": [
         "Unity/Assets/Scripts/Flow/",
         "Unity/Assets/Scenes/Menu.unity",
         "Unity/Assets/UI/Menu/",
         "Unity/Assets/Editor/CopyCoreData.cs",
         "Unity/Assets/Tests/FlowTests.cs"
       ],
-      "priority": 260
+      "iteration": 3
     },
     {
       "id": "F-047",
@@ -958,11 +979,12 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 235,
+      "touches": [
         "Unity/Assets/Scripts/Actors/Tweens/",
         "Unity/Assets/Tests/TweenTests.cs"
       ],
-      "priority": 235
+      "iteration": 2
     },
     {
       "id": "F-048",
@@ -981,12 +1003,13 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 270,
+      "touches": [
         "Unity/Assets/Scripts/Decor/",
         "Unity/Assets/Prefabs/Decor/",
         "Unity/Assets/Tests/DecorTests.cs"
       ],
-      "priority": 270
+      "iteration": 3
     },
     {
       "id": "F-050",
@@ -1006,13 +1029,14 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 930,
+      "touches": [
         "Unity/Assets/Scripts/Net/",
         "Unity/Packages/manifest.json",
         "docs/ugs-setup.md",
         "Unity/Assets/Tests/NetTests.cs"
       ],
-      "priority": 930
+      "iteration": 4
     },
     {
       "id": "F-051",
@@ -1031,13 +1055,200 @@
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
-      "owned_files": [
+      "priority": 940,
+      "touches": [
         "Unity/Assets/Scripts/Lobby/",
         "Unity/Assets/Scenes/Lobby.unity",
         "Unity/Assets/UI/Lobby/",
         "Unity/Assets/Tests/LobbyTests.cs"
       ],
-      "priority": 940
+      "iteration": 4
+    },
+    {
+      "id": "F-060",
+      "title": "Общий JSON-парсер данных вместо пяти копий Num()",
+      "layer": "core",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 105,
+      "depends_on": [],
+      "owner_role": "developer-core",
+      "status": "todo",
+      "acceptance": [
+        "Один парсер данных в `Game.Core/Data/` (по образцу `StreetData.Json`): `Viewers`, `BullMovement`, `RunnerMovement`, `Actions`, `Characters` читают JSON через него, свои `Num()` удалены",
+        "Отсутствующий ключ или не число — исключение с именем файла и ключа, а не ноль",
+        "Все существующие тесты зелёные без правки ожиданий; детерминизм не меняется (хэши забега те же)"
+      ],
+      "touches": [
+        "Game.Core/Data/",
+        "Game.Core/Economy/Viewers.cs",
+        "Game.Core/Bull/BullMovement.cs",
+        "Game.Core/Runners/RunnerMovement.cs",
+        "Game.Core/Runners/Actions.cs",
+        "Game.Core/Runners/Characters.cs",
+        "Game.Core/Street/StreetData.cs",
+        "Game.Core.Tests/GameDataTests.cs"
+      ]
+    },
+    {
+      "id": "F-061",
+      "title": "Числа рывка быка из кода в bull.json; расхождение скорости рывка 11 и 9.5",
+      "layer": "core",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 106,
+      "depends_on": [
+        "F-060"
+      ],
+      "owner_role": "developer-core",
+      "status": "todo",
+      "acceptance": [
+        "Константы `BullCharge` (интервал рывка 8–15 с, длительность 3 с, скорость рывка, дальность цели 30 м, подброс 8 м, неуязвимость 3 с, промежуток 6 с, замедление быка 2 с, поперечная скорость рывка) живут в `Game.Core/Data/bull.json` с источником, код читает их из `GameData`",
+        "Скорость рывка одна: сейчас `BullCharge.ChargeSpeed = 11` и `bull.json chargeSpeed = 9.5`. Сверь с `design/overview.md` (таблица быка и «Старт»: «бык срывается … на разгоне до 9.5 м/с») и с `design/F-005.md`; если это две разные скорости (разгон со старта и рывок), разведи их под разными ключами с источником, если одна — оставь одну",
+        "Тест: смена числа в JSON меняет поведение рывка; хэши забега на текущих данных не меняются, кроме осознанной правки скорости (тогда это в merge-коммите)"
+      ],
+      "touches": [
+        "Game.Core/Bull/",
+        "Game.Core/Data/bull.json",
+        "Game.Core/GameData.cs",
+        "Game.Core.Tests/BullChargeTests.cs",
+        "Game.Core.Tests/GameDataTests.cs"
+      ]
+    },
+    {
+      "id": "F-062",
+      "title": "«Нет сигнала»: подброшенный не бежит, а лежит, потом разгоняется",
+      "layer": "core",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 107,
+      "depends_on": [
+        "F-061"
+      ],
+      "owner_role": "developer-core",
+      "status": "todo",
+      "acceptance": [
+        "Правило из `design/overview.md → «Нет сигнала»` дословно: «бык подбрасывает бегуна на рогах на 8 м вперёд (мультяшно, без крови), 3 с (у персонажа своё) нет управления и экран стрима в помехах … подброшенный ещё 3 с после «нет сигнала» неуязвим … так что цепочки подбросов нет, а 3 с хватает разогнаться до бега»",
+        "Сейчас `Simulation` подменяет вход подброшенного на `default`, а `default` — это «руль 0, темп 0», то есть обычный бег: бегун продолжает бежать без управления и даже уходит вперёд. Правильно: на время «нет сигнала» скорость бегуна 0 (лежит), после — разгон с нуля по обычным правилам темпа",
+        "Состояние «лежит» — в структуре бегуна (`RunnerState`) или в `TossState`, а не правкой скорости «после» движения; один источник правды",
+        "Тест: за 3 с «нет сигнала» s бегуна не растёт; через 3 с неуязвимости бегун набирает скорость бега; бык за это время подбросить его не может"
+      ],
+      "touches": [
+        "Game.Core/Simulation.cs",
+        "Game.Core/Bull/BullCharge.cs",
+        "Game.Core/Runners/RunnerMovement.cs",
+        "Game.Core/Runners/RunnerState.cs",
+        "Game.Core.Tests/BullChargeTests.cs"
+      ]
+    },
+    {
+      "id": "F-063",
+      "title": "Сведение состояния бегуна: факты столкновений, действий и подброса в одной структуре",
+      "layer": "core",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 108,
+      "depends_on": [
+        "F-062",
+        "F-019"
+      ],
+      "owner_role": "developer-core",
+      "status": "todo",
+      "acceptance": [
+        "Параллельные массивы `RaceState` (`Collisions`, `Stability`, `Actions`, `Tosses`, `Viewing`), заведённые из-за запрета трогать `RunnerState.cs` (см. archive/decisions-before-iterations.md, F-013/F-015/F-017), сведены туда, где им место по `ARCHITECTURE.md`: состояние места — в одной структуре на место или явно разделено по системам с причиной в `ARCHITECTURE.md`",
+        "Поведение не меняется: хэши забега на 3 сидах до и после равны (тест фиксирует их)",
+        "`Clone` и `StateHash` покрывают все поля; тест детерминизма зелёный"
+      ],
+      "touches": [
+        "Game.Core/RaceState.cs",
+        "Game.Core/Runners/",
+        "Game.Core/Bull/BullCharge.cs",
+        "Game.Core/Economy/",
+        "Game.Core/Simulation.cs",
+        "ARCHITECTURE.md",
+        "Game.Core.Tests/"
+      ]
+    },
+    {
+      "id": "F-064",
+      "title": "Диздок: почему это весело — гипотезы и пороги для плейтеста",
+      "layer": "design",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 104,
+      "depends_on": [],
+      "owner_role": "gamedesigner-feature",
+      "status": "todo",
+      "acceptance": [
+        "Новый раздел `## Почему это весело` в `design/overview.md` после «Что игрок делает каждые 10 секунд», по скиллу design-doc: ощущение (что игрок чувствует в момент рывка быка, толчка, подброса), 2–3 референса с тем, что берём и чего нет, отброшенные варианты, риск",
+        "Начинается с брейншторма (тул `brainstorm`), сырьё в `brainstorm/F-064-*.md`",
+        "5–8 гипотез с порогами, проверяемых прогоном ботов (`race-sim`, метрики из F-025): например «самая долгая пауза без событий ≤ 8 с», «смена лидера ≥ 3 за забег», «разрыв донатов 1-го и 2-го ≤ 25%», «каждый характер бота побеждает в 15–45% забегов», «подброс у каждого места 1–4 раза за забег»",
+        "Числа, которые плейтест может крутить, помечены «тюнить» с пределами (зоны зрителей, рывок, устойчивость, донаты за события)"
+      ],
+      "touches": [
+        "design/overview.md",
+        "brainstorm/"
+      ]
+    },
+    {
+      "id": "F-065",
+      "title": "Плейтест итерации 1: забеги ботов",
+      "layer": "playtest",
+      "milestone": "M1",
+      "iteration": 1,
+      "priority": 190,
+      "depends_on": [
+        "F-019",
+        "F-020",
+        "F-023",
+        "F-024",
+        "F-025",
+        "F-060",
+        "F-061",
+        "F-062",
+        "F-063",
+        "F-064"
+      ],
+      "owner_role": "gamedesigner-playtest",
+      "status": "todo",
+      "acceptance": [
+        "`race-sim` на 40 сидах; каждая гипотеза из `design/overview.md → «Почему это весело»` получает вердикт с цифрой",
+        "Проверено правило «Нет сигнала» по хроникам: подброшенный не уходит вперёд за время помех",
+        "Тюнинг только чисел «тюнить», не больше 3 раундов, `dotnet test` зелёный",
+        "Отчёт `playtest/iter-1.md` со всеми разделами"
+      ],
+      "touches": [
+        "playtest/",
+        "Game.Core/Data/",
+        "Game.Core.Tests/"
+      ]
+    },
+    {
+      "id": "F-066",
+      "title": "Плейтест итерации 2: гребокс и подсказки",
+      "layer": "playtest",
+      "milestone": "M1",
+      "iteration": 2,
+      "priority": 290,
+      "depends_on": [
+        "F-040",
+        "F-049",
+        "F-041",
+        "F-042",
+        "F-047",
+        "F-021"
+      ],
+      "owner_role": "gamedesigner-playtest",
+      "status": "todo",
+      "acceptance": [
+        "`race-sim` на 40 сидах с подсказками чата у ботов; гипотезы про подсказки и про лидера вслепую получают вердикт с цифрой",
+        "Отчёт `playtest/iter-2.md`; в «Что проверить в следующий раз» — что Nick стоит посмотреть в гребоксе руками"
+      ],
+      "touches": [
+        "playtest/",
+        "Game.Core/Data/",
+        "Game.Core.Tests/"
+      ]
     }
   ]
 }
