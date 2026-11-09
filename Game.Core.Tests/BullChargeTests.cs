@@ -330,7 +330,22 @@ namespace Game.Core.Tests
             Assert.False(BullCharge.Shielded(sim, 0));
             sim.Step(TickInputs.Empty);
             Assert.Equal(0, sim.State.Runners[1].Toss.Tossed);
-            Assert.True(bs < arena);
+
+            // несколько интервалов рывка: единственный кандидат на пороге (остальные на арене — тоже защищённые) не цель, бык не ближе tossWaitGap
+            double gap = Dbl(Data.BullData.TossWaitGap.Raw);
+            int charges = sim.State.Charge.Count;
+            for (int t = 0; t < 900; t++)
+            {
+                sim.State.Bull.S = Fx(arena - thr - 1).Raw;
+                sim.State.Runners[1].S = Fx(arena - thr + 4).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+                for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(arena + 20 + i).Raw;
+                sim.Step(TickInputs.Empty);
+                Assert.Equal(0, sim.State.Runners[1].Toss.Tossed);
+                Assert.True(Dbl(sim.State.Runners[1].S - sim.State.Bull.S) >= gap - 0.01, "бык ближе tossWaitGap к бегуну на пороге");
+                if (sim.State.Charge.Count != charges) Assert.NotEqual(1, sim.State.Charge.LastChargeTarget);
+                charges = sim.State.Charge.Count;
+                Assert.NotEqual(1, sim.State.Charge.Target);
+            }
         }
 
         [Fact]
@@ -345,7 +360,7 @@ namespace Game.Core.Tests
             int tossTick = sim.State.Runners[1].Toss.LastTossTick;
             int charges = sim.State.Charge.Count;
             // место 1 — единственное в досягаемости, остальные далеко: за охлаждение ни одного рывка на него
-            while (sim.Tick < tossTick + cd)
+            while (sim.Tick < tossTick + cd - 5)
             {
                 double b0 = Dbl(sim.State.Bull.S);
                 for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(b0 + 500 + i * 10).Raw;
@@ -355,6 +370,13 @@ namespace Game.Core.Tests
                     Assert.NotEqual(1, sim.State.Charge.LastChargeTarget);
                 charges = sim.State.Charge.Count;
             }
+            // защита кончилась, охлаждение ещё идёт: контакт работает (F-100 §3.1 п.6 «Контакт при этом работает»)
+            Assert.False(BullCharge.Protected(sim.State.Runners[1].Toss));
+            Assert.True(sim.Tick < tossTick + cd);
+            sim.State.Runners[1].S = sim.State.Bull.S + Fx(0.5).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(2, sim.State.Runners[1].Toss.Tossed);
+            Assert.Equal(TossCause.Contact, sim.State.Runners[1].Toss.LastCause);
         }
 
         [Fact]

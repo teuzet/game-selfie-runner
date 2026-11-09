@@ -126,6 +126,8 @@ namespace Game.Core.Bull
             Fixed baseSpeed = b.Mode == BullMode.Charge ? d.CatchUpSpeed
                 : b.Mode == BullMode.Close ? d.CloseSpeed : d.CruiseSpeed;
             // F-100 §3.1 п.5: резинка не давит бегуна — разгон 9.5 только по пустой улице (никого впереди ближе catchUpClear).
+            // Принятое отступление: ограничивается целевая скорость (крейсер), а скорость выше крейсера (после рывка, подъёма)
+            // сбрасывается не мгновенно, а через accel — поэтому тест допускает крейсер × 1.2.
             if (b.Mode == BullMode.Charge && baseSpeed > d.CruiseSpeed)
                 for (int i = 0; i < runners.Length; i++)
                 {

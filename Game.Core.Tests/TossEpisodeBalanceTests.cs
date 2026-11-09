@@ -103,8 +103,8 @@ namespace Game.Core.Tests
                             }
                             prevTossTick[i] = st.Tick; prevTossed[i] = r.Toss.Tossed;
                         }
-                        // бык не в точке лежащего и держит отступ позади защищённого лежащего/неуязвимого
-                        if (active && BullCharge.Protected(r.Toss) && r.Viewing.FinishTick < 0)
+                        // бык не в точке защищённого (лежащий/неуязвимый, порог арены) и держит отступ позади него; финишировавшие и арена — вне инварианта
+                        if (active && BullCharge.Shielded(sim, i) && r.Viewing.FinishTick < 0 && r.S < sim.ArenaStart.Raw)
                         {
                             long ds = r.S - b.S;
                             if (ds >= 0 && ds < tossGap - gapEps) failures.AppendLine($"seed {seed} t{st.Tick}: бык в {ds / (double)Fixed.OneRaw:F2} м от защищённого {i}");
