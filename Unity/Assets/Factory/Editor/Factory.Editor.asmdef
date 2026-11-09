@@ -1,0 +1,10 @@
+{
+  "name": "Factory.Editor",
+  "rootNamespace": "Factory.Editor",
+  "references": ["SelfieRunner.Sim", "Game.Core"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "autoReferenced": true
+}
