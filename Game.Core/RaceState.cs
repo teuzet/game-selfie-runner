@@ -130,6 +130,10 @@ namespace Game.Core
                 h = Mix(h, (ulong)(uint)a.LastTripTick);
                 h = Mix(h, (ulong)(uint)a.LastGotShovedTick);
                 h = Mix(h, (ulong)(uint)a.LastGotTrippedTick);
+                h = Mix(h, (ulong)(uint)a.LastShoveTarget);
+                h = Mix(h, (ulong)(uint)a.LastTripTarget);
+                h = Mix(h, (ulong)(uint)a.LastShovedBy);
+                h = Mix(h, (ulong)(uint)a.LastTrippedBy);
             }
             for (int i = 0; i < Dyn.Length; i++)
             {
