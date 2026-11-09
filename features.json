@@ -13,7 +13,7 @@
         "DetRandom (PCG32) от сида: NextUInt(), Range(int min, int maxExclusive), NextFixed01(), Chance(Fixed p); состояние — два ulong, копируется присваиванием.",
         "Тесты: арифметика на границах и переполнении, Sqrt против целых квадратов, одинаковая последовательность DetRandom на двух прогонах, Range равномерен на 100 000 выборках (±2%)."
       ],
-      "status": "review",
+      "status": "unity_check",
       "attempts": 2,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -89,7 +89,7 @@
         "Подсказки о препятствиях по 8 типам × сторона в обоих языках.",
         "Без мата, оскорблений по признакам и брендов; ирония и троллинг допустимы."
       ],
-      "status": "running",
+      "status": "testing",
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "gamedesigner-feature",
