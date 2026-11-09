@@ -1719,6 +1719,28 @@
       "priority": 490,
       "iteration": 3,
       "modules": []
+    },
+    {
+      "id": "F-080",
+      "title": "Демо-билд: оболочка из шаблона фабрики (FactoryBuild.Demo)",
+      "layer": "unity",
+      "milestone": "M1",
+      "depends_on": [],
+      "acceptance": [
+        "В Unity-проекте игры есть Editor-скрипт FactoryBuild с методом Demo (взять из C:\\factory\\factory\\templates\\game\\UnityShell\\Assets\\Factory, адаптировать к сцене и драйверу игры)",
+        "`Unity.exe -batchmode -quit -projectPath Unity -executeMethod FactoryBuild.Demo -buildTarget Win64` собирает Windows-плеер",
+        "Оверлей/опрос в конце сессии можно отложить, кнопки вердикта будут в Telegram"
+      ],
+      "status": "running",
+      "attempts": 0,
+      "budget_tokens": 400000,
+      "owner_role": "developer-unity",
+      "touches": [
+        "Unity/Assets/Factory/"
+      ],
+      "priority": 345,
+      "iteration": 2,
+      "modules": []
     }
   ]
 }
