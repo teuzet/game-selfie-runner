@@ -12,6 +12,7 @@ namespace Game.Core.Economy
         public int PrevZone;        // зона до последней смены, -1 — смен не было
         public int ZoneChanges;     // сколько раз зона менялась (факт для F-019: горячо/холодно)
         public int LastZoneTick;    // тик последней смены, -1 — не было
+        public int FinishTick;      // тик финиша (F-020), -1 — ещё бежит; после финиша зрители и донаты заморожены
     }
 
     /// <summary>Зоны дистанции до быка: 0 — горячая, 3 — холодная. Для F-019 «горячо/холодно».</summary>
@@ -50,7 +51,7 @@ namespace Game.Core.Economy
         {
             v = default;
             v.Viewers = d.Start.Raw;
-            v.Zone = -1; v.PrevZone = -1; v.LastZoneTick = -1;
+            v.Zone = -1; v.PrevZone = -1; v.LastZoneTick = -1; v.FinishTick = -1;
         }
 
         public static int ZoneOf(EconomyData d, Fixed dist) =>
@@ -69,6 +70,7 @@ namespace Game.Core.Economy
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref var v = ref st.Viewing[i];
+                if (v.FinishTick >= 0) continue; // финишировал: зрители не меняются
                 var r = st.Runners[i];
                 var fs = Fixed.FromRaw(r.S - st.Bull.S);
                 var fx = Fixed.FromRaw(r.X - st.Bull.X);

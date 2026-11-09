@@ -14,7 +14,7 @@ namespace Game.Core.Tests
         // До F-014 все места имели устойчивость 1.0: тесты столкновений берут нейтральных персонажей (GameData без characters.json).
         static readonly GameData Base = GameData.Load();
         static Simulation Neutral(RaceConfig c, StreetMap? street = null) =>
-            new Simulation(c, new GameData(Base.RunnerData, Base.BullData, Base.StreetData), street);
+            new Simulation(c, new GameData(Base.RunnerData, Base.BullData, Base.StreetData), street).Running();
 
         static RaceConfig Cfg(ulong seed) => new RaceConfig(seed, new[]
         {

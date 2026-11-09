@@ -2,6 +2,7 @@ using Game.Core.Bull;
 using Game.Core.Economy;
 using Game.Core.Events;
 using Game.Core.Math;
+using Game.Core.Race;
 using Game.Core.Runners;
 using Game.Core.Street;
 using StreetMap = Game.Core.Street.Street;
@@ -22,6 +23,9 @@ namespace Game.Core
 
         /// <summary>События последнего Step (F-019): очищается в начале Step, в RaceState и хэш не входит.</summary>
         public RaceEvents Events { get; } = new RaceEvents();
+
+        /// <summary>Начало финиш-арены: вход в неё — финиш бегуна (F-020).</summary>
+        public Fixed ArenaStart { get; }
 
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
@@ -50,11 +54,12 @@ namespace Game.Core
             for (int i = 0; i < _seatData.Length; i++)
                 _seatData[i] = Characters.ForSeat(RunnerData, CharacterData.Get(config.GetSeat(i).CharacterId));
             Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
+            ArenaStart = Phases.ArenaStart(Street);
             State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData, EconomyData);
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData)
-        { EconomyData = ed; Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData, Fixed arenaStart)
+        { ArenaStart = arenaStart; EconomyData = ed; Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
 
         /// <summary>Набор параметров персонажа места (SeatConfig.CharacterId).</summary>
         public CharacterDef CharacterOf(int seat) => CharacterData.Get(Config.GetSeat(seat).CharacterId);
@@ -64,7 +69,7 @@ namespace Game.Core
 
         public Simulation Clone()
         {
-            var c = new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData);
+            var c = new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData, ArenaStart);
             c.Events.CopyFrom(Events);
             return c;
         }
@@ -78,6 +83,15 @@ namespace Game.Core
         {
             var st = State;
             Events.Clear();
+            if (st.Phase == RacePhase.Over) { st.Tick++; return; } // итоги: состояние заморожено
+            if (st.Phase == RacePhase.Countdown)
+            {
+                // Отсчёт: бегуны стоят, зрители не меняются; бык в загоне только ведёт таймер срыва.
+                BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
+                Phases.StepCountdown(this);
+                st.Tick++;
+                return;
+            }
             Collisions.BeforeMove(st);
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
@@ -100,6 +114,7 @@ namespace Game.Core
             Viewers.Step(this);
             FrameSteal.Step(this);
             EventScan.Run(this);
+            Phases.Step(this);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
         }

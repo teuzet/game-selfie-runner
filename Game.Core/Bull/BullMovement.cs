@@ -10,7 +10,7 @@ namespace Game.Core.Bull
     /// <summary>Числа быка из Data/bull.json.</summary>
     public sealed class BullData
     {
-        public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, CatchUpSpeed, CruiseSpeed, CloseSpeed,
+        public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, FinishSec, CatchUpSpeed, CruiseSpeed, CloseSpeed,
             TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleWidth, Accel, SteerSpeed;
 
         // Рывок быка (BullCharge): секунды — целые, дистанции и скорости — Fixed.
@@ -23,7 +23,8 @@ namespace Game.Core.Bull
             return new BullData
             {
                 PenOffset = j.Num("penOffset"), LineS = j.Num("lineS"), CountdownSec = j.Num("countdownSec"),
-                ReleaseDelaySec = j.Num("releaseDelaySec"), CatchUpSpeed = j.Num("catchUpSpeed"),
+                ReleaseDelaySec = j.Num("releaseDelaySec"), FinishSec = j.Num("finishSec"),
+                CatchUpSpeed = j.Num("catchUpSpeed"),
                 CruiseSpeed = j.Num("cruiseSpeed"), CloseSpeed = j.Num("closeSpeed"),
                 TargetBehind = j.Num("targetBehind"), LagFar = j.Num("lagFar"), LagNear = j.Num("lagNear"),
                 StairsMul = j.Num("stairsMul"), SlowedMul = j.Num("slowedMul"),

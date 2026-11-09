@@ -18,6 +18,9 @@ namespace Game.Core.Events
         InYourFrame,   // у Seat в кадре Target; Param1 = зрителей/с (Fixed raw), с учётом перка жертвы
         ZoneChanged,   // Seat: Param1 = прежняя зона, Param2 = новая (ViewerZone)
         ViewerThreshold, // Seat: Param1 = порог (250, 500, ...), каждый порог один раз — рекорд
+        RaceStart,     // «0» отсчёта: бегуны побежали (Seat = -1)
+        FinishSoon,    // первый вбежал на арену, пошли 15 с; Seat — он
+        RaceFinish,    // забег закрыт; Seat — победитель (итоги в RaceState)
     }
 
     public struct RaceEvent
