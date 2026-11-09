@@ -5,152 +5,183 @@
 html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relative}
 .bg{position:absolute;inset:0;background:url(base.jpg) center/cover}
-.vignette{position:absolute;inset:0;background:
- linear-gradient(90deg,rgba(0,0,0,0) 60%,rgba(20,10,30,.55) 100%),
- linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,0) 14%,rgba(0,0,0,0) 80%,rgba(0,0,0,.45) 100%)}
-.pill{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);color:#1b1a2e;border-radius:999px;padding:10px 18px;font-weight:700;font-size:24px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.vig{position:absolute;inset:0;background:
+ linear-gradient(90deg,rgba(0,0,0,0) 66%,rgba(20,10,30,.5) 100%),
+ linear-gradient(180deg,rgba(0,0,0,.4) 0,rgba(0,0,0,0) 15%,rgba(0,0,0,0) 82%,rgba(0,0,0,.4) 100%)}
+.glass{background:rgba(15,12,25,.6);backdrop-filter:blur(8px);border-radius:16px}
+.white{background:rgba(255,255,255,.94);color:#1b1a2e;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.t{font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.7}
+.pill{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:9px 16px;font-weight:800;font-size:22px}
 .live{background:#ff2d55;color:#fff}
-.live i{width:14px;height:14px;border-radius:50%;background:#fff;display:inline-block;animation:none;box-shadow:0 0 0 4px rgba(255,255,255,.35)}
-.top{position:absolute;left:36px;top:30px;display:flex;gap:14px;align-items:center}
-.up{color:#19b36b;font-size:20px;font-weight:800}
-.name{position:absolute;left:36px;top:92px;font-size:22px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.6)}
-.name span{opacity:.8;font-weight:400}
-/* progress of the street */
-.track{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:640px}
-.track .bar{height:14px;border-radius:7px;background:rgba(0,0,0,.45);position:relative;border:2px solid rgba(255,255,255,.5)}
-.track .fill{position:absolute;left:0;top:0;bottom:0;width:38%;border-radius:7px;background:linear-gradient(90deg,#ffb020,#ff6a00)}
-.track .m{position:absolute;top:-16px;width:40px;height:40px;border-radius:50%;border:3px solid #fff;background:#444 center/cover;box-shadow:0 3px 8px rgba(0,0,0,.4);transform:translateX(-50%)}
-.track .bull{top:-22px;width:52px;height:52px;border:3px solid #ff2d55;background:#7a1020;display:flex;align-items:center;justify-content:center;font-size:30px}
-.track .lbl{display:flex;justify-content:space-between;font-size:17px;font-weight:600;margin-top:28px;text-shadow:0 2px 6px rgba(0,0,0,.7);opacity:.95}
-/* right top */
-.tr{position:absolute;right:36px;top:30px;display:flex;gap:14px;align-items:center}
-.money{background:#ffd54a;color:#4a2d00;font-size:28px}
-.place{background:rgba(0,0,0,.55);color:#fff;border:2px solid rgba(255,255,255,.4)}
-/* chat */
-.chat{position:absolute;right:36px;top:120px;width:410px;bottom:300px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:8px}
-.msg{background:rgba(15,12,25,.55);backdrop-filter:blur(6px);border-radius:14px;padding:10px 14px;font-size:21px;line-height:1.3;max-width:100%;align-self:flex-start}
-.msg b{font-weight:800;margin-right:6px}
-.msg.warn{background:#ffdd33;color:#2b1a00;font-weight:900;font-size:24px;border:3px solid #fff;box-shadow:0 6px 20px rgba(255,200,0,.5);transform:rotate(-1.5deg)}
-.msg.donate{background:linear-gradient(135deg,#ff6a00,#ff2d55);color:#fff;font-weight:700;border:2px solid #fff}
-.msg.donate .sum{display:block;font-size:30px;font-weight:900;margin-bottom:4px}
-.msg.sys{background:rgba(25,179,107,.8);font-weight:700}
-.c1{color:#ffb74d}.c2{color:#4dd0e1}.c3{color:#f06292}.c4{color:#aed581}.c5{color:#ce93d8}.c6{color:#ffd54a}
-.badge{display:inline-block;background:#9c27b0;color:#fff;font-size:14px;padding:2px 7px;border-radius:6px;margin-right:6px;vertical-align:middle;font-weight:800}
-/* quest */
-.quest{position:absolute;left:36px;top:150px;width:420px;background:rgba(255,255,255,.94);color:#1b1a2e;border-radius:18px;padding:16px 18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.quest h4{font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:#9c27b0;margin-bottom:6px}
+.live i{width:12px;height:12px;border-radius:50%;background:#fff;display:inline-block;box-shadow:0 0 0 4px rgba(255,255,255,.35)}
+.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-weight:900;color:#fff;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+.aM{background:#ff6a00}.aR{background:#9c27b0}.aD{background:#e5232e}.aF{background:#2f80ed}
+/* ---------- top left: who am I, viewers, why they change ---------- */
+.tl{position:absolute;left:36px;top:30px;width:430px}
+.tl .row{display:flex;gap:12px;align-items:center}
+.viewers{background:rgba(255,255,255,.94);color:#1b1a2e}
+.viewers .n{font-size:26px}
+.viewers .d{color:#19b36b;font-size:18px;font-weight:900}
+.nick{margin-top:10px;font-size:20px;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.nick span{opacity:.75;font-weight:500}
+.feed{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.feed div{align-self:flex-start;padding:6px 12px;border-radius:10px;font-size:18px;font-weight:700;background:rgba(15,12,25,.6);backdrop-filter:blur(6px)}
+.feed .pos{color:#7CF2B3}.feed .neg{color:#ff8a8a}.feed .eur{color:#ffd54a}
+.feed .old{opacity:.55}
+/* ---------- quest ---------- */
+.quest{position:absolute;left:36px;top:300px;width:430px;padding:16px 18px}
+.quest h4{color:#9c27b0;margin-bottom:6px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
 .quest p{font-size:24px;font-weight:800;line-height:1.15}
-.quest .rw{font-size:18px;color:#4a2d00;background:#ffd54a;display:inline-block;border-radius:8px;padding:3px 8px;margin-top:8px;font-weight:800}
-.quest .pb{height:12px;background:#e8e6f0;border-radius:6px;margin-top:12px;overflow:hidden}
+.quest .from{font-size:16px;color:#555;margin-top:4px}
+.quest .pb{height:12px;background:#e8e6f0;border-radius:6px;margin-top:12px;overflow:hidden;position:relative}
 .quest .pb i{display:block;height:100%;width:64%;background:linear-gradient(90deg,#9c27b0,#ff2d55)}
-.quest small{display:block;text-align:right;font-size:15px;font-weight:700;margin-top:4px;color:#555}
-/* bottom left: danger + hype */
-.bl{position:absolute;left:36px;bottom:40px;display:flex;flex-direction:column;gap:14px}
-.card{background:rgba(15,12,25,.62);backdrop-filter:blur(6px);border-radius:16px;padding:14px 18px;width:420px}
-.card .t{font-size:15px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:6px;font-weight:700}
-.card .v{font-size:34px;font-weight:900;display:flex;justify-content:space-between;align-items:baseline}
-.card .v small{font-size:18px;font-weight:700;color:#ff6a6a}
-.heat{height:16px;border-radius:8px;background:linear-gradient(90deg,#19b36b,#ffd54a 55%,#ff2d55);position:relative;margin-top:8px}
-.heat i{position:absolute;top:-6px;left:78%;width:8px;height:28px;background:#fff;border-radius:4px;box-shadow:0 0 8px #000;transform:translateX(-50%)}
-.heat .z{position:absolute;top:22px;font-size:14px;font-weight:700;opacity:.8}
-.hype .v{color:#ffd54a}
-/* reactions */
-.re{position:absolute;font-size:44px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
-/* other streams */
-.others{position:absolute;right:36px;bottom:40px;width:410px}
-.others .t{font-size:15px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin-bottom:8px;font-weight:700;text-shadow:0 2px 6px rgba(0,0,0,.7)}
-.others .row{display:flex;gap:10px}
-.th{flex:1;aspect-ratio:16/9;border-radius:12px;background:#333 center/cover;position:relative;border:2px solid rgba(255,255,255,.5);overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-.th .n{position:absolute;left:0;right:0;bottom:0;padding:5px 8px;font-size:14px;font-weight:700;background:linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,0))}
-.th .vv{position:absolute;right:6px;top:6px;font-size:13px;font-weight:800;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:6px}
-.th .live{position:absolute;left:6px;top:6px;font-size:11px;padding:2px 7px;border-radius:5px;display:inline-flex;gap:4px;align-items:center}
-.th .live i{width:7px;height:7px;box-shadow:none}
-.th.lost{filter:grayscale(1) contrast(.8)}
-.th.lost .ns{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;background:repeating-linear-gradient(45deg,rgba(0,0,0,.45) 0 6px,rgba(0,0,0,.25) 6px 12px)}
-/* keys */
-.keys{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);display:flex;gap:22px;font-size:17px;font-weight:600;opacity:.85;text-shadow:0 2px 6px rgba(0,0,0,.8)}
-.keys kbd{background:rgba(255,255,255,.9);color:#1b1a2e;border-radius:6px;padding:2px 9px;font-family:Inter;font-weight:800;margin-right:4px;font-size:15px}
-/* phone frame corners */
-.corner{position:absolute;width:70px;height:70px;border:5px solid rgba(255,255,255,.85);border-radius:6px}
-.corner.tl{left:0;top:0;border-right:0;border-bottom:0;left:20px;top:20px;border-radius:18px 0 0 0}
+.quest .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:16px;font-weight:700;color:#555}
+.quest .rw{background:#ffd54a;color:#4a2d00;border-radius:8px;padding:3px 8px;font-weight:900}
+/* ---------- top center: street progress ---------- */
+.track{position:absolute;left:50%;top:30px;transform:translateX(-50%);width:620px}
+.track .bar{height:14px;border-radius:7px;background:rgba(0,0,0,.5);position:relative;border:2px solid rgba(255,255,255,.55)}
+.track .m{position:absolute;top:-16px;width:40px;height:40px;font-size:18px;transform:translateX(-50%)}
+.track .me{width:48px;height:48px;top:-20px;border-color:#ffd54a;box-shadow:0 0 0 4px rgba(255,213,74,.55);font-size:21px}
+.track .bull{top:-22px;width:52px;height:52px;border-color:#ff2d55;background:#7a1020;font-size:30px}
+.track .lbl{display:flex;justify-content:space-between;font-size:17px;font-weight:700;margin-top:30px;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.eyes{position:absolute;left:50%;top:112px;transform:translateX(-50%);padding:8px 16px;font-size:18px;font-weight:700;display:flex;gap:10px;align-items:center;white-space:nowrap}
+.eyes b{color:#ffd54a}
+/* ---------- top right: score ---------- */
+.score{position:absolute;right:36px;top:30px;width:400px;padding:14px 18px}
+.score .big{display:flex;justify-content:space-between;align-items:baseline}
+.score .eur{font-size:40px;font-weight:900;color:#ffd54a}
+.score .rate{font-size:18px;font-weight:800;color:#7CF2B3}
+.lb{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.lb div{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;padding:5px 8px;border-radius:10px}
+.lb .av{width:30px;height:30px;font-size:14px;border-width:2px}
+.lb .nm{flex:1}
+.lb .e{font-weight:900;width:84px;text-align:right}
+.lb .v{opacity:.7;width:70px;text-align:right;font-size:15px}
+.lb .me{background:rgba(255,213,74,.18);outline:2px solid rgba(255,213,74,.7)}
+.lb .off{opacity:.55}
+/* ---------- chat ---------- */
+.chat{position:absolute;right:36px;top:340px;width:400px;bottom:40px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;overflow:hidden}
+.msg{background:rgba(15,12,25,.55);backdrop-filter:blur(6px);border-radius:14px;padding:9px 13px;font-size:20px;line-height:1.3;align-self:flex-start}
+.msg b{font-weight:800;margin-right:6px}
+.msg.sys{background:rgba(156,39,176,.85);font-weight:700}
+.msg.donate{background:linear-gradient(135deg,#ff6a00,#ff2d55);font-weight:700;border:2px solid #fff}
+.msg.donate .sum{display:block;font-size:26px;font-weight:900}
+.msg.mod{background:rgba(25,179,107,.8)}
+.msg.warn{background:#ffdd33;color:#2b1a00;font-weight:900;font-size:22px;border:3px solid #fff;box-shadow:0 6px 20px rgba(255,200,0,.5)}
+.msg.warn small{display:block;font-size:14px;font-weight:800;opacity:.75;letter-spacing:.06em}
+.c1{color:#ffb74d}.c2{color:#4dd0e1}.c3{color:#f06292}.c4{color:#aed581}.c5{color:#ce93d8}.c6{color:#ffd54a}
+.badge{display:inline-block;background:#19b36b;color:#fff;font-size:13px;padding:2px 6px;border-radius:6px;margin-right:6px;vertical-align:middle;font-weight:900}
+.chatlbl{position:absolute;right:36px;top:312px;width:400px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.7;text-shadow:0 2px 6px rgba(0,0,0,.8);display:flex;justify-content:space-between}
+/* ---------- callout: the one thing to do right now ---------- */
+.callout{position:absolute;left:1080px;top:470px;width:380px;text-align:center}
+.callout .arrow{filter:drop-shadow(0 0 24px rgba(255,220,50,.9)) drop-shadow(0 6px 0 #7a5a00);margin-bottom:6px}
+.callout .w{display:inline-block;background:#ffdd33;color:#2b1a00;font-weight:900;font-size:40px;padding:6px 22px;border-radius:14px;border:4px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.4);transform:rotate(-2deg)}
+.callout .why{margin-top:10px;font-size:17px;font-weight:700;text-shadow:0 2px 6px rgba(0,0,0,.9)}
+.callout .why b{color:#ffd54a}
+/* ---------- bottom left: bull gauge ---------- */
+.bull{position:absolute;left:36px;bottom:40px;width:430px;padding:14px 18px}
+.bull .hd{display:flex;justify-content:space-between;align-items:baseline}
+.bull .dist{font-size:38px;font-weight:900}
+.bull .state{font-size:18px;font-weight:800;color:#ffb020}
+.zones{height:18px;border-radius:9px;background:linear-gradient(90deg,#6b7fd6 0 36%,#19b36b 36% 50%,#ffd54a 50% 72%,#ff6a00 72% 86%,#ff2d55 86%);position:relative;margin-top:10px}
+.zones i{position:absolute;top:-7px;left:76%;width:10px;height:32px;background:#fff;border-radius:5px;box-shadow:0 0 10px #000;transform:translateX(-50%)}
+.zl{display:flex;font-size:13px;font-weight:800;opacity:.8;margin-top:8px;letter-spacing:.04em}
+.zl span:nth-child(1){width:36%}.zl span:nth-child(2){width:36%;text-align:center}.zl span:nth-child(3){width:28%;text-align:right}
+.eff{display:flex;justify-content:space-between;margin-top:10px;font-size:18px;font-weight:800}
+.eff .h{color:#ffd54a}.eff .g{color:#7CF2B3}
+.target{margin-top:10px;font-size:16px;font-weight:700;opacity:.9;padding-top:10px;border-top:1px solid rgba(255,255,255,.15)}
+.target b{color:#ff8a8a}
+/* ---------- keys ---------- */
+.keys{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);display:flex;gap:22px;font-size:16px;font-weight:600;opacity:.85;text-shadow:0 2px 6px rgba(0,0,0,.8);white-space:nowrap}
+.keys kbd{background:rgba(255,255,255,.9);color:#1b1a2e;border-radius:6px;padding:2px 9px;font-family:Inter;font-weight:800;margin-right:4px;font-size:14px}
+.re{position:absolute;font-size:40px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.corner{position:absolute;width:70px;height:70px;border:5px solid rgba(255,255,255,.85)}
+.corner.tl{left:20px;top:20px;border-right:0;border-bottom:0;border-radius:18px 0 0 0}
 .corner.tr{right:20px;top:20px;border-left:0;border-bottom:0;border-radius:0 18px 0 0}
 .corner.bl{left:20px;bottom:20px;border-right:0;border-top:0;border-radius:0 0 0 18px}
 .corner.br{right:20px;bottom:20px;border-left:0;border-top:0;border-radius:0 0 18px 0}
-.rec{position:absolute;left:50%;top:94px;transform:translateX(-50%);font-size:16px;font-weight:700;letter-spacing:.2em;opacity:.8;text-shadow:0 2px 6px rgba(0,0,0,.8)}
 </style></head><body>
-<div class="bg"></div><div class="vignette"></div>
+<div class="bg"></div><div class="vig"></div>
 
-<div class="top">
-  <span class="pill live"><i></i> LIVE</span>
-  <span class="pill">👁 12 480 <span class="up">▲ +312</span></span>
-</div>
-<div class="name">MARINA_RUNS <span>· уличный стрим · Сан-Торо</span></div>
-
-<div class="track">
-  <div class="bar"><div class="fill"></div>
-    <div class="m bull" style="left:33%">🐂</div>
-    <div class="m" style="left:38%;background-image:url(base.jpg);border-color:#ffd54a;box-shadow:0 0 0 4px rgba(255,213,74,.6)"></div>
-    <div class="m" style="left:30%;background-image:url(runner-nerd-nosignal-01.jpg)"></div>
-    <div class="m" style="left:47%;background-image:url(runner-bro-smug-01.jpg)"></div>
-    <div class="m" style="left:55%;background-image:url(runner-grandma-delight-01.jpg)"></div>
+<div class="tl">
+  <div class="row">
+    <span class="pill live"><i></i> LIVE</span>
+    <span class="pill viewers">👁 <span class="n">12 480</span><span class="d">▲ 312</span></span>
   </div>
-  <div class="lbl"><span>Старт</span><span>1:52 / 5:00</span><span>Арена 🏟</span></div>
+  <div class="nick">MARINA_RUNS <span>· Сан-Торо · ты бежишь 2-й</span></div>
+  <div class="feed">
+    <div class="pos">+310 👁 бык вошёл в кадр</div>
+    <div class="pos">+120 👁 Пако упал у тебя в кадре</div>
+    <div class="eur">+€50 донат от Pablo_88</div>
+    <div class="neg old">−40 👁 скучно: 3 с без событий</div>
+  </div>
 </div>
 
-<div class="tr">
-  <span class="pill place">2 / 4 место</span>
-  <span class="pill money">💰 € 1 240</span>
-</div>
-
-<div class="quest">
+<div class="quest white">
   <h4>Квест от зрителей</h4>
   <p>Продержись 5 секунд рядом с быком</p>
-  <span class="rw">+ € 200 и ×2 зрителей</span>
+  <div class="from">заказал Pablo_88 вместе с донатом</div>
   <div class="pb"><i></i></div>
-  <small>3.2 / 5.0 с</small>
+  <div class="meta"><span>3,2 / 5,0 с</span><span class="rw">+€200 · +500 👁</span></div>
 </div>
 
+<div class="track">
+  <div class="bar">
+    <div class="m av bull" style="left:33%">🐂</div>
+    <div class="m av aF" style="left:28%;opacity:.6">Ф</div>
+    <div class="m av aM me" style="left:38%">М</div>
+    <div class="m av aD" style="left:45%">Д</div>
+    <div class="m av aR" style="left:54%">Р</div>
+  </div>
+  <div class="lbl"><span>Старт</span><span>1:52 · до арены 1 240 м</span><span>Арена 🏟</span></div>
+</div>
+<div class="eyes glass">👀 Дорогу перед тобой видят зрители <b>Диего</b> · он на 14 м впереди</div>
+
+<div class="score glass">
+  <div class="t">Донаты · победа по деньгам</div>
+  <div class="big"><span class="eur">€ 1 240</span><span class="rate">+€12 / с</span></div>
+  <div class="lb">
+    <div><span class="av aR">Р</span><span class="nm">Роза</span><span class="e">€ 1 480</span><span class="v">9,9k 👁</span></div>
+    <div class="me"><span class="av aM">М</span><span class="nm">Марина (ты)</span><span class="e">€ 1 240</span><span class="v">12,5k 👁</span></div>
+    <div><span class="av aD">Д</span><span class="nm">Диего</span><span class="e">€ 910</span><span class="v">7,1k 👁</span></div>
+    <div class="off"><span class="av aF">Ф</span><span class="nm">Федя 📵</span><span class="e">€ 430</span><span class="v">2,3k 👁</span></div>
+  </div>
+</div>
+
+<div class="chatlbl"><span>Чат стрима</span><span>1 204 пишут</span></div>
 <div class="chat">
-  <div class="msg"><b class="c1">tomas_k:</b> опять бабуля впереди всех 😂</div>
-  <div class="msg"><b class="c2">leo_leo:</b> марина не оборачивайся он прям за тобой 💀</div>
-  <div class="msg sys">🎯 Квест принят: продержись 5 с у быка</div>
-  <div class="msg"><b class="c3">anna.b:</b> ААААА 🔥🔥🔥</div>
-  <div class="msg"><b class="c4">x_pavel:</b> переключился с качка, тут веселее</div>
-  <div class="msg donate"><span class="sum">💸 € 50 · Pablo_88</span>врежься в арбузы, умоляю</div>
-  <div class="msg"><b class="c6"><span class="badge">MOD</span>ira_mod:</b> смотрю стрим Диего, перед тобой бочка!!</div>
-  <div class="msg warn">⚠️ СТОЛБ СЛЕВА!!! ПРАВЕЕ!!!</div>
+  <div class="msg"><b class="c1">tomas_k:</b> роза опять впереди всех 😂</div>
+  <div class="msg"><b class="c3">anna.b:</b> МАРИНА НЕ ОБОРАЧИВАЙСЯ 💀</div>
+  <div class="msg donate"><span class="sum">💸 € 50 · Pablo_88</span>продержись у быка 5 сек, слабо?</div>
+  <div class="msg sys">🎯 Квест принят. 5 секунд пошли</div>
+  <div class="msg"><b class="c4">x_pavel:</b> ушёл со стрима диего, тут веселее</div>
+  <div class="msg"><b class="c2">leo_leo:</b> федю затоптали ахахах 📵</div>
+  <div class="msg mod"><b class="c6"><span class="badge">MOD</span>ira_mod:</b> у Диего в кадре ваша улица: впереди бочка слева</div>
+  <div class="msg"><b class="c5">kotik_99:</b> 🐂🐂🐂 он прям за тобой</div>
+  <div class="msg warn">⚠️ СТОЛБ! ПРАВЕЕ!!!<small>× 7 человек за секунду</small></div>
   <div class="msg"><b class="c2">leo_leo:</b> ПРАВЕЕЕЕЕ</div>
 </div>
 
-<div class="bl">
-  <div class="card">
-    <div class="t">Бык за спиной</div>
-    <div class="v">4,1 м <small>опасно · зрители любят</small></div>
-    <div class="heat"><i></i><span class="z" style="left:0">скучно</span><span class="z" style="right:0">затопчут</span></div>
-    <div style="height:16px"></div>
-  </div>
-  <div class="card hype">
-    <div class="t">Хайп</div>
-    <div class="v">× 2,4 <small style="color:#19b36b">+ 0,3 за близость</small></div>
-  </div>
+<div class="callout">
+  <div class="arrow"><svg width="200" height="110" viewBox="0 0 200 110"><path d="M10 40 H120 V10 L190 55 L120 100 V70 H10 Z" fill="#ffdd33" stroke="#fff" stroke-width="6" stroke-linejoin="round"/></svg></div>
+  <div class="w">ПРАВЕЕ!</div>
+  <div class="why">столб через 6 м · видно из стрима <b>Диего</b></div>
 </div>
 
-<div class="re" style="left:1120px;bottom:60px">❤️</div>
-<div class="re" style="left:1170px;bottom:130px;font-size:36px">🔥</div>
-<div class="re" style="left:1140px;bottom:200px;font-size:30px">💀</div>
-<div class="re" style="left:1190px;bottom:265px;font-size:26px;opacity:.7">😂</div>
-<div class="re" style="left:1125px;bottom:325px;font-size:22px;opacity:.5">❤️</div>
-
-<div class="others">
-  <div class="t">Другие стримы забега</div>
-  <div class="row">
-    <div class="th" style="background-image:url(runner-grandma-delight-01.jpg)"><span class="pill live"><i></i>LIVE</span><span class="vv">👁 9 870</span><div class="n">Бабуля Роза</div></div>
-    <div class="th" style="background-image:url(runner-bro-smug-01.jpg)"><span class="pill live"><i></i>LIVE</span><span class="vv">👁 7 120</span><div class="n">Диего_Качок</div></div>
-    <div class="th lost" style="background-image:url(runner-nerd-nosignal-01.jpg)"><div class="ns">НЕТ СИГНАЛА 📵</div><span class="vv">👁 2 300</span><div class="n">Федя_IT</div></div>
-  </div>
+<div class="bull glass">
+  <div class="hd"><span class="t">Бык за спиной</span><span class="state">горячо · зрители любят</span></div>
+  <div class="hd"><span class="dist">4,1 м</span><span class="state" style="color:#ff8a8a">ещё 1,5 м и затопчет</span></div>
+  <div class="zones"><i></i></div>
+  <div class="zl"><span>далеко · зрители уходят</span><span>хайп</span><span>затопчут</span></div>
+  <div class="eff"><span class="h">хайп × 2,4</span><span class="g">+85 👁 / с</span></div>
+  <div class="target">🎯 Бык выбрал цель: <b>Диего</b> (красная майка) · ты в его поле зрения</div>
 </div>
 
-<div class="keys"><span><kbd>A</kbd><kbd>D</kbd>увернуться</span><span><kbd>Space</kbd>толкнуть</span><span><kbd>E</kbd>влезть в кадр</span></div>
+<div class="re" style="left:1395px;bottom:110px">❤️</div>
+<div class="re" style="left:1410px;bottom:185px;font-size:34px">🔥</div>
+<div class="re" style="left:1392px;bottom:255px;font-size:28px;opacity:.8">💀</div>
+<div class="re" style="left:1415px;bottom:320px;font-size:24px;opacity:.6">😂</div>
 
+<div class="keys"><span><kbd>A</kbd><kbd>D</kbd>увернуться</span><span><kbd>Shift</kbd>ускориться</span><span><kbd>Space</kbd>толкнуть</span><span><kbd>E</kbd>влезть в чужой кадр</span></div>
 <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
 </body></html>
