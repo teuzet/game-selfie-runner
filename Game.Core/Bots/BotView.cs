@@ -14,6 +14,7 @@ namespace Game.Core.Bots
     {
         public int Side;       // −1 слева, 0 по центру, +1 справа
         public bool Full;      // на всю ширину: не рулит
+        public bool Stall;     // лоток (для квеста «Врежься в лоток»)
         public int TicksUntil; // до препятствия
     }
 
@@ -56,6 +57,9 @@ namespace Game.Core.Bots
         public BotHint Hint0, Hint1;
         // п.9 квест (id или ""): до F-021/квестов всегда пусто
         public string Quest;
+        public bool HasQuestTarget; // цель квеста — бегун QuestTarget
+        public int QuestTarget;
+        public bool Arena;          // финиш-арена (Phase.Finishing): действия не проверяются
 
         public bool Down => StunTicks > 0 || NoSignalTicks > 0;
         public const int MaxHints = 2;
@@ -70,7 +74,7 @@ namespace Game.Core.Bots
         /// <summary>Собирает наблюдения места из состояния. Зовёт Simulation, раз в тик; без аллокаций.</summary>
         public static BotView Build(RaceState st, StreetMap street, BotData bd, int seat, IBotHintSource? hints)
         {
-            var v = new BotView { Seat = seat, Tick = st.Tick, Quest = "" };
+            var v = new BotView { Seat = seat, Tick = st.Tick, Quest = "", Arena = st.Phase == Game.Core.Race.RacePhase.Finishing };
             ref readonly RunnerState me = ref st.Runners[seat];
             v.S = Fixed.FromRaw(me.S); v.X = Fixed.FromRaw(me.X); v.Speed = Fixed.FromRaw(me.Speed);
             v.Stamina = Fixed.FromRaw(me.Stamina);

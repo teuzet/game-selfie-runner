@@ -10,7 +10,7 @@ namespace Game.Core.Bots
         public string Id = "";
         public Fixed BandMin, BandMax, SprintBelow, Hysteresis, SprintUntilStamina, ReserveStamina, HuntRadius;
         public int TempoPeriod, ActionPeriod, ReactionMin, ReactionMax, WaitNeighbor, PushMin, PushMax;
-        public Fixed TrustHints, TrustNeighbors, Aggression;
+        public Fixed TrustHints, TrustNeighbors, Aggression, OvertakeSprint;
         public bool DodgeRush;
         public string[] Quests = new string[0];
 
@@ -27,8 +27,9 @@ namespace Game.Core.Bots
     {
         public BotDef[] Temperaments = new BotDef[0];
         public Fixed DeadZone, WallMargin, DodgeDiv, CenterDodgeMargin, SideFrame, RearFrame, NeighborReact,
-            NeighborSeparation, RushSidestep, PassMargin, MarketAxis, PlazaExtra, PondEdge, LaneSwitch, ShiftEps;
-        public int AheadMemory, NeighborHold;
+            NeighborSeparation, RushSidestep, PassMargin, MarketAxis, PlazaExtra, PondEdge, LaneSwitch, ShiftEps,
+            TripReach, PushShift, WallZone, ThirdDiv, QuestHuntRadius, QuestAggression, StayHotMin, StayHotMax, OvertakeBand;
+        public int AheadMemory, NeighborHold, HuntTicks, QuestHuntPeriod;
 
         public static BotData None() => new BotData();
 
@@ -52,6 +53,10 @@ namespace Game.Core.Bots
                 RushSidestep = c.Num("rushSidestep"), PassMargin = c.Num("passMargin"), MarketAxis = c.Num("marketAxis"),
                 PlazaExtra = c.Num("plazaExtra"), PondEdge = c.Num("pondEdge"), LaneSwitch = c.Num("laneSwitch"),
                 ShiftEps = c.Num("shiftEps"), AheadMemory = c.Int("aheadMemory"), NeighborHold = c.Int("neighborHold"),
+                TripReach = c.Num("tripReach"), PushShift = c.Num("pushShift"), WallZone = c.Num("wallZone"),
+                ThirdDiv = c.Num("thirdDiv"), HuntTicks = c.Int("huntTicks"), QuestHuntRadius = c.Num("questHuntRadius"),
+                QuestHuntPeriod = c.Int("questHuntPeriod"), QuestAggression = c.Num("questAggression"),
+                StayHotMin = c.Arr("stayHotBand").Num(0), StayHotMax = c.Arr("stayHotBand").Num(1), OvertakeBand = c.Num("overtakeBand"),
                 Temperaments = new BotDef[t.Count],
             };
             for (int i = 0; i < t.Count; i++)
@@ -71,7 +76,7 @@ namespace Game.Core.Bots
                     TrustHints = o.Num("trustHints"), TrustNeighbors = o.Num("trustNeighbors"),
                     WaitNeighbor = o.Int("waitNeighbor"), Aggression = o.Num("aggression"), HuntRadius = o.Num("huntRadius"),
                     PushMin = push.Num(0).ToInt(), PushMax = push.Num(1).ToInt(),
-                    DodgeRush = o.Bool("dodgeRush"), Quests = o.StrList("quests"),
+                    DodgeRush = o.Bool("dodgeRush"), OvertakeSprint = o.Num("overtakeSprint"), Quests = o.StrList("quests"),
                 };
             }
             return d;

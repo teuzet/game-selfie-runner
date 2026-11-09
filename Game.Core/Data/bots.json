@@ -1,5 +1,5 @@
 {
-  "note": "Источник: design/F-005.md §3 «Числа» и §4 «Контент» (таблица 1:1 для трёх характеров), общие числа — §2.2/§2.3/«Общие». Индекс в temperaments = SeatConfig.BotTemperament. Метры, тики (30/с), доли. Код поведения: трус — F-023, адреналинщик и тролль — F-024 (до тех пор их ведёт код труса с их числами).",
+  "note": "Источник: design/F-005.md §3 «Числа» и §4 «Контент» (таблица 1:1 для трёх характеров), общие числа — §2.2/§2.3/«Общие». Индекс в temperaments = SeatConfig.BotTemperament. Метры, тики (30/с), доли. Код поведения: трус — F-023, адреналинщик и тролль — F-024 (Adrenaline.cs, Troll.cs).",
   "common": {
     "deadZone": 0.15,
     "wallMargin": 0.5,
@@ -18,7 +18,17 @@
     "laneSwitch": 1.0,
     "shiftEps": 0.02,
     "neighborHold": 30,
-    "srcNote": "deadZone 0.15 — «Общие: мёртвая зона руля», §2.2; wallMargin 0.5 — «отступ цели от стены»; dodgeDiv 4 — «уворот ширина/4»; centerDodgeMargin 0.8 — §2.3 п.2 «±(ширина/2 − 0.8 м)»; sideFrame 1.5 и rearFrame 30 — «сосед в кадре сбоку |Δs| ≤ 1.5 м, сзади до 30 м»; aheadMemory 30 тиков — «память о соседе впереди 30 тиков»; neighborReact 3 — §2.3 п.3 «сосед сбоку или сзади до 3 м»; neighborSeparation 1.0 — §2.3 п.3 «ближе 1.0 м по x»; rushSidestep 1.2 — §2.3 п.1; passMargin 1.0 — §2.3 п.2 «первая позади на 1 м»; marketAxis 0.5, plazaExtra 0.25, pondEdge 0.8 — §2.3 п.4; laneSwitch 1.0 м (когда «сторона, где уже бежит» меняется), shiftEps 0.02 м/тик (порог «сосед смещается поперёк») и neighborHold 30 тиков (сколько держится повторённый уворот) — решение исполнителя F-023, в диздоке чисел нет, тюнить."
+    "tripReach": 1.2,
+    "pushShift": 2,
+    "wallZone": 2,
+    "thirdDiv": 3,
+    "huntTicks": 90,
+    "questHuntRadius": 3,
+    "questHuntPeriod": 90,
+    "questAggression": 1.0,
+    "stayHotBand": [3, 7],
+    "overtakeBand": 15,
+    "srcNote": "deadZone 0.15 — «Общие: мёртвая зона руля», §2.2; wallMargin 0.5 — «отступ цели от стены»; dodgeDiv 4 — «уворот ширина/4»; centerDodgeMargin 0.8 — §2.3 п.2 «±(ширина/2 − 0.8 м)»; sideFrame 1.5 и rearFrame 30 — «сосед в кадре сбоку |Δs| ≤ 1.5 м, сзади до 30 м»; aheadMemory 30 тиков — «память о соседе впереди 30 тиков»; neighborReact 3 — §2.3 п.3 «сосед сбоку или сзади до 3 м»; neighborSeparation 1.0 — §2.3 п.3 «ближе 1.0 м по x»; rushSidestep 1.2 — §2.3 п.1; passMargin 1.0 — §2.3 п.2 «первая позади на 1 м»; marketAxis 0.5, plazaExtra 0.25, pondEdge 0.8 — §2.3 п.4; laneSwitch 1.0 м (когда «сторона, где уже бежит» меняется), shiftEps 0.02 м/тик (порог «сосед смещается поперёк») и neighborHold 30 тиков (сколько держится повторённый уворот) — решение исполнителя F-023, в диздоке чисел нет, тюнить; tripReach 1.2 м — §2.4 тролль п.2 «≤ 1.2 м прямо впереди»; pushShift 2 м — п.1 «сдвиг на 2 м / устойчивость» (устойчивость жертвы бот не знает, берётся 1); wallZone 2 м — п.1 «ближе 2 м к его стене»; thirdDiv 3 — п.1 «треть улицы»; huntTicks 90 — «охота длится до 3 с»; questHuntRadius 3, questHuntPeriod 90, questAggression 1.0 — §2.4 адреналинщик, «Уложи соседа»: агрессия 1.0 и охота тролля с радиусом 3 м; stayHotBand [3, 7] — «Держись у быка» коридор 3–7 м; overtakeBand 15 — «Обгони X» коридор расширяется до 15 м."
   },
   "temperaments": [
     { "id": "coward",
@@ -27,7 +37,7 @@
       "tempoPeriod": 15, "actionPeriod": 0, "reaction": [8, 10],
       "trustHints": 1.0, "trustNeighbors": 1.0, "waitNeighbor": 0,
       "aggression": 0, "huntRadius": 0, "pushWindow": [0, 0],
-      "dodgeRush": false,
+      "dodgeRush": false, "overtakeSprint": 0,
       "quests": ["clean_run"] },
     { "id": "adrenaline",
       "band": [4, 8], "sprintBelow": 2.5, "hysteresis": 0.5,
@@ -35,7 +45,7 @@
       "tempoPeriod": 6, "actionPeriod": 15, "reaction": [6, 8],
       "trustHints": 1.0, "trustNeighbors": 0.5, "waitNeighbor": 0,
       "aggression": 0.3, "huntRadius": 1.5, "pushWindow": [8, 20],
-      "dodgeRush": true,
+      "dodgeRush": true, "overtakeSprint": 60,
       "quests": ["stay_hot", "hit_stall", "floor_neighbor", "overtake"] },
     { "id": "troll",
       "band": [12, 18], "sprintBelow": 6, "hysteresis": 1,
@@ -43,8 +53,8 @@
       "tempoPeriod": 10, "actionPeriod": 90, "reaction": [7, 9],
       "trustHints": 1.0, "trustNeighbors": 1.0, "waitNeighbor": 8,
       "aggression": 1.0, "huntRadius": 3, "pushWindow": [8, 20],
-      "dodgeRush": true,
+      "dodgeRush": true, "overtakeSprint": 40,
       "quests": ["floor_neighbor", "overtake"] }
   ],
-  "tableNote": "Строки temperaments — таблица §3: band — «коридор d» (трус ≥ 15, цель ≥ 30; адреналинщик 4–8; тролль 12–18); sprintBelow — «порог спринта по d»; hysteresis — «гистерезис порогов d»; sprintUntilStamina — «спринт до выносливости»; reserveStamina — «запас без угрозы» (тролль: 50 на охоте); tempoPeriod/actionPeriod — «период темпа/действия» (0 = «—»); reaction — «задержка реакции R»; trustHints/trustNeighbors — «верит подсказкам/соседям» (тролль: 1.0 вне охоты, на охоте код ставит 0 — F-024); waitNeighbor — «ждёт уворота жертвы» R + 8 → 8 к R (F-024), у остальных 0; aggression — «агрессия»; huntRadius — «радиус поиска жертвы»; pushWindow — «окно толчка до препятствия»; dodgeRush — сайдстеп на рывок быка по §2.3 п.1 (трус только спринтует); quests — §3 «квесты» (id квестов — F-005 §4)."
+  "tableNote": "Строки temperaments — таблица §3: band — «коридор d» (трус ≥ 15, цель ≥ 30; адреналинщик 4–8; тролль 12–18); sprintBelow — «порог спринта по d»; hysteresis — «гистерезис порогов d»; sprintUntilStamina — «спринт до выносливости»; reserveStamina — «запас без угрозы» (тролль: 50 на охоте); tempoPeriod/actionPeriod — «период темпа/действия» (0 = «—»); reaction — «задержка реакции R»; trustHints/trustNeighbors — «верит подсказкам/соседям» (тролль: 1.0 вне охоты, на охоте код ставит 0 — F-024); waitNeighbor — «ждёт уворота жертвы» R + 8 → 8 к R (F-024), у остальных 0; aggression — «агрессия»; huntRadius — «радиус поиска жертвы»; pushWindow — «окно толчка до препятствия»; overtakeSprint — «Обгони X»: спринт при выносливости ≥ 60 (адреналинщик) / ≥ 40 (тролль), §2.4; dodgeRush — сайдстеп на рывок быка по §2.3 п.1 (трус только спринтует); quests — §3 «квесты» (id квестов — F-005 §4)."
 }
