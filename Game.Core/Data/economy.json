@@ -1,0 +1,19 @@
+{
+  "note": "Источник: design/overview.md, «Зрители и донаты». Дистанции в метрах до быка, скорости в зрителях/с.",
+  "hotRange": 8,
+  "warmRange": 20,
+  "coolRange": 40,
+  "hotRate": 15,
+  "warmRate": 5,
+  "coolRate": -4,
+  "coldRate": -10,
+  "zonesSrc": "Зоны 0–8 м +15/с, 8–20 +5/с, 20–40 −4/с, >40 −10/с — F-018 (acceptance), design/overview.md. Множитель персонажа (characters.json viewers) применяется только к приросту.",
+  "start": 100,
+  "cap": 2000,
+  "floor": 0,
+  "limitsSrc": "Старт 100, потолок 2000, пол 0 — F-018, design/overview.md.",
+  "donationDivisor": 100,
+  "donationSrc": "Донаты = зрители/100 в секунду — F-018, design/overview.md.",
+  "noSignalLoss": 0.1,
+  "noSignalSrc": "При «нет сигнала» −10% зрителей/с и без дохода — F-018, design/overview.md."
+}

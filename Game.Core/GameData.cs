@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using Game.Core.Bull;
+using Game.Core.Economy;
 using Game.Core.Runners;
 using Game.Core.Street;
 
@@ -20,8 +21,11 @@ namespace Game.Core
         public CharacterData CharacterData { get; }
         public ActionData ActionData { get; }
 
-        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData? characterData = null, ActionData? actionData = null)
+        public EconomyData EconomyData { get; }
+
+        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData? characterData = null, ActionData? actionData = null, EconomyData? economyData = null)
         {
+            EconomyData = economyData ?? EconomyData.Default();
             ActionData = actionData ?? ActionData.Default();
             CharacterData = characterData ?? CharacterData.Neutral();
             RunnerData = runnerData;
@@ -29,10 +33,11 @@ namespace Game.Core
             StreetData = streetData;
         }
 
-        public static GameData Parse(string runnersJson, string bullJson, string streetJson, string? charactersJson = null, string? actionsJson = null) =>
+        public static GameData Parse(string runnersJson, string bullJson, string streetJson, string? charactersJson = null, string? actionsJson = null, string? economyJson = null) =>
             new GameData(RunnerData.Parse(runnersJson), BullData.Parse(bullJson), StreetData.Parse(streetJson),
                 charactersJson == null ? null : CharacterData.Parse(charactersJson),
-                actionsJson == null ? null : ActionData.Parse(actionsJson));
+                actionsJson == null ? null : ActionData.Parse(actionsJson),
+                economyJson == null ? null : EconomyData.Parse(economyJson));
 
         /// <summary>Читает файлы из dir; null — искать Game.Core/Data вверх от AppContext.BaseDirectory.</summary>
         public static GameData Load(string? dir = null)
@@ -50,7 +55,7 @@ namespace Game.Core
                 }
                 if (dir == null) throw new FileNotFoundException("Game.Core/Data not found");
             }
-            return Parse(Read(dir, "runners.json"), Read(dir, "bull.json"), Read(dir, "street.json"), Read(dir, "characters.json"), Read(dir, "actions.json"));
+            return Parse(Read(dir, "runners.json"), Read(dir, "bull.json"), Read(dir, "street.json"), Read(dir, "characters.json"), Read(dir, "actions.json"), Read(dir, "economy.json"));
         }
 
         private static string Read(string dir, string name) => File.ReadAllText(Path.Combine(dir, name), Encoding.UTF8);

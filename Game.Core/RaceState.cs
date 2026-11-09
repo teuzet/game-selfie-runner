@@ -19,13 +19,15 @@ namespace Game.Core
         public Game.Core.Bull.BullChargeState Charge;
         /// <summary>Подброс по местам (F-017): «нет сигнала», неуязвимость, факты «подброшен»/«встал» для F-019.</summary>
         public readonly Game.Core.Bull.TossState[] Tosses = new Game.Core.Bull.TossState[RaceConfig.SeatCount];
+        /// <summary>Зрители и донаты по местам (F-018); зона дистанции до быка — факт для F-019.</summary>
+        public readonly Game.Core.Economy.ViewerState[] Viewing = new Game.Core.Economy.ViewerState[RaceConfig.SeatCount];
         /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
         public readonly Game.Core.Street.ObstacleDyn[] Dyn;
         /// <summary>«Препятствие уже действовало на бегуна»: seat * stride + индекс (препятствия, затем фонтан/вода по блокам).</summary>
         public readonly byte[] Hit;
 
         public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData, Fixed lineS,
-            Game.Core.Street.Street street, RaceConfig config, Game.Core.Runners.CharacterData characters)
+            Game.Core.Street.Street street, RaceConfig config, Game.Core.Runners.CharacterData characters, Game.Core.Economy.EconomyData economy)
         {
             Dyn = new Game.Core.Street.ObstacleDyn[street.Obstacles.Length];
             Hit = new byte[RaceConfig.SeatCount * Game.Core.Runners.Collisions.HitStride(street)];
@@ -34,6 +36,7 @@ namespace Game.Core
             Rng = new DetRandom(seed);
             Game.Core.Bull.BullCharge.InitState(seed, ref Charge);
             for (int i = 0; i < Tosses.Length; i++) Game.Core.Bull.BullCharge.InitToss(ref Tosses[i]);
+            for (int i = 0; i < Viewing.Length; i++) Game.Core.Economy.Viewers.InitState(economy, ref Viewing[i]);
             Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
             {
@@ -61,6 +64,7 @@ namespace Game.Core
             Rng = o.Rng;
             Bull = o.Bull;
             Charge = o.Charge;
+            System.Array.Copy(o.Viewing, Viewing, Viewing.Length);
             System.Array.Copy(o.Tosses, Tosses, Tosses.Length);
             System.Array.Copy(o.Runners, Runners, Runners.Length);
             System.Array.Copy(o.Collisions, Collisions, Collisions.Length);
@@ -139,6 +143,15 @@ namespace Game.Core
                 h = Mix(h, (ulong)(uint)Tosses[i].LastTossTick);
                 h = Mix(h, (ulong)(uint)Tosses[i].LastRoseTick);
                 h = Mix(h, (ulong)Tosses[i].LastTossFromS);
+            }
+            for (int i = 0; i < Viewing.Length; i++)
+            {
+                h = Mix(h, (ulong)Viewing[i].Viewers);
+                h = Mix(h, (ulong)Viewing[i].Donations);
+                h = Mix(h, (ulong)(uint)Viewing[i].Zone);
+                h = Mix(h, (ulong)(uint)Viewing[i].PrevZone);
+                h = Mix(h, (ulong)(uint)Viewing[i].ZoneChanges);
+                h = Mix(h, (ulong)(uint)Viewing[i].LastZoneTick);
             }
             h = Mix(h, (ulong)Bull.S);
             h = Mix(h, (ulong)Bull.X);
