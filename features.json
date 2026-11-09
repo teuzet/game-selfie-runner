@@ -398,7 +398,7 @@
         "«Влез в кадр»: ≤2 м позади соседа дольше 1 с тянет 6 зрителей/с; у жертвы с перком GlamourLoyalViewers (Simulation.CharacterOf(seat).Perk, F-014) × perkValue 0.5 = 3/с; оба получают событие.",
         "Тесты: каждый факт даёт ровно одно событие и один скачок; влез в кадр переливает зрителей; буфер не аллоцирует; детерминизм."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
