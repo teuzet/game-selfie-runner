@@ -22,7 +22,8 @@
         "Game.Core.Tests/MathTests.cs"
       ],
       "priority": 10,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-002",
@@ -54,7 +55,8 @@
         ".gitignore"
       ],
       "priority": 20,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-003",
@@ -79,7 +81,8 @@
         "design/F-003.md"
       ],
       "priority": 10,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-004",
@@ -104,7 +107,8 @@
         "brainstorm/"
       ],
       "priority": 20,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-005",
@@ -126,7 +130,8 @@
         "design/F-005.md"
       ],
       "priority": 30,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-010",
@@ -156,7 +161,8 @@
         "Game.Core.Tests/StreetDataTests.cs"
       ],
       "priority": 30,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-011",
@@ -188,7 +194,8 @@
         "Game.Core.Tests/StreetGeneratorTests.cs"
       ],
       "priority": 40,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-012",
@@ -216,7 +223,8 @@
         "Game.Core.Tests/RunnerMovementTests.cs"
       ],
       "priority": 50,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-013",
@@ -245,7 +253,8 @@
         "Game.Core.Tests/CollisionTests.cs"
       ],
       "priority": 60,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-014",
@@ -278,7 +287,8 @@
         "Game.Core.Tests/CollisionTests.cs"
       ],
       "priority": 70,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-015",
@@ -309,7 +319,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 80,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-016",
@@ -338,7 +349,8 @@
         "Game.Core.Tests/BullMovementTests.cs"
       ],
       "priority": 55,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-017",
@@ -365,7 +377,8 @@
         "Game.Core.Tests/BullChargeTests.cs"
       ],
       "priority": 90,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-018",
@@ -395,7 +408,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 100,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-019",
@@ -425,7 +439,8 @@
         "Game.Core.Tests/EventsTests.cs"
       ],
       "priority": 110,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-020",
@@ -452,7 +467,8 @@
         "Game.Core.Tests/PhasesTests.cs"
       ],
       "priority": 120,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-021",
@@ -485,7 +501,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 320,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-022",
@@ -515,7 +532,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 430,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-023",
@@ -551,7 +569,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 150,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-024",
@@ -580,7 +599,8 @@
         "Game.Core.Tests/BotCharacterTests.cs"
       ],
       "priority": 160,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-025",
@@ -610,7 +630,8 @@
         "Game.Core.Tests/"
       ],
       "priority": 170,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-026",
@@ -634,7 +655,8 @@
         "Game.Core.Tests/SeatReplacementTests.cs"
       ],
       "priority": 435,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-027",
@@ -659,7 +681,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 62,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-030",
@@ -685,7 +708,8 @@
         "Game.Core.Tests/NetTransportTests.cs"
       ],
       "priority": 900,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-031",
@@ -710,7 +734,8 @@
         "Game.Core.Tests/RollbackTests.cs"
       ],
       "priority": 910,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-032",
@@ -736,7 +761,8 @@
         "Game.Core.Tests/NetResilienceTests.cs"
       ],
       "priority": 920,
-      "iteration": 4
+      "iteration": 4,
+      "modules": []
     },
     {
       "id": "F-006",
@@ -755,7 +781,8 @@
         "ENVIRONMENT.md"
       ],
       "priority": 199,
-      "iteration": null
+      "iteration": null,
+      "modules": []
     },
     {
       "id": "F-040",
@@ -789,7 +816,8 @@
         ".gitignore"
       ],
       "priority": 200,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-049",
@@ -822,7 +850,8 @@
         "Unity/ProjectSettings/EditorBuildSettings.asset"
       ],
       "priority": 330,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-041",
@@ -848,7 +877,8 @@
         "Unity/Assets/Tests/WorldTests.cs"
       ],
       "priority": 410,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-042",
@@ -875,7 +905,8 @@
         "Unity/Assets/Tests/ActorTests.cs"
       ],
       "priority": 420,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-043",
@@ -902,7 +933,8 @@
         "Unity/Assets/Tests/OverlayTests.cs"
       ],
       "priority": 440,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-044",
@@ -930,7 +962,8 @@
         "Unity/Assets/Tests/ChatTests.cs"
       ],
       "priority": 450,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-045",
@@ -955,7 +988,8 @@
         "Unity/Assets/Tests/FaceTests.cs"
       ],
       "priority": 460,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-046",
@@ -985,7 +1019,8 @@
         "Unity/Assets/Tests/FlowTests.cs"
       ],
       "priority": 470,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-047",
@@ -1010,7 +1045,8 @@
         "Unity/Assets/Tests/TweenTests.cs"
       ],
       "priority": 425,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-048",
@@ -1035,7 +1071,8 @@
         "Unity/Assets/Tests/DecorTests.cs"
       ],
       "priority": 480,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-050",
@@ -1062,7 +1099,8 @@
         "Unity/Assets/Tests/NetTests.cs"
       ],
       "priority": 930,
-      "iteration": 4
+      "iteration": 4,
+      "modules": []
     },
     {
       "id": "F-051",
@@ -1088,7 +1126,8 @@
         "Unity/Assets/Tests/LobbyTests.cs"
       ],
       "priority": 940,
-      "iteration": 4
+      "iteration": 4,
+      "modules": []
     },
     {
       "id": "F-060",
@@ -1116,7 +1155,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 105,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-061",
@@ -1143,7 +1183,8 @@
         "Game.Core.Tests/GameDataTests.cs"
       ],
       "priority": 106,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-062",
@@ -1171,7 +1212,8 @@
         "Game.Core.Tests/BullChargeTests.cs"
       ],
       "priority": 107,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-063",
@@ -1201,7 +1243,8 @@
         "Game.Core.Tests/"
       ],
       "priority": 108,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-064",
@@ -1224,7 +1267,8 @@
         "brainstorm/"
       ],
       "priority": 104,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-065",
@@ -1259,7 +1303,8 @@
         "Game.Core.Tests/"
       ],
       "priority": 190,
-      "iteration": 1
+      "iteration": 1,
+      "modules": []
     },
     {
       "id": "F-066",
@@ -1300,7 +1345,8 @@
         "Game.Core.Tests/"
       ],
       "priority": 390,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-070",
@@ -1339,7 +1385,8 @@
         "ARCHITECTURE.md"
       ],
       "priority": 300,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-100",
@@ -1364,7 +1411,8 @@
         "design/F-005.md"
       ],
       "priority": 301,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-101",
@@ -1388,7 +1436,8 @@
         "design/overview.md"
       ],
       "priority": 302,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-071",
@@ -1422,7 +1471,8 @@
         "MODULES.md"
       ],
       "priority": 310,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-072",
@@ -1451,7 +1501,8 @@
         "Game.Core.Tests/EventsTests.cs"
       ],
       "priority": 315,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-073",
@@ -1481,7 +1532,8 @@
         "Game.Core.Tests/StateLayoutTests.cs"
       ],
       "priority": 311,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-074",
@@ -1512,7 +1564,8 @@
         "Game.Core.Tests/EventsTests.cs"
       ],
       "priority": 312,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-075",
@@ -1528,7 +1581,7 @@
         "Скорость персонажей — дословно из design/F-101.md → «Скорость персонажей» и обновлённой таблицы overview «Персонажи M1»: characters.json (speed спортсмена) с источником; тест ссылается на GameData: трусца каждого персонажа (RunnerData темп трусцы × speed) меньше BullData.CruiseSpeed.",
         "Тесты: бегун в 60 м от быка 60 с — зрители и доход по F-101 (не ноль, если документ так решил); CharacterTests про соотношение скоростей гламур/спортсмен переписан на новые числа со ссылкой на F-101; на 40 сидах через RaceRecorder мест с 0 зрителей на финише ≤ 10 из 160 (балансный тест печатает таблицу при падении); детерминизм; эталон StateLayoutTests переснят с пометкой F-075."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -1541,7 +1594,8 @@
         "Game.Core.Tests/StateLayoutTests.cs"
       ],
       "priority": 316,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-079",
@@ -1571,7 +1625,8 @@
         "Game.Core.Tests/StateLayoutTests.cs"
       ],
       "priority": 330,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-077",
@@ -1597,7 +1652,8 @@
         "Game.Core.Tests/SimRunTests.cs"
       ],
       "priority": 340,
-      "iteration": 2
+      "iteration": 2,
+      "modules": []
     },
     {
       "id": "F-078",
@@ -1626,7 +1682,8 @@
         "Game.Core.Tests/ActionTests.cs"
       ],
       "priority": 405,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     },
     {
       "id": "F-067",
@@ -1660,7 +1717,8 @@
         "Game.Core.Tests/"
       ],
       "priority": 490,
-      "iteration": 3
+      "iteration": 3,
+      "modules": []
     }
   ]
 }
