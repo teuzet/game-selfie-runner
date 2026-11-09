@@ -43,12 +43,15 @@ public class ViewersTests
     [Fact]
     public void RunningAwayLosesViewers()
     {
+        // Числа зон — ручки плейтеста (playtest/iter-1.md): «эфир пустой» −6/с, «холодно» 20–50 м −2/с.
         var sim = Make();
-        Run(sim, 50, 300); // −10/с × 10 с = −100 → пол 0
+        Run(sim, 60, 300); // −6/с × 10 с = −60
+        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers), 39.9, 40.01);
+        Run(sim, 60, 300); // ещё 10 с → пол 0
         Assert.Equal(0, Viewers.ViewersOf(sim.State, 3));
         var sim2 = Make();
-        Run(sim2, 30, 150); // −4/с × 5 с = −20
-        Assert.InRange((double)Fixed.FromRaw(sim2.State.Runners[3].Viewing.Viewers), 79.9, 80.01);
+        Run(sim2, 45, 150); // −2/с × 5 с = −10 (45 м — ещё «холодно», не «эфир пустой»)
+        Assert.InRange((double)Fixed.FromRaw(sim2.State.Runners[3].Viewing.Viewers), 89.9, 90.01);
     }
 
     [Fact]
@@ -113,15 +116,19 @@ public class ViewersTests
     }
 
     [Fact]
-    public void ParseMatchesDefault()
+    public void ParseReadsEconomyJson()
     {
         var d = EconomyData.Parse(System.IO.File.ReadAllText(
             System.IO.Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Game.Core", "Data", "economy.json")));
         var def = EconomyData.Default();
+        // Нетронутые плейтестом числа совпадают с Default() ядра.
         Assert.Equal(def.HotRate, d.HotRate);
-        Assert.Equal(def.ColdRate, d.ColdRate);
         Assert.Equal(def.Cap, d.Cap);
         Assert.InRange(d.NoSignalLoss.Raw - def.NoSignalLoss.Raw, -1, 1);
+        // Ручки плейтеста итерации 1 (playtest/iter-1.md): холодно 20–50 м −2/с, эфир пустой −6/с.
+        Assert.Equal(Fixed.FromInt(50), d.CoolRange);
+        Assert.Equal(Fixed.FromInt(-2), d.CoolRate);
+        Assert.Equal(Fixed.FromInt(-6), d.ColdRate);
     }
 
     [Fact]
