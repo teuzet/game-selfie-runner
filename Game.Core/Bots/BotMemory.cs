@@ -10,6 +10,7 @@ namespace Game.Core.Bots
         public long ExpectedS;  // raw: s бота в момент подсказки + скорость × тиков до
         public int Side;        // −1/0/+1
         public int Full;        // на всю ширину
+        public int Stall;       // лоток
     }
 
     /// <summary>Что бот помнит о соседе (§2.1 п.6): последний раз виден и куда смещался.</summary>
@@ -36,6 +37,13 @@ namespace Game.Core.Bots
         public long NbTargetX;
         public int LaneSide;           // сторона, где бот бежит (−1/+1), для «памяти о блоке»
         public BotNeighborMem N0, N1, N2, N3;
+        // охота (F-024): жертва (−1 — нет), конец охоты, следующий поиск, с какого тика решает по геометрии
+        public int HuntVictim, HuntEnd, HuntNext, HuntReady;
+        public int HuntKind;           // что рулит охота в этот тик: 0 — ничего, 1 — позиция для толчка в препятствие, 2 — «идёт за жертвой»
+        public long HuntTx;
+        public int HuntAct, HuntActTick; // действие охоты (1 подножка, 2 толчок), поставлено в тике HuntActTick
+        public int ActionNext;         // тик следующей проверки действия (период характера)
+        public long LastTx;            // цель руля прошлого решения: «жертва на пути уворота»
 
         public static void Init(ref BotMemory m, ulong seed, int seat)
         {
@@ -43,6 +51,7 @@ namespace Game.Core.Bots
             m.Rng = new DetRandom(seed ^ 0xB07B07B07B07B07UL, (ulong)(seat + 1));
             m.NbReactAt = -1;
             m.NbHoldUntil = -1;
+            m.HuntVictim = -1; m.HuntActTick = -1;
             m.LaneSide = (seat & 1) == 0 ? 1 : -1;
             m.N0.LastTick = m.N1.LastTick = m.N2.LastTick = m.N3.LastTick = -1;
             m.N0.PrevTick = m.N1.PrevTick = m.N2.PrevTick = m.N3.PrevTick = -1;
@@ -71,6 +80,11 @@ namespace Game.Core.Bots
             h = RaceState.Mix(h, (ulong)(uint)NbHoldUntil); h = RaceState.Mix(h, (ulong)NbTargetX);
             h = RaceState.Mix(h, (ulong)(uint)LaneSide);
             h = HashNb(h, N0); h = HashNb(h, N1); h = HashNb(h, N2); h = HashNb(h, N3);
+            h = RaceState.Mix(h, (ulong)(uint)HuntVictim); h = RaceState.Mix(h, (ulong)(uint)HuntEnd);
+            h = RaceState.Mix(h, (ulong)(uint)HuntNext); h = RaceState.Mix(h, (ulong)(uint)HuntReady);
+            h = RaceState.Mix(h, (ulong)(uint)HuntKind); h = RaceState.Mix(h, (ulong)HuntTx);
+            h = RaceState.Mix(h, (ulong)(uint)HuntAct); h = RaceState.Mix(h, (ulong)(uint)HuntActTick);
+            h = RaceState.Mix(h, (ulong)(uint)ActionNext); h = RaceState.Mix(h, (ulong)LastTx);
             return h;
         }
 
@@ -78,7 +92,8 @@ namespace Game.Core.Bots
         {
             h = RaceState.Mix(h, (ulong)(uint)p.Used); h = RaceState.Mix(h, (ulong)(uint)p.ReactAt);
             h = RaceState.Mix(h, (ulong)p.ExpectedS); h = RaceState.Mix(h, (ulong)(uint)p.Side);
-            return RaceState.Mix(h, (ulong)(uint)p.Full);
+            h = RaceState.Mix(h, (ulong)(uint)p.Full);
+            return RaceState.Mix(h, (ulong)(uint)p.Stall);
         }
 
         static ulong HashNb(ulong h, in BotNeighborMem n)
