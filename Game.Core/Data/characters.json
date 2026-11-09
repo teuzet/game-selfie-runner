@@ -5,9 +5,10 @@
   "srcNote": "shoveDistance 2 м и shoveSpeedLoss 25% — толчок, design/overview.md «Бегун (общее)»; делится на устойчивость цели.",
   "characters": [
     { "id": "glamour", "speed": 0.92, "stability": 0.7, "viewers": 1.4, "tastiness": 1.0, "noSignal": 3, "perk": "glamourLoyalViewers", "perkValue": 0.5 },
-    { "id": "athlete", "speed": 1.10, "stability": 1.2, "viewers": 0.9, "tastiness": 1.6, "noSignal": 2.5, "perk": "athleteEndurance", "perkValue": 1.5 },
+    { "id": "athlete", "speed": 1.05, "stability": 1.2, "viewers": 0.9, "tastiness": 1.6, "noSignal": 2.5, "perk": "athleteEndurance", "perkValue": 1.5 },
     { "id": "grandma", "speed": 0.88, "stability": 1.6, "viewers": 1.2, "tastiness": 0.6, "noSignal": 5, "perk": "grandmaBag", "perkValue": 2.5 },
     { "id": "nerd", "speed": 1.00, "stability": 0.9, "viewers": 1.0, "tastiness": 1.0, "noSignal": 3, "perk": "nerdModerator", "perkValue": 0 }
   ],
+  "speedSrc": "Скорость спортсмена 1.10 → 1.05, потолок 1.08 (трусца < крейсера быка) — design/F-101.md §3.2, design/overview.md «Персонажи M1» (F-075).",
   "perkNote": "perkValue: glamourLoyalViewers — доля стоимости «влез в кадр» (0.5 = в 2 раза меньше); athleteEndurance — множитель восстановления выносливости (1.5 = на 50% быстрее); grandmaBag — дальность её толчка, м (читает F-015, сдвиг цели не меняет); nerdModerator — не используется (подсказки без шума)."
 }

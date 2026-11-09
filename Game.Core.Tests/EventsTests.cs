@@ -127,6 +127,8 @@ namespace Game.Core.Tests
             double s = BaseS(sim);
             Place(sim, 0, s, -2.4); Place(sim, 1, s, -1.2);
             Place(sim, 2, s + 300, 0); Place(sim, 3, s + 320, 0);
+            // design/F-101.md §3.1 п.4: «„Тебя толкнули“ на полу — без потери»; над полом −30 как раньше
+            sim.State.Runners[1].Viewing.Viewers += Fixed.FromInt(100).Raw;
             var ctl = sim.Clone();
             sim.Step(Push); ctl.Step(TickInputs.Empty);
             Assert.Equal(2, sim.Events.Count);
