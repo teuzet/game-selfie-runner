@@ -7,3 +7,9 @@ Unity/Library/
 Unity/Temp/
 Unity/Logs/
 Unity/Builds/
+Unity/UserSettings/
+Game.Core/**/*.meta
+Game.Core/*.meta
+Game.Net/**/*.meta
+Game.Net/*.meta
+Unity/Assets/StreamingAssets/GameCoreData/

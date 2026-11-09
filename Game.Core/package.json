@@ -1,0 +1,7 @@
+{
+  "name": "com.selfierunner.game-core",
+  "version": "0.1.0",
+  "displayName": "Game.Core",
+  "description": "Детерминированное игровое ядро SelfieRunner (без Unity API).",
+  "unity": "6000.6"
+}
