@@ -2,3 +2,4 @@
 
 - 2026-11-09 04:39 F-001 Детерминированная математика: Fixed и DetRandom (726b3a588d)
 - 2026-11-09 04:45 F-004 Диздок и база чата: 17 поводов, правила волн, фразы RU/EN через brainstorm (132a67d8a5)
+- 2026-11-09 04:48 F-002 Каркас симуляции: Simulation, RaceState, TickInputs, Clone/StateHash, лог входов (fdaddba0d7)
