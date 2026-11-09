@@ -149,9 +149,9 @@ namespace Game.Sim
             return rec;
         }
 
-        /// <summary>Подсказки чата (их ещё нет в ядре) и смена зоны паузу не прерывают (design/overview.md, «Открытое»).</summary>
+        /// <summary>Подсказки чата и смена зоны паузу не прерывают (design/overview.md, «Открытое»).</summary>
         static bool IsQuietBreaker(RaceEventType t) =>
-            t != RaceEventType.ZoneChanged && t != RaceEventType.RaceStart && t != RaceEventType.None;
+            t != RaceEventType.ZoneChanged && t != RaceEventType.Hint && t != RaceEventType.RaceStart && t != RaceEventType.None;
 
         static void Count(RunRecord rec, RaceEvent ev)
         {

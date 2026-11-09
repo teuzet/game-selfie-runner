@@ -244,7 +244,7 @@ namespace Game.Core.Runners
             c.LastTick = st.Tick;
         }
 
-        static CollisionKind KindOf(string id)
+        public static CollisionKind KindOf(string id)
         {
             switch (id)
             {

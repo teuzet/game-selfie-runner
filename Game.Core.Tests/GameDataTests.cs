@@ -63,7 +63,7 @@ public class GameDataTests
         var files = GameData.ReadFiles();
         foreach (string name in new[] { Game.Core.Runners.RunnerData.FileName, Game.Core.Bull.BullData.FileName,
             Game.Core.Street.StreetData.FileName, Game.Core.Runners.CharacterData.FileName, Game.Core.Runners.ActionData.FileName,
-            Game.Core.Economy.EconomyData.FileName, Game.Core.Bots.BotData.FileName })
+            Game.Core.Economy.EconomyData.FileName, Game.Core.Bots.BotData.FileName, Game.Core.Hints.HintData.FileName })
             Assert.True(files.Has(name), name);
     }
 

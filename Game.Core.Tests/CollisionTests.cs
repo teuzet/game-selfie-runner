@@ -15,7 +15,7 @@ namespace Game.Core.Tests
         static readonly GameData Base = GameData.Load();
         static Simulation Neutral(RaceConfig c, StreetMap? street = null) =>
             new Simulation(c, new GameData(Base.RunnerData, Base.BullData, Base.StreetData, Game.Core.Runners.CharacterData.Neutral(),
-                Base.ActionData, Game.Core.Economy.EconomyData.Default(), Game.Core.Bots.BotData.None()), street).Running();
+                Base.ActionData, Game.Core.Economy.EconomyData.Default(), Game.Core.Bots.BotData.None(), Base.HintData), street).Running();
 
         static RaceConfig Cfg(ulong seed) => new RaceConfig(seed, new[]
         {

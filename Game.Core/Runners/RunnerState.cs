@@ -22,6 +22,8 @@ namespace Game.Core
         public Game.Core.Bull.TossState Toss;
         /// <summary>Зрители и донаты (F-018); зона дистанции до быка — факт для F-019.</summary>
         public Game.Core.Economy.ViewerState Viewing;
+        /// <summary>Подсказки чата (F-021): обработанные препятствия, ГСЧ шума, подсказки тика для бота.</summary>
+        public Game.Core.Hints.HintState Hints;
 
         /// <summary>Начальное состояние места: бегун на линии старта; подструктуры инициализируют их модули-владельцы.</summary>
         public static void Init(ref RunnerState r, Game.Core.Runners.RunnerData rd, Game.Core.Runners.CharacterDef character,
@@ -47,7 +49,8 @@ namespace Game.Core
             h = Collision.Hash(h);
             h = Action.Hash(h);
             h = Toss.Hash(h);
-            return Viewing.Hash(h);
+            h = Viewing.Hash(h);
+            return Hints.Hash(h);
         }
     }
 }

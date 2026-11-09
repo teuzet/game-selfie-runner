@@ -5,6 +5,7 @@ using Game.Core.Bots;
 using Game.Core.Bull;
 using Game.Core.Data;
 using Game.Core.Economy;
+using Game.Core.Hints;
 using Game.Core.Runners;
 using Game.Core.Street;
 
@@ -24,11 +25,13 @@ namespace Game.Core
         public ActionData ActionData { get; }
         public EconomyData EconomyData { get; }
         public BotData BotData { get; }
+        public HintData HintData { get; }
 
         /// <summary>Сборка из готовых данных модулей (Parse и тесты, которым нужен нестандартный набор).</summary>
         public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData characterData,
-            ActionData actionData, EconomyData economyData, BotData botData)
+            ActionData actionData, EconomyData economyData, BotData botData, HintData hintData)
         {
+            HintData = hintData;
             RunnerData = runnerData;
             BullData = bullData;
             StreetData = streetData;
@@ -45,7 +48,8 @@ namespace Game.Core
             CharacterData.Parse(files.Get(CharacterData.FileName)),
             ActionData.Parse(files.Get(ActionData.FileName)),
             EconomyData.Parse(files.Get(EconomyData.FileName)),
-            BotData.Parse(files.Get(BotData.FileName)));
+            BotData.Parse(files.Get(BotData.FileName)),
+            HintData.Parse(files.Get(HintData.FileName)));
 
         /// <summary>Читает все *.json папки в набор файлов (для тестов и Game.Sim).</summary>
         public static DataFiles ReadFiles(string? dir = null)

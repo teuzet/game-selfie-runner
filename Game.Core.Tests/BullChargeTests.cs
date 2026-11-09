@@ -307,7 +307,7 @@ namespace Game.Core.Tests
             string json = System.IO.File.ReadAllText(BullJsonPath(), Encoding.UTF8);
             Assert.Contains("\"chargeSpeed\": 11,", json);
             var slow = new GameData(Data.RunnerData, BullData.Parse(json.Replace("\"chargeSpeed\": 11,", "\"chargeSpeed\": 7,")),
-                Data.StreetData, Data.CharacterData, Data.ActionData, Data.EconomyData, Game.Core.Bots.BotData.None());
+                Data.StreetData, Data.CharacterData, Data.ActionData, Data.EconomyData, Game.Core.Bots.BotData.None(), Data.HintData);
             double normal = MaxChargeSpeed(Data), slowed = MaxChargeSpeed(slow);
             _out.WriteLine($"normal={normal} slowed={slowed}");
             // BullMovement.Step перед рывком подтягивает скорость к разгону 9.5, поэтому разница меньше 4 м/с

@@ -21,6 +21,7 @@ namespace Game.Core.Events
         RaceStart,     // «0» отсчёта: бегуны побежали (Seat = -1)
         FinishSoon,    // первый вбежал на арену, пошли 15 с; Seat — он
         RaceFinish,    // забег закрыт; Seat — победитель (итоги в RaceState)
+        Hint,          // подсказка чата Seat (F-021): Param1 = CollisionKind препятствия | тиков до << 8 (ChatHints.TypeOf/TicksOf), Param2 = сторона −1/0/+1 с учётом шума
     }
 
     public struct RaceEvent

@@ -2,6 +2,7 @@ using Game.Core.Bots;
 using Game.Core.Bull;
 using Game.Core.Economy;
 using Game.Core.Events;
+using Game.Core.Hints;
 using Game.Core.Math;
 using Game.Core.Race;
 using Game.Core.Runners;
@@ -34,8 +35,9 @@ namespace Game.Core
         public ActionData ActionData { get; }
         public EconomyData EconomyData { get; }
         public BotData BotData { get; }
-        /// <summary>Откуда боты берут подсказки чата: заглушка (null — подсказок нет) до F-021.</summary>
-        public IBotHintSource? BotHints { get; set; }
+        public HintData HintData { get; }
+        /// <summary>Откуда боты берут подсказки чата: по умолчанию модуль Hints (F-021); null — боты без подсказок (тесты).</summary>
+        public IBotHintSource? BotHints { get; set; } = new ChatHintSource();
         /// <summary>Мозги по местам (null у людей); неизменяемы, при Clone общие.</summary>
         private readonly IBotBrain?[] _brains;
         /// <summary>RunnerData по местам с применённым персонажем (скорость, перк выносливости).</summary>
@@ -57,6 +59,7 @@ namespace Game.Core
             ActionData = data.ActionData;
             EconomyData = data.EconomyData;
             BotData = data.BotData;
+            HintData = data.HintData;
             _brains = BotBrains.CreateAll(BotData, config);
             _seatData = Characters.ForSeats(RunnerData, CharacterData, config);
             Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
@@ -64,8 +67,8 @@ namespace Game.Core
             State = new RaceState(config, data, Street, BullMovement.StartLine(BullData, Street));
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData, Fixed arenaStart, BotData bots, IBotBrain?[] brains)
-        { BotData = bots; _brains = brains; ArenaStart = arenaStart; EconomyData = ed; Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData, Fixed arenaStart, BotData bots, IBotBrain?[] brains, HintData hints)
+        { HintData = hints; BotData = bots; _brains = brains; ArenaStart = arenaStart; EconomyData = ed; Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
 
         /// <summary>Набор параметров персонажа места (SeatConfig.CharacterId).</summary>
         public CharacterDef CharacterOf(int seat) => CharacterData.Get(Config.GetSeat(seat).CharacterId);
@@ -75,7 +78,7 @@ namespace Game.Core
 
         public Simulation Clone()
         {
-            var c = new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData, ArenaStart, BotData, _brains);
+            var c = new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData, ArenaStart, BotData, _brains, HintData);
             c.BotHints = BotHints;
             c.Events.CopyFrom(Events);
             return c;
@@ -92,6 +95,7 @@ namespace Game.Core
             Events.Clear();
             if (st.Phase == RacePhase.Over) { st.Tick++; return; } // итоги: состояние заморожено
             if (st.Phase == RacePhase.Countdown) { StepCountdown(); return; }
+            ChatHints.Step(this);
             Collisions.BeforeMove(st);
             BotBrains.FillInputs(_brains, st, Street, BotData, Config, BotHints, ref inputs);
             RunnerMovement.MuteNoSignal(ref inputs, st.Runners);
