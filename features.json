@@ -810,7 +810,7 @@
         "Проверка как в F-040: batch-компиляция без ошибок и `-runTests -testPlatform EditMode` зелёный, хвост лога в notes; Play Mode глазами не требуется."
       ],
       "status": "running",
-      "attempts": 0,
+      "attempts": 1,
       "budget_tokens": 500000,
       "owner_role": "developer-unity",
       "touches": [
