@@ -1,0 +1,19 @@
+{
+  "note": "Источник: design/overview.md (бык: крейсер, резинка, старт) и design/F-003.md (лестница, уклон). Метры и секунды. Плоский файл: ключ — число.",
+  "penOffset": 25,
+  "lineS": 30,
+  "countdownSec": 3,
+  "releaseDelaySec": 2,
+  "chargeSpeed": 9.5,
+  "cruiseSpeed": 6.0,
+  "closeSpeed": 5.0,
+  "targetBehind": 12,
+  "lagFar": 25,
+  "lagNear": 6,
+  "stairsMul": 0.8,
+  "slowedMul": 0.7,
+  "capsuleRadius": 1.2,
+  "accel": 8,
+  "steerSpeed": 3,
+  "srcNote": "penOffset 25 м, countdownSec 3, releaseDelaySec 2, chargeSpeed 9.5 — overview (Старт); lineS 30 — F-003 блок start; cruiseSpeed/closeSpeed/targetBehind/lagFar/lagNear — overview (таблица быка); stairsMul 0.8 — F-003 stairs_zone; slowedMul 0.7 (на 30% медленнее) — overview (Нет сигнала); capsuleRadius 1.2 — критерии F-016; accel 8 и steerSpeed 3 — решение исполнителя F-016"
+}

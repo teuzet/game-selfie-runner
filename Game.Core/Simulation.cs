@@ -1,3 +1,4 @@
+using Game.Core.Bull;
 using Game.Core.Math;
 using Game.Core.Runners;
 using Game.Core.Street;
@@ -18,22 +19,25 @@ namespace Game.Core
         public StreetMap Street { get; }
 
         public RunnerData RunnerData { get; }
+        public BullData BullData { get; }
 
         private static StreetData? _defaultData;
         private static RunnerData? _defaultRunnerData;
+        private static BullData? _defaultBullData;
 
         /// <param name="street">Готовая улица; null — собрать из сида по Data/street.json, пул core.</param>
         public Simulation(RaceConfig config, StreetMap? street = null)
         {
             Config = config;
             RunnerData = _defaultRunnerData ??= RunnerData.Load();
-            State = new RaceState(config.Seed, RunnerData);
+            BullData = _defaultBullData ??= BullData.Load();
+            State = new RaceState(config.Seed, RunnerData, BullData);
             Street = street ?? StreetGenerator.Build(config.Seed, _defaultData ??= StreetData.Load(), StreetPool.Core);
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd) { Config = config; State = state; Street = street; RunnerData = rd; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd) { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; }
 
-        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData);
+        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData);
 
         public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
 
@@ -50,6 +54,7 @@ namespace Game.Core
                 RunnerMovement.StepRunner(RunnerData, Street, ref st.Runners[i], inp);
             }
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
+            BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
         }

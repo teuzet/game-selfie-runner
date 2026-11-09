@@ -8,10 +8,12 @@ namespace Game.Core
         public int Tick;
         public DetRandom Rng;
         public readonly RunnerState[] Runners = new RunnerState[RaceConfig.SeatCount];
+        public BullState Bull;
 
-        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData)
+        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData)
         {
             Rng = new DetRandom(seed);
+            Game.Core.Bull.BullMovement.Init(bullData, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
                 Game.Core.Runners.RunnerMovement.InitRunner(runnerData, ref Runners[i]);
         }
@@ -29,6 +31,7 @@ namespace Game.Core
         {
             Tick = o.Tick;
             Rng = o.Rng;
+            Bull = o.Bull;
             System.Array.Copy(o.Runners, Runners, Runners.Length);
         }
 
@@ -48,6 +51,12 @@ namespace Game.Core
                 h = Mix(h, (ulong)Runners[i].Exhausted);
                 h = Mix(h, (ulong)Runners[i].StunTicks);
             }
+            h = Mix(h, (ulong)Bull.S);
+            h = Mix(h, (ulong)Bull.X);
+            h = Mix(h, (ulong)Bull.Speed);
+            h = Mix(h, (ulong)Bull.Phase);
+            h = Mix(h, (ulong)Bull.Timer);
+            h = Mix(h, (ulong)Bull.SlowTicks);
             return h;
         }
 
