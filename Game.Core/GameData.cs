@@ -17,15 +17,19 @@ namespace Game.Core
         public BullData BullData { get; }
         public StreetData StreetData { get; }
 
-        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData)
+        public CharacterData CharacterData { get; }
+
+        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData? characterData = null)
         {
+            CharacterData = characterData ?? CharacterData.Neutral();
             RunnerData = runnerData;
             BullData = bullData;
             StreetData = streetData;
         }
 
-        public static GameData Parse(string runnersJson, string bullJson, string streetJson) =>
-            new GameData(RunnerData.Parse(runnersJson), BullData.Parse(bullJson), StreetData.Parse(streetJson));
+        public static GameData Parse(string runnersJson, string bullJson, string streetJson, string? charactersJson = null) =>
+            new GameData(RunnerData.Parse(runnersJson), BullData.Parse(bullJson), StreetData.Parse(streetJson),
+                charactersJson == null ? null : CharacterData.Parse(charactersJson));
 
         /// <summary>Читает файлы из dir; null — искать Game.Core/Data вверх от AppContext.BaseDirectory.</summary>
         public static GameData Load(string? dir = null)
@@ -43,7 +47,7 @@ namespace Game.Core
                 }
                 if (dir == null) throw new FileNotFoundException("Game.Core/Data not found");
             }
-            return Parse(Read(dir, "runners.json"), Read(dir, "bull.json"), Read(dir, "street.json"));
+            return Parse(Read(dir, "runners.json"), Read(dir, "bull.json"), Read(dir, "street.json"), Read(dir, "characters.json"));
         }
 
         private static string Read(string dir, string name) => File.ReadAllText(Path.Combine(dir, name), Encoding.UTF8);

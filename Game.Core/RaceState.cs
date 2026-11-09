@@ -11,7 +11,7 @@ namespace Game.Core
         public BullState Bull;
         /// <summary>Факты и эффекты столкновений по местам (F-013); события F-019 читают Count/LastKind/LastS/LastX/LastTick.</summary>
         public readonly Game.Core.Runners.CollisionState[] Collisions = new Game.Core.Runners.CollisionState[RaceConfig.SeatCount];
-        /// <summary>Устойчивость по местам (Fixed raw), по умолчанию 1.0; персонажи (позже) задают своё.</summary>
+        /// <summary>Устойчивость по местам (Fixed raw), из персонажа места (CharacterId), F-014.</summary>
         public readonly long[] Stability = new long[RaceConfig.SeatCount];
         /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
         public readonly Game.Core.Street.ObstacleDyn[] Dyn;
@@ -19,12 +19,12 @@ namespace Game.Core
         public readonly byte[] Hit;
 
         public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData, Fixed lineS,
-            Game.Core.Street.Street street)
+            Game.Core.Street.Street street, RaceConfig config, Game.Core.Runners.CharacterData characters)
         {
             Dyn = new Game.Core.Street.ObstacleDyn[street.Obstacles.Length];
             Hit = new byte[RaceConfig.SeatCount * Game.Core.Runners.Collisions.HitStride(street)];
             Game.Core.Street.MovingObstacles.Init(street, Dyn);
-            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Stability[i] = Fixed.One.Raw; }
+            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Stability[i] = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw; }
             Rng = new DetRandom(seed);
             Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
