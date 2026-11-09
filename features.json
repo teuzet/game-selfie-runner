@@ -13,7 +13,7 @@
         "DetRandom (PCG32) от сида: NextUInt(), Range(int min, int maxExclusive), NextFixed01(), Chance(Fixed p); состояние — два ulong, копируется присваиванием.",
         "Тесты: арифметика на границах и переполнении, Sqrt против целых квадратов, одинаковая последовательность DetRandom на двух прогонах, Range равномерен на 100 000 выборках (±2%)."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 2,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -38,7 +38,7 @@
         "InputLog: запись входов по тикам и проигрывание; тест: два прогона одного сида и входов 3000 тиков — равные хэши на каждом тике; клон на 100-м тике, догнанный до 200-го, равен прямому прогону.",
         "Directory.Build.props переносит вывод в bin~/ и obj~/, .gitignore обновлён; dotnet test зелёный."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -91,7 +91,7 @@
         "Подсказки о препятствиях по 8 типам × сторона в обоих языках.",
         "Без мата, оскорблений по признакам и брендов; ирония и троллинг допустимы."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "gamedesigner-feature",
