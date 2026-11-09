@@ -15,5 +15,18 @@
   "donationDivisor": 100,
   "donationSrc": "Донаты = зрители/100 в секунду — F-018, design/overview.md.",
   "noSignalLoss": 0.1,
-  "noSignalSrc": "При «нет сигнала» −10% зрителей/с и без дохода — F-018, design/overview.md."
+  "noSignalSrc": "При «нет сигнала» −10% зрителей/с и без дохода — F-018, design/overview.md.",
+  "collisionViewers": 40,
+  "tossViewers": 120,
+  "tossDonations": 50,
+  "shoveViewers": 50,
+  "tripViewers": 80,
+  "gotShovedViewers": -30,
+  "waterDonations": 80,
+  "recordStep": 250,
+  "eventBonusesSrc": "Столкновение +40, подброс +120 зрителей и +50 донатов, толкнул +50, подножка +80, тебя толкнули −30, пруд +80 донатов (плюс +40 как столкновение), порог рекорда каждые 250 — design/overview.md → «Зрители и донаты»; ключи и пределы тюнинга — design/F-101.md §3.3 (F-074, числа прежние).",
+  "frameStealRate": 6,
+  "frameRange": 2,
+  "frameHoldSec": 1,
+  "frameStealSrc": "«Влез в кадр»: ≤2 м позади соседа дольше 1 с тянет 6 зрителей/с — design/overview.md → «Зрители и донаты»; ключи — design/F-101.md §3.3 (тюнить rate 3–10)."
 }

@@ -210,22 +210,22 @@ namespace Game.Sim
                     sb.Append(Clock(0)).Append(" Старт: бегуны побежали\n");
                     return;
                 case RaceEventType.Collision:
-                    bonus = ev.Param1 == (int)Game.Core.Runners.CollisionKind.Water ? "+40 зрителей, +80 донатов" : "+" + EventBonuses.CollisionViewers + " зрителей";
+                    bonus = ev.Param1 == (int)Game.Core.Runners.CollisionKind.Water ? "+" + sim.EconomyData.CollisionViewers + " зрителей, +" + sim.EconomyData.WaterDonations + " донатов" : "+" + sim.EconomyData.CollisionViewers + " зрителей";
                     text = Label(rec, seat) + " " + Verb(rec, seat, "врезался", "врезалась") + " в " + Names.Obstacle(ev.Param1);
                     break;
                 case RaceEventType.Tossed:
-                    bonus = "+" + EventBonuses.TossViewers + " зрителей, +" + EventBonuses.TossDonations + " донатов";
+                    bonus = "+" + sim.EconomyData.TossViewers + " зрителей, +" + sim.EconomyData.TossDonations + " донатов";
                     text = "Бык подбросил: " + Label(rec, seat);
                     break;
                 case RaceEventType.Rose:
                     text = Label(rec, seat) + " " + Verb(rec, seat, "встал", "встала") + ": сигнал вернулся";
                     break;
                 case RaceEventType.Shoved:
-                    bonus = "+" + EventBonuses.ShoveViewers + " зрителей, цель " + EventBonuses.GotShovedViewers + " зрителей";
+                    bonus = "+" + sim.EconomyData.ShoveViewers + " зрителей, цель " + sim.EconomyData.GotShovedViewers + " зрителей";
                     text = Label(rec, seat) + " " + Verb(rec, seat, "толкнул", "толкнула") + " " + Names.CharacterAcc(rec.Seats[ev.Target].Character);
                     break;
                 case RaceEventType.Tripped:
-                    bonus = "+" + EventBonuses.TripViewers + " зрителей";
+                    bonus = "+" + sim.EconomyData.TripViewers + " зрителей";
                     text = Label(rec, seat) + " " + Verb(rec, seat, "поставил", "поставила") + " подножку " + Dative(rec.Seats[ev.Target].Character);
                     break;
                 case RaceEventType.LaidOut:
