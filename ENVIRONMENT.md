@@ -7,10 +7,9 @@
 - Вывод сборки — `bin~/` и `obj~/` в корне репозитория (`Directory.Build.props`), чтобы Unity не импортировал DLL и сгенерированные `.cs`.
 
 ## Unity
-- Требуется: **6000.3 LTS** (решение Nick, 2026-11-09, ответ на вопрос F-040). Проект открывается только этой версией; другие 6000.x не используем, чтобы `ProjectSettings` и `packages-lock.json` не прыгали между версиями.
-- Поиск редактора исполнителем: переменная `UNITY_PATH` (полный путь к `Unity.exe`), иначе `C:/Program Files/Unity/Hub/Editor/6000.3*/Editor/Unity.exe`. Смотреть `C:/Program Files` из песочницы можно тулом Glob; команды оболочки туда не пускает.
-- Состояние на 2026-11-09 10:46: установлен только **6000.6.4f1** (`C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe`), `UNITY_PATH` не задана, загрузок в Unity Hub нет. 6000.3 **не установлен** — F-006 в статусе `blocked`, Unity-фичи ждут.
-- Когда 6000.3 появится: F-006 переводится в `todo`, исполнитель записывает сюда точную версию, путь и дату.
+- Версия проекта: **6000.6.4f1** — установленная на машине (решение Nick, 2026-11-09, вместо 6000.3 LTS). Проект не открывают другими версиями, чтобы `ProjectSettings` и `packages-lock.json` не прыгали.
+- Путь: `C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe`, задан в `factory.yaml` фабрики (`unity.exe`). Его же гоняет гейт диспетчера; воркерам путь приходит в `UNITY_PATH`.
+- Исполнитель запускает редактор только тулом `unity` (`factory tool run unity --set mode=... --out .factory/unity`). Сменить версию — одна строка в `factory.yaml` и решение Nick.
 
 ## Песочница агентов
 - Файлы читаются и ищутся только внутри `C:/factory/home/game-selfie-runner` (плюс Read/Glob по абсолютному пути); `factory` CLI недоступен, `features.json` проверяется `dotnet run .factory/validate.cs -- features.json`.
