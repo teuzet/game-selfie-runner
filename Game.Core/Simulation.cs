@@ -1,4 +1,6 @@
 using Game.Core.Math;
+using Game.Core.Street;
+using StreetMap = Game.Core.Street.Street;
 
 namespace Game.Core
 {
@@ -11,15 +13,22 @@ namespace Game.Core
         public RaceState State { get; }
         public int Tick => State.Tick;
 
-        public Simulation(RaceConfig config)
+        /// <summary>Улица забега: строится из сида при создании, не входит в RaceState (неизменяема, при Clone общая).</summary>
+        public StreetMap Street { get; }
+
+        private static StreetData? _defaultData;
+
+        /// <param name="street">Готовая улица; null — собрать из сида по Data/street.json, пул core.</param>
+        public Simulation(RaceConfig config, StreetMap? street = null)
         {
             Config = config;
             State = new RaceState(config.Seed);
+            Street = street ?? StreetGenerator.Build(config.Seed, _defaultData ??= StreetData.Load(), StreetPool.Core);
         }
 
-        private Simulation(RaceConfig config, RaceState state) { Config = config; State = state; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street) { Config = config; State = state; Street = street; }
 
-        public Simulation Clone() => new Simulation(Config, State.Clone());
+        public Simulation Clone() => new Simulation(Config, State.Clone(), Street);
 
         public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
 
