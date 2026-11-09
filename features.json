@@ -1490,7 +1490,7 @@
         "Game.Sim/RaceRecorder.cs печатает бонусы в хронике из EconomyData, а не из констант (включая строку пруда «+40 зрителей, +80 донатов»).",
         "Тесты: GameDataTests читает ключи из JSON и падает на отсутствующем ключе; EventsTests — смена числа в JSON меняет скачок; на текущих числах хэши забега не меняются (эталон StateLayoutTests тот же); Game.Sim на сидах 1–3 даёт хроники, совпадающие с playtest/iter-1/run-2 с точностью до CRLF (если F-071–F-073 ещё не влиты) или с текущим main; детерминизм."
       ],
-      "status": "running",
+      "status": "testing",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
