@@ -1,0 +1,159 @@
+using System;
+using System.Globalization;
+using Game.Core.Math;
+using StreetMap = Game.Core.Street.Street;
+
+namespace Game.Core.Runners
+{
+    /// <summary>Data/actions.json: дальности, перезарядки и стан действия «Мешает соседу».</summary>
+    public sealed class ActionData
+    {
+        public Fixed ShoveRange, ShoveCooldown, TripRange, TripCooldown, TripStun, StairsPushBack;
+
+        public static ActionData Default() => new ActionData
+        {
+            ShoveRange = Fixed.FromFraction(3, 2), ShoveCooldown = Fixed.FromInt(2),
+            TripRange = Fixed.FromFraction(6, 5), TripCooldown = Fixed.FromInt(4),
+            TripStun = Fixed.FromFraction(3, 5), StairsPushBack = Fixed.FromFraction(3, 5),
+        };
+
+        public static ActionData Parse(string json) => new ActionData
+        {
+            ShoveRange = Num(json, "shoveRange"), ShoveCooldown = Num(json, "shoveCooldown"),
+            TripRange = Num(json, "tripRange"), TripCooldown = Num(json, "tripCooldown"),
+            TripStun = Num(json, "tripStun"), StairsPushBack = Num(json, "stairsPushBack"),
+        };
+
+        static Fixed Num(string json, string key)
+        {
+            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
+            if (k < 0) throw new FormatException("actions.json: нет ключа " + key);
+            int p = json.IndexOf(':', k) + 1;
+            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
+            int e = p;
+            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
+            string t = json.Substring(p, e - p);
+            if (t.Length == 0) throw new FormatException("actions.json: ключ " + key + " не число");
+            bool neg = t[0] == '-';
+            if (neg) t = t.Substring(1);
+            int dot = t.IndexOf('.');
+            string ip = dot < 0 ? t : t.Substring(0, dot);
+            string fp = dot < 0 ? "" : t.Substring(dot + 1);
+            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
+            if (fp.Length > 0)
+            {
+                long den = 1;
+                for (int i = 0; i < fp.Length; i++) den *= 10;
+                v = v + Fixed.FromRaw((long.Parse(fp, CultureInfo.InvariantCulture) * Fixed.OneRaw) / den);
+            }
+            return neg ? -v : v;
+        }
+    }
+
+    /// <summary>Перезарядки и факты действий места (для событий F-019). Входит в RaceState и хэш.</summary>
+    public struct ActionState
+    {
+        public int ShoveCd, TripCd;           // тиков до следующего толчка / подножки
+        public int Shoved, Tripped;           // «толкнул», «сбил подножкой» (я — действующий)
+        public int GotShoved, GotTripped;     // «тебя толкнули», «упал от подножки» (я — цель)
+        public int LastShoveTick, LastTripTick, LastGotShovedTick, LastGotTrippedTick; // -1 — не было
+        public int LastShoveTarget, LastTripTarget, LastShovedBy, LastTrippedBy;       // место, -1 — нет
+    }
+
+    /// <summary>Контекстное действие (PlayerInput.action): подножка впереди приоритетнее толчка сбоку. Без аллокаций.</summary>
+    public static class Actions
+    {
+        static readonly Fixed TicksFx = Fixed.FromInt(Simulation.TicksPerSecond);
+
+        public static void InitState(ref ActionState a)
+        {
+            a = default;
+            a.LastShoveTick = a.LastTripTick = a.LastGotShovedTick = a.LastGotTrippedTick = -1;
+            a.LastShoveTarget = a.LastTripTarget = a.LastShovedBy = a.LastTrippedBy = -1;
+        }
+
+        /// <summary>Дальность толчка места: shoveRange, у бабули — её perkValue.</summary>
+        public static Fixed ShoveRangeOf(ActionData ad, CharacterDef c) =>
+            c.Perk == Perk.GrandmaBag && c.PerkValue > ad.ShoveRange ? c.PerkValue : ad.ShoveRange;
+
+        public static void Step(ActionData ad, CharacterData cd, RunnerData[] seatData, StreetMap street, RaceState st,
+            RaceConfig config, TickInputs inputs)
+        {
+            int n = st.Runners.Length;
+            for (int i = 0; i < n; i++)
+            {
+                if (st.Actions[i].ShoveCd > 0) st.Actions[i].ShoveCd--;
+                if (st.Actions[i].TripCd > 0) st.Actions[i].TripCd--;
+            }
+            for (int me = 0; me < n; me++)
+            {
+                var seat = config.GetSeat(me);
+                if (seat.Kind == SeatKind.Bot || !inputs.Get(me).Action) continue;
+                if (st.Runners[me].StunTicks > 0) continue;
+                TryAct(ad, cd, seatData, street, st, me, cd.Get(seat.CharacterId));
+            }
+        }
+
+        static void TryAct(ActionData ad, CharacterData cd, RunnerData[] seatData, StreetMap street, RaceState st, int me, CharacterDef pusher)
+        {
+            ref RunnerState mr = ref st.Runners[me];
+            Fixed ms = Fixed.FromRaw(mr.S), mx = Fixed.FromRaw(mr.X);
+            Fixed shoveRange = ShoveRangeOf(ad, pusher);
+            Fixed tripSq = ad.TripRange * ad.TripRange, shoveSq = shoveRange * shoveRange;
+            int trip = -1, shove = -1;
+            Fixed tripBest = Fixed.Zero, shoveBest = Fixed.Zero;
+            for (int t = 0; t < st.Runners.Length; t++)
+            {
+                if (t == me) continue;
+                Fixed ds = Fixed.FromRaw(st.Runners[t].S) - ms, dx = Fixed.FromRaw(st.Runners[t].X) - mx;
+                Fixed d2 = ds * ds + dx * dx;
+                // Впереди: сосед дальше по s и «больше впереди, чем сбоку»; иначе — сбоку.
+                if (ds > Fixed.Zero && ds >= Fixed.Abs(dx))
+                {
+                    if (d2 <= tripSq && (trip < 0 || d2 < tripBest)) { trip = t; tripBest = d2; }
+                }
+                else if (d2 <= shoveSq && (shove < 0 || d2 < shoveBest)) { shove = t; shoveBest = d2; }
+            }
+            if (trip >= 0 && st.Actions[me].TripCd == 0) { Trip(ad, street, st, me, trip); return; }
+            if (shove >= 0 && st.Actions[me].ShoveCd == 0) Shove(ad, cd, seatData, street, st, me, shove, pusher);
+        }
+
+        static void Shove(ActionData ad, CharacterData cd, RunnerData[] seatData, StreetMap street, RaceState st, int me, int target, CharacterDef pusher)
+        {
+            ref RunnerState tr = ref st.Runners[target];
+            int dir = tr.X >= st.Runners[me].X ? 1 : -1;
+            Characters.ApplyShove(cd, seatData[target], street, st, pusher, target, dir);
+            ref CollisionState c = ref st.Collisions[target];
+            if (c.ZoneActive != 0) c.ZoneRaw = (Fixed.FromRaw(c.ZoneRaw) * (Fixed.One - cd.ShoveSpeedLoss)).Raw;
+            PushBackOnStairs(ad, street, ref tr);
+            st.Actions[me].ShoveCd = (ad.ShoveCooldown * TicksFx).ToInt();
+            st.Actions[me].Shoved++;
+            st.Actions[me].LastShoveTick = st.Tick; st.Actions[me].LastShoveTarget = target;
+            st.Actions[target].GotShoved++;
+            st.Actions[target].LastGotShovedTick = st.Tick; st.Actions[target].LastShovedBy = me;
+        }
+
+        static void Trip(ActionData ad, StreetMap street, RaceState st, int me, int target)
+        {
+            ref RunnerState tr = ref st.Runners[target];
+            tr.Speed = 0;
+            st.Collisions[target].ZoneRaw = 0;
+            tr.StunTicks = Collisions.StunTicks(ad.TripStun, Fixed.FromRaw(st.Stability[target]));
+            PushBackOnStairs(ad, street, ref tr);
+            st.Actions[me].TripCd = (ad.TripCooldown * TicksFx).ToInt();
+            st.Actions[me].Tripped++;
+            st.Actions[me].LastTripTick = st.Tick; st.Actions[me].LastTripTarget = target;
+            st.Actions[target].GotTripped++;
+            st.Actions[target].LastGotTrippedTick = st.Tick; st.Actions[target].LastTrippedBy = me;
+        }
+
+        static void PushBackOnStairs(ActionData ad, StreetMap street, ref RunnerState r)
+        {
+            Fixed s = Fixed.FromRaw(r.S);
+            if (street.Blocks[street.BlockIndexAt(s)].Def.Id != "stairs") return;
+            s = s - ad.StairsPushBack;
+            if (s < Fixed.Zero) s = Fixed.Zero;
+            r.S = s.Raw;
+        }
+    }
+}

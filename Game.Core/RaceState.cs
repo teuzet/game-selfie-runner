@@ -13,6 +13,8 @@ namespace Game.Core
         public readonly Game.Core.Runners.CollisionState[] Collisions = new Game.Core.Runners.CollisionState[RaceConfig.SeatCount];
         /// <summary>Устойчивость по местам (Fixed raw), из персонажа места (CharacterId), F-014.</summary>
         public readonly long[] Stability = new long[RaceConfig.SeatCount];
+        /// <summary>Перезарядки и факты толчка/подножки по местам (F-015); события F-019 читают Shoved/Tripped/GotShoved/GotTripped и Last*.</summary>
+        public readonly Game.Core.Runners.ActionState[] Actions = new Game.Core.Runners.ActionState[RaceConfig.SeatCount];
         /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
         public readonly Game.Core.Street.ObstacleDyn[] Dyn;
         /// <summary>«Препятствие уже действовало на бегуна»: seat * stride + индекс (препятствия, затем фонтан/вода по блокам).</summary>
@@ -24,7 +26,7 @@ namespace Game.Core
             Dyn = new Game.Core.Street.ObstacleDyn[street.Obstacles.Length];
             Hit = new byte[RaceConfig.SeatCount * Game.Core.Runners.Collisions.HitStride(street)];
             Game.Core.Street.MovingObstacles.Init(street, Dyn);
-            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Stability[i] = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw; }
+            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Game.Core.Runners.Actions.InitState(ref Actions[i]); Stability[i] = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw; }
             Rng = new DetRandom(seed);
             Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
@@ -55,6 +57,7 @@ namespace Game.Core
             System.Array.Copy(o.Runners, Runners, Runners.Length);
             System.Array.Copy(o.Collisions, Collisions, Collisions.Length);
             System.Array.Copy(o.Stability, Stability, Stability.Length);
+            System.Array.Copy(o.Actions, Actions, Actions.Length);
             System.Array.Copy(o.Dyn, Dyn, Dyn.Length);
             System.Array.Copy(o.Hit, Hit, Hit.Length);
         }
@@ -89,6 +92,19 @@ namespace Game.Core
                 h = Mix(h, (ulong)Collisions[i].ZoneActive);
                 h = Mix(h, (ulong)Collisions[i].ZoneRaw);
                 h = Mix(h, (ulong)Stability[i]);
+            }
+            for (int i = 0; i < Actions.Length; i++)
+            {
+                h = Mix(h, (ulong)(uint)Actions[i].ShoveCd);
+                h = Mix(h, (ulong)(uint)Actions[i].TripCd);
+                h = Mix(h, (ulong)(uint)Actions[i].Shoved);
+                h = Mix(h, (ulong)(uint)Actions[i].Tripped);
+                h = Mix(h, (ulong)(uint)Actions[i].GotShoved);
+                h = Mix(h, (ulong)(uint)Actions[i].GotTripped);
+                h = Mix(h, (ulong)(uint)Actions[i].LastShoveTick);
+                h = Mix(h, (ulong)(uint)Actions[i].LastTripTick);
+                h = Mix(h, (ulong)(uint)Actions[i].LastGotShovedTick);
+                h = Mix(h, (ulong)(uint)Actions[i].LastGotTrippedTick);
             }
             for (int i = 0; i < Dyn.Length; i++)
             {

@@ -45,7 +45,8 @@ public class GameDataTests
         string dir = DataDir();
         return GameData.Parse(File.ReadAllText(Path.Combine(dir, "runners.json")),
             File.ReadAllText(Path.Combine(dir, "bull.json")), File.ReadAllText(Path.Combine(dir, "street.json")),
-            File.ReadAllText(Path.Combine(dir, "characters.json")));
+            File.ReadAllText(Path.Combine(dir, "characters.json")),
+            File.ReadAllText(Path.Combine(dir, "actions.json")));
     }
 
     [Fact]
