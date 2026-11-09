@@ -13,7 +13,9 @@ namespace Game.Core.Tests
     /// <summary>
     /// F-071, design/F-100.md → «Подброс закрывает эпизод» (3.1): «Бык держит дистанцию позади защищённого, а не паркуется на его `s` и не обходит:
     /// ближе 4 м к защищённому впереди бык не подходит»; «Охлаждение цели: 30 с от подброса бык не выбирает этого бегуна целью рывка»;
-    /// «Финишировавшего и бегуна на пороге арены бык не подбрасывает». Гипотеза H6: подбросы на место за забег — медиана у каждого места 1–4, ни у кого > 5.
+    /// «Финишировавшего и бегуна на пороге арены бык не подбрасывает».
+    /// Гипотезы F-100 → «Гипотезы» (дословно; гейт F-079): «подброс — эпизод | подбросы на место за забег | медиана у каждого места 1–4, ни у кого > 5» и
+    /// «бык при толпе | дистанция быка до медианы толпы; средняя скорость быка | ≤ 25 м ≥ 90% времени; 5.5–6.5 м/с».
     /// Прогон 40 сидов ботов (RaceRecorder.MakeConfig); при падении печатается таблица.
     /// </summary>
     public class TossEpisodeBalanceTests
@@ -37,8 +39,11 @@ namespace Game.Core.Tests
 
         /// <summary>
         /// Пороги гипотезы H6 (F-100 §2): ≤ 5 подбросов у места, медиана по местам 1–4, бык ≤ 25 м от медианы толпы ≥ 90% тиков.
-        /// Пропущен: пороги достижимы только вместе с F-072 (рывок 2 с, доворот 1 м/с), F-073 (бот спринтует после подъёма — без этого
-        /// подброшенный остаётся в 4–8 м впереди быка и держит его на крейсере) и F-075 (скорости персонажей по F-101). Таблица — в выводе теста.
+        /// Пропущен: «H6 — вход плейтеста F-066». Гейт F-079 прогнал §4 F-100 поверх влитых F-071/F-072/F-073/F-075: пороги недостижимы ручками bull.json.
+        /// Числа bull.json как были: медианы мест 2–4 = 0 (нужно 1–4; место 1 — 2.5), максимум 8 подбросов (нужно ≤ 5),
+        /// бык дальше 25 м от медианы толпы 20.7% тиков (нужно ≤ 10%), средняя скорость быка 6.01 м/с (в норме 5.5–6.5), подбросов «рывок» 38/170.
+        /// Причина: все подбросы достаются лидеру, места 2–4 бык не достаёт — это правило (направление подброса, выбор цели) или числа ботов/экономики.
+        /// При снятии Skip тест печатает таблицу.
         /// </summary>
         [Fact(Skip = "H6 — вход плейтеста F-066: гейт F-079 прогнал §4 F-100 (подбросы по местам, бык у толпы), пороги недостижимы ручками bull.json; при снятии Skip тест печатает таблицу")]
         public void H6Thresholds_40Seeds()
@@ -55,7 +60,7 @@ namespace Game.Core.Tests
             var perPlace = new int[4][];
             for (int p = 0; p < 4; p++) perPlace[p] = new int[Seeds];
             int maxTosses = 0;
-            long farTicks = 0, totalTicks = 0, rushTosses = 0, allTosses = 0;
+            long farTicks = 0, totalTicks = 0, rushTosses = 0, allTosses = 0, bullPathRaw = 0;
             long gapEps = Fixed.FromFraction(1, 4).Raw; // расталкивание соседей может сдвинуть бегуна на доли метра
             long tossGap = Data.BullData.TossWaitGap.Raw;
             int cooldownTicks = Data.BullData.TossCooldownSec * Simulation.TicksPerSecond;
@@ -74,6 +79,7 @@ namespace Game.Core.Tests
                 {
                     var finishedBefore = new bool[4];
                     for (int i = 0; i < 4; i++) finishedBefore[i] = st.Runners[i].Viewing.FinishTick >= 0;
+                    long bullSBefore = st.Bull.S;
                     sim.Step(TickInputs.Empty);
                     ticks++;
                     st = sim.State;
@@ -116,7 +122,7 @@ namespace Game.Core.Tests
                     }
                     if (active)
                     {
-                        totalTicks++;
+                        totalTicks++; bullPathRaw += b.S - bullSBefore;
                         if (BullMovement.MedianS(st.Runners).Raw - b.S > Fixed.FromInt(25).Raw || b.S - BullMovement.MedianS(st.Runners).Raw > Fixed.FromInt(25).Raw) farTicks++;
                     }
                 }
@@ -135,7 +141,8 @@ namespace Game.Core.Tests
             }
 
             double farShare = totalTicks == 0 ? 1 : farTicks / (double)totalTicks;
-            table.AppendLine($"max tosses/seat={maxTosses}; bull>25m from median share={farShare:P1}; rush tosses={rushTosses}/{allTosses}");
+            double bullSpeed = totalTicks == 0 ? 0 : bullPathRaw / (double)Fixed.OneRaw / (totalTicks / (double)Simulation.TicksPerSecond);
+            table.AppendLine($"max tosses/seat={maxTosses}; bull>25m from median share={farShare:P1}; bull avg speed={bullSpeed:F2} m/s; rush tosses={rushTosses}/{allTosses}");
             for (int p = 0; p < 4; p++)
             {
                 var a = (int[])perPlace[p].Clone(); Array.Sort(a);
@@ -145,6 +152,7 @@ namespace Game.Core.Tests
             }
             if (maxTosses > 5) h6.AppendLine($"у кого-то {maxTosses} подбросов, нужно ≤ 5");
             if (farShare > 0.10) h6.AppendLine($"бык дальше 25 м от медианы толпы {farShare:P1} времени, нужно ≤ 10%");
+            if (bullSpeed < 5.5 || bullSpeed > 6.5) h6.AppendLine($"средняя скорость быка {bullSpeed:F2} м/с, нужно 5.5–6.5");
             return (table.ToString(), failures.ToString(), h6.ToString());
         }
 
