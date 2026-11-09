@@ -13,7 +13,7 @@
         "DetRandom (PCG32) от сида: NextUInt(), Range(int min, int maxExclusive), NextFixed01(), Chance(Fixed p); состояние — два ulong, копируется присваиванием.",
         "Тесты: арифметика на границах и переполнении, Sqrt против целых квадратов, одинаковая последовательность DetRandom на двух прогонах, Range равномерен на 100 000 выборках (±2%)."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -67,8 +67,8 @@
         "Образец JSON одного блока и одного препятствия для Game.Core/Data/street.json.",
         "Раздел «Что считать готовым» переносится в acceptance F-010 и F-011 без правок."
       ],
-      "status": "review",
-      "attempts": 1,
+      "status": "running",
+      "attempts": 2,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
       "owned_files": [
