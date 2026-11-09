@@ -69,7 +69,7 @@
         "Раздел 5 «Что считать готовым» техлид уже перенёс без правок в acceptance F-010 (п. 1–3) и F-011 (п. 4–9). В документе заменить раздел 5 одной строкой-ссылкой на acceptance F-010 и F-011, чтобы критерии не жили в двух местах. Это обязательный коммит попытки: без нового коммита в ветке попытка считается проваленной.",
         "Документ не противоречит разделам F-003 в decisions.md; новые решения — только если без них документ неверен, тогда через decisions в result.json."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
@@ -115,7 +115,7 @@
         "Критерии баланса для прогонов: трус выигрывает ≤ 20%, адреналинщик и тролль затоптаны в 1.5–3 раза чаще труса, разброс донатов ≤ ×1.5.",
         "Открытое: нужно ли ботам слышать подсказки точнее игрока."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
@@ -590,7 +590,7 @@
         "ITransport: Send(peer, ReadOnlySpan<byte>), Poll(out peer, buffer) → длина; FakeTransport с задержкой, джиттером, потерями и дублями от DetRandom-сида.",
         "InputPacket: tick, seat, входы за последние 8 тиков; сериализация ≤ 24 байт; HashPacket: tick, hash. Тесты: пакеты проходят FakeTransport с потерями 20% и восстанавливаются из избыточности; round-trip сериализации."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
