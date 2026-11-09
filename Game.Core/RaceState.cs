@@ -57,6 +57,7 @@ namespace Game.Core
             h = Mix(h, (ulong)Bull.Phase);
             h = Mix(h, (ulong)Bull.Timer);
             h = Mix(h, (ulong)Bull.SlowTicks);
+            h = Mix(h, (ulong)Bull.Mode);
             return h;
         }
 

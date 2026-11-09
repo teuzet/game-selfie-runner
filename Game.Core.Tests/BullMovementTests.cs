@@ -41,7 +41,7 @@ namespace Game.Core.Tests
             Assert.Equal(25, (double)D.LagFar);
             Assert.Equal(6, (double)D.LagNear);
             Assert.Equal(0.8, (double)D.StairsMul, 3);
-            Assert.Equal(1.2, (double)D.CapsuleRadius, 3);
+            Assert.Equal(1.2, (double)D.CapsuleWidth, 3);
         }
 
         [Fact]
@@ -89,6 +89,54 @@ namespace Game.Core.Tests
             Assert.True(caught);
             Assert.Equal((int)BullPhase.Arena, b.Phase);
             Assert.True(min >= 6 && max <= 25.0, $"дистанция до медианы {min:F2}..{max:F2}, ожидалось 6..25");
+            Assert.True(min <= 13, $"бык не вернулся к цели 12 м после рывка: минимум {min:F2}");
+        }
+
+        [Fact]
+        public void CatchUpReturnsToTargetBehind()
+        {
+            var b = NewBull();
+            var r = Dummies(60); // толпа далеко: лаг >25 → рывок до 12 м
+            b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(10).Raw; b.Speed = Fixed.FromInt(6).Raw;
+            double min = 1e9;
+            for (int t = 0; t < 300; t++)
+            {
+                MoveDummies(r, Fixed.FromInt(7));
+                BullMovement.Step(D, Street, ref b, r);
+                min = System.Math.Min(min, (double)BullMovement.MedianS(r) - Dbl(b.S));
+                if (min < 20) break;
+            }
+            for (int t = 0; t < 30; t++)
+            {
+                MoveDummies(r, Fixed.FromInt(7));
+                BullMovement.Step(D, Street, ref b, r);
+            }
+            // после рывка бык держится у цели, а не у границы 25
+            double lag = (double)BullMovement.MedianS(r) - Dbl(b.S);
+            Assert.InRange(lag, 6, 20);
+        }
+
+        [Fact]
+        public void SlopeScalesCruise()
+        {
+            foreach (var (id, mul) in new[] { ("descent", 1.1), ("ascent", 0.9) })
+            {
+                StreetMap? st = null; PlacedBlock blk = default;
+                for (ulong seed = 1; seed < 400 && st == null; seed++)
+                {
+                    var c = StreetGenerator.Build(seed, StreetData.Load(), StreetPool.Core);
+                    foreach (var pb in c.Blocks) if (pb.Def.Id == id) { st = c; blk = pb; break; }
+                }
+                Assert.NotNull(st);
+                var b = NewBull();
+                b.Phase = (int)BullPhase.Cruise; b.Timer = 0;
+                double s0 = (double)blk.Start + 5;
+                b.S = Fixed.FromFraction((int)(s0 * 100), 100).Raw;
+                var r = Dummies(s0 + 15); // лаг 15 — крейсер
+                b.Speed = Fixed.FromInt(6).Raw;
+                for (int t = 0; t < 10; t++) BullMovement.Step(D, st!, ref b, r);
+                Assert.Equal(6.0 * mul, Dbl(b.Speed), 2);
+            }
         }
 
         [Fact]
@@ -115,9 +163,7 @@ namespace Game.Core.Tests
             // Замедление ×0.7: цель крейсера 6.0 → 4.2.
             var b = NewBull();
             var r = Dummies(40);
-            b.Phase = (int)BullPhase.Cruise; // толпа в 15 м впереди: крейсер 6.0
-            for (int i = 0; i < 4; i++) r[i].S = Fixed.FromInt(40).Raw;
-            b.Speed = 0;
+            for (int i = 0; i < 4; i++) r[i].S = Fixed.FromInt(40).Raw; // толпа в 15 м впереди: крейсер 6.0
             b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(25).Raw; b.Speed = 0;
             BullMovement.Slow(ref b, 300);
             for (int t = 0; t < 40; t++) BullMovement.Step(D, Street, ref b, r);
@@ -157,13 +203,31 @@ namespace Game.Core.Tests
         [Fact]
         public void IgnoresObstaclesAndSteersTowardNearestRunner()
         {
+            // Ближайший бегун справа (x=+2, впереди), остальные далеко слева (x=-2): бык уходит вправо.
+            var b = NewBull();
+            var r = Dummies(100);
+            r[0].S = Fixed.FromInt(44).Raw; r[0].X = Fixed.FromInt(2).Raw;
+            for (int i = 1; i < 4; i++) r[i].X = Fixed.FromInt(-2).Raw;
+            b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(40).Raw; b.Speed = Fixed.FromInt(6).Raw;
+            for (int t = 0; t < 10; t++) BullMovement.Step(D, Street, ref b, r);
+            Assert.True(Dbl(b.X) > 0.5, $"x={Dbl(b.X):F2}, ожидался сдвиг к ближайшему (+2)");
+            Assert.True(b.Speed > 0);
+        }
+
+        [Fact]
+        public void XIsClampedToStreetEdgesMinusHalfCapsule()
+        {
             var b = NewBull();
             var r = Dummies(60);
-            b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(48).Raw; b.Speed = Fixed.FromInt(6).Raw;
-            for (int t = 0; t < 60; t++) BullMovement.Step(D, Street, ref b, r);
-            // Целится в ближайшего (x = -1.5.. 1.5, все на одном s): x в пределах полосы, скорость держится.
-            Assert.InRange(Dbl(b.X), -1.5, 1.5);
-            Assert.True(b.Speed > 0);
+            b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(40).Raw; b.Speed = Fixed.FromInt(6).Raw;
+            for (int t = 0; t < 120; t++)
+            {
+                for (int i = 0; i < 4; i++) { r[i].S = b.S + Fixed.FromInt(14).Raw; r[i].X = Fixed.FromInt(20).Raw; }
+                BullMovement.Step(D, Street, ref b, r);
+                double lim = (double)Street.WidthAt(Fixed.FromRaw(b.S)) / 2 - 0.6;
+                Assert.True(Dbl(b.X) <= lim + 1e-3, $"x={Dbl(b.X):F2} > {lim:F2}");
+            }
+            Assert.True(Dbl(b.X) > 1.0);
         }
 
         [Fact]

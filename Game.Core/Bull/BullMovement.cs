@@ -11,7 +11,7 @@ namespace Game.Core.Bull
     public sealed class BullData
     {
         public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, ChargeSpeed, CruiseSpeed, CloseSpeed,
-            TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleRadius, Accel, SteerSpeed;
+            TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleWidth, Accel, SteerSpeed;
 
         public static BullData Parse(string json) => new BullData
         {
@@ -20,7 +20,7 @@ namespace Game.Core.Bull
             CruiseSpeed = Num(json, "cruiseSpeed"), CloseSpeed = Num(json, "closeSpeed"),
             TargetBehind = Num(json, "targetBehind"), LagFar = Num(json, "lagFar"), LagNear = Num(json, "lagNear"),
             StairsMul = Num(json, "stairsMul"), SlowedMul = Num(json, "slowedMul"),
-            CapsuleRadius = Num(json, "capsuleRadius"), Accel = Num(json, "accel"), SteerSpeed = Num(json, "steerSpeed"),
+            CapsuleWidth = Num(json, "capsuleWidth"), Accel = Num(json, "accel"), SteerSpeed = Num(json, "steerSpeed"),
         };
 
         public static BullData Load(string? path = null)
@@ -82,6 +82,7 @@ namespace Game.Core.Bull
             b.Phase = (int)BullPhase.Pen;
             b.Timer = ((d.CountdownSec + d.ReleaseDelaySec) * Fixed.FromInt(Simulation.TicksPerSecond)).ToInt();
             b.SlowTicks = 0;
+            b.Mode = BullMode.None;
         }
 
         /// <summary>Внешнее замедление (после подброса бегуна): скорость ×slowedMul на ticks тиков.</summary>
@@ -112,18 +113,24 @@ namespace Game.Core.Bull
                 if (--b.Timer > 0) return;
                 b.Timer = 0;
                 b.Phase = (int)BullPhase.Charge;
+                b.Mode = BullMode.Charge; // срыв: рывок, пока не догонит targetBehind
             }
 
             Fixed s = Fixed.FromRaw(b.S), x = Fixed.FromRaw(b.X), speed = Fixed.FromRaw(b.Speed);
             Fixed lag = MedianS(runners) - s; // отставание от медианы толпы
 
-            // Резинка: пороги отставания 25 / сближения 6 считаются от медианы, цель — 12 м позади неё.
-            Fixed baseSpeed;
-            if (lag > d.LagFar) baseSpeed = d.ChargeSpeed;
-            else if (lag < d.LagNear) baseSpeed = d.CloseSpeed;
-            else baseSpeed = d.CruiseSpeed;
-
-            if (b.Phase == (int)BullPhase.Charge && lag <= d.LagFar) b.Phase = (int)BullPhase.Cruise;
+            // Резинка с гистерезисом к цели targetBehind (решение F-016 в decisions.md):
+            // lag > lagFar → рывок 9.5 до lag <= targetBehind; lag < lagNear → 5.0 до lag >= targetBehind; иначе крейсер.
+            if (b.Mode == BullMode.Charge && lag <= d.TargetBehind) b.Mode = BullMode.None;
+            else if (b.Mode == BullMode.Close && lag >= d.TargetBehind) b.Mode = BullMode.None;
+            if (b.Mode == BullMode.None)
+            {
+                if (lag > d.LagFar) b.Mode = BullMode.Charge;
+                else if (lag < d.LagNear) b.Mode = BullMode.Close;
+            }
+            Fixed baseSpeed = b.Mode == BullMode.Charge ? d.ChargeSpeed
+                : b.Mode == BullMode.Close ? d.CloseSpeed : d.CruiseSpeed;
+            b.Phase = b.Mode == BullMode.Charge ? (int)BullPhase.Charge : (int)BullPhase.Cruise;
 
             // Уклон блока и лестница действуют на все скорости быка.
             Fixed mul = street.SlopeAt(s);
@@ -136,18 +143,17 @@ namespace Game.Core.Bull
                 target = target * d.SlowedMul;
                 b.Phase = (int)BullPhase.Slowed;
             }
-            else if (b.Phase == (int)BullPhase.Slowed) b.Phase = (int)BullPhase.Cruise;
 
             Fixed dv = d.Accel * Dt;
             if (speed < target) speed = Fixed.Min(speed + dv, target);
             else speed = Fixed.Max(speed - dv, target);
             s = s + speed * Dt;
 
-            // x тянется к ближайшему бегуну; те, что позади быка, считаются вдвое дальше.
+            // x тянется к ближайшему бегуну по |ds|+|dx|.
             int best = -1; long bestD = long.MaxValue;
             for (int i = 0; i < runners.Length; i++)
             {
-                long ds = runners[i].S - s.Raw; if (ds < 0) ds = -ds * 2;
+                long ds = runners[i].S - s.Raw; if (ds < 0) ds = -ds;
                 long dx = runners[i].X - x.Raw; if (dx < 0) dx = -dx;
                 long dist = ds + dx;
                 if (dist < bestD) { bestD = dist; best = i; }
@@ -158,7 +164,7 @@ namespace Game.Core.Bull
                 Fixed step = d.SteerSpeed * Dt;
                 x = x + Fixed.Clamp(diff, -step, step);
             }
-            Fixed lim = street.WidthAt(s) / Fixed.FromInt(2) - d.CapsuleRadius;
+            Fixed lim = street.WidthAt(s) / Fixed.FromInt(2) - d.CapsuleWidth / Fixed.FromInt(2); // капсула 1.2 м — ширина (overview): центр не ближе половины ширины к краю
             if (lim < Fixed.Zero) lim = Fixed.Zero;
             x = Fixed.Clamp(x, -lim, lim);
 
