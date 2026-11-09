@@ -205,7 +205,7 @@ public class HintTests
         ulong[] init = new ulong[4];
         for (int s = 0; s < 4; s++) init[s] = nerds.State.Runners[s].Hints.Rng.State;
         int nerdHints = 0, otherHints = 0;
-        for (int t = 0; t < 4000; t++)
+        for (int t = 0; t < 9000; t++) // F-072: рывок 2 с без доворота меняет ход забега — подсказок за первые 4000 тиков у ботаников может не быть
         {
             nerds.Step(TickInputs.Empty); others.Step(TickInputs.Empty);
             nerdHints += nerds.Events.CountOf(RaceEventType.Hint); otherHints += others.Events.CountOf(RaceEventType.Hint);

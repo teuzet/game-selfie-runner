@@ -122,7 +122,11 @@ namespace Game.Core.Bull
                 if (c.Target < 0 || Shielded(sim, c.Target)) { c.ChargeLeft = 0; c.Target = -1; } // рывок на ставшего защищённым прекращается
             }
             bool rushing = c.ChargeLeft > 0; // причина подброса в этом тике — рывок, даже если он кончится в этом же тике
-            if (rushing) MoveCharging(sim, street, ref b, ref c, prevBullS);
+            if (rushing)
+            {
+                MoveCharging(sim, street, ref b, ref c, prevBullS);
+                if (b.Phase == (int)BullPhase.Charge) Miss(sim, ref b, ref c, prevBullS);
+            }
 
             if (b.Phase != (int)BullPhase.Arena) Contacts(sim, street, ref b, ref c, prevBullS, rushing);
         }
@@ -194,6 +198,35 @@ namespace Game.Core.Bull
             }
             else if (--c.ChargeLeft == 0) c.Target = -1;
             b.S = s.Raw; b.X = x.Raw; b.Speed = speed.Raw;
+        }
+
+        /// <summary>
+        /// F-100 §3.2 п.3 «Промах»: бык в рывке поравнялся по s с бегуном, который дальше chargeReach поперёк, — рывок кончается:
+        /// бык встаёт вровень (не обгоняет, идёт не быстрее него), chargeMissSlowSec идёт медленнее и chargeMissNoSteerSec не доворачивает.
+        /// Достанувшего (≤ chargeReach) подбросит Contacts этого же тика.
+        /// </summary>
+        static void Miss(Simulation sim, ref BullState b, ref BullChargeState c, long prevBullS)
+        {
+            var st = sim.State;
+            var bd = sim.BullData;
+            Fixed reach = bd.ChargeReach;
+            // с кем бык поравнялся в этом тике: бегун с минимальным s в [prevBullS, b.S], дальше reach поперёк
+            int hit = -1;
+            for (int i = 0; i < RaceConfig.SeatCount; i++)
+            {
+                ref RunnerState r = ref st.Runners[i];
+                if (Shielded(sim, i) || r.S < prevBullS || r.S > b.S) continue;
+                Fixed dx = Fixed.FromRaw(r.X - b.X);
+                if (dx * dx <= reach * reach) continue;
+                if (hit < 0 || r.S < st.Runners[hit].S) hit = i;
+            }
+            if (hit < 0) return;
+            ref RunnerState m = ref st.Runners[hit];
+            b.S = m.S;
+            if (b.Speed > m.Speed) b.Speed = m.Speed > 0 ? m.Speed : 0;
+            c.ChargeLeft = 0; c.Target = -1;
+            BullMovement.Slow(ref b, (bd.ChargeMissSlowSec * Fixed.FromInt(Tps)).ToInt());
+            b.NoSteerTicks = (bd.ChargeMissNoSteerSec * Fixed.FromInt(Tps)).ToInt();
         }
 
         /// <summary>
