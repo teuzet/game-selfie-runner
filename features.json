@@ -1241,7 +1241,7 @@
         "Тюнинг только чисел «тюнить», не больше 3 раундов, `dotnet test` зелёный",
         "Отчёт `playtest/iter-1.md` со всеми разделами"
       ],
-      "status": "running",
+      "status": "testing",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-playtest",
