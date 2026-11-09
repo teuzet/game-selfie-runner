@@ -1,0 +1,47 @@
+# occasion: finish — бегун финишировал (арена или конец 15 с)
+[ru]
+s3|ФИНИШ!!
+s2|получилось!!
+s|какой забег, какой стрим
+s|спасибо за эфир
+s|лучшие 5 минут моего дня
+s|аплодисменты стоя
+s|завтра снова, да?
+s|бык, улица, ты — идеальный стрим
+s|ставлю лайк, хоть их тут и нет
+s|чат был с тобой до конца
+s|отдыхай, заслужено
+g|кто-то там на улице остался ахах
+g|соседи пусть плачут
+g|бык уходит ни с чем
+g|а помните тот полёт на рогах?
+t|а можно сразу второй забег?
+t|в целом неплохо, на троечку
+t|самое смешное было с рогами
+t|финиш есть, а донатов маловато
+t|стрим кончился, а мы нет
+t|в следующий раз без столбов, ладно?
+t|не забудь нарезку лучших фейлов
+[en]
+s3|FINISH!!
+s2|you did it!
+s|what a run, what a stream
+s|thanks for the stream
+s|best 5 minutes of my day
+s|standing ovation
+s|again tomorrow, right?
+s|bull, street, you: perfect stream
+s|would like this stream twice if i could
+s|chat was with you till the end
+s|rest up, you earned it
+g|someone's still out on the street lol
+g|let the neighbors cry
+g|the bull goes home empty-handed
+g|remember that flight on the horns?
+t|can we do a second run right now?
+t|not bad overall, solid C
+t|the horn part was the best
+t|finished, but donations are kinda thin
+t|stream's over, but we're not
+t|next time fewer poles, ok?
+t|don't forget the fail highlights

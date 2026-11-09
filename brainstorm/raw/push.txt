@@ -1,0 +1,85 @@
+# occasion: push — толчок. actor: бегун толкнул соседа {name}; victim: бегуна толкнул {name}
+[ru role=actor]
+s2|ВОТ ЭТО ПЛЕЧО
+s|так и надо, пусть не лезет
+s|чистая работа
+s|место под солнцем отвоёвано
+s|правильно, это твоя полоса
+g3|прощай, {name}
+g2|{name} улетает в сторону ахах
+g|{name}, как там у стены?
+g|бонжур, {name}
+g|ахахаха вот это толчок
+g|{name} даже не понимает, что случилось
+g|звук «ой» от {name} бесценен
+g|сосед минус, мы плюс
+t|извиняться будем? нет
+t|вежливость уровня «бык»
+t|{name}: «а можно было словами?»
+t|давай ещё раз, для повтора
+t|бабуля бы толкнула сильнее
+t|а теперь прямо в лоток
+t|это не толчок, это дружеский совет
+[ru role=victim]
+s2|эй! так нельзя!
+s|держись на ногах, давай
+s|{name} совсем без совести
+s|ничего, отомстим
+s|держишься, молодец
+s|мы всё видели, {name} нечестно
+s|не отвлекайся, бык рядом
+g2|ахах тебя подвинули
+g|вот это тебя впечатали
+g|{name} сегодня в ударе
+g|красиво отлетаешь
+g|{name} забирает твоих зрителей, лол
+t|ты что, из ваты?
+t|{name}: 1, ты: 0
+t|сдачи дай, чего стоишь
+t|толкай обратно, не стесняйся
+t|это был твой ряд вообще-то
+t|может, сразу в сторонку отойдёшь?
+t|{name} тебе передаёт привет
+t|подписываюсь на {name}, шучу
+[en role=actor]
+s2|WHAT A SHOULDER
+s|serves them right for crowding you
+s|clean work
+s|that's your lane now
+s|space claimed
+g3|bye bye {name}
+g2|{name} going sideways lmao
+g|{name}, how's the wall?
+g|bonjour, {name}
+g|hahaha what a shove
+g|{name} has no idea what happened
+g|the "oof" from {name} was priceless
+g|neighbor minus, us plus
+t|are we apologizing? no
+t|manners: bull level
+t|{name}: "we could've talked about it"
+t|again, for the replay
+t|grandma would shove harder
+t|now into the melon stall with them
+t|that's not a shove, that's friendly advice
+[en role=victim]
+s2|hey! not cool!
+s|stay on your feet, come on
+s|{name} has zero shame
+s|it's fine, we'll get revenge
+s|nice recovery
+s|we all saw it, {name} is cheating
+s|focus, the bull's close
+g2|lmao you got moved
+g|you got SLAMMED
+g|{name} is on fire today
+g|you bounce nicely
+g|{name} is stealing your viewers lol
+t|are you made of cotton?
+t|{name} 1, you 0
+t|push back, what are you waiting for
+t|shove back, coward
+t|that was your lane, by the way
+t|maybe just step aside next time?
+t|{name} says hi
+t|subscribing to {name}, jk

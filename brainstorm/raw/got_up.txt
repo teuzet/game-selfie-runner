@@ -1,0 +1,43 @@
+# occasion: got_up — «нет сигнала» кончилось, бегун снова управляет
+[ru]
+s3|СИГНАЛ ЕСТЬ!!
+s2|ура, ты снова в кадре!
+s|картинка есть, погнали
+s|вот это стойкость
+s|легенды не сдаются
+s|беги, пока бык отдыхает
+s|ура, картинка
+s|давай, ещё не всё потеряно
+s|мы не ушли, мы ждали
+s|разгоняйся, у тебя 3 секунды
+g|а я уже клип сделал
+g|с возвращением из полёта
+g|как там, наверху?
+t|опять ты
+t|так, кто тут снова на рога?
+t|можно было ещё полежать
+t|бык: «мы не закончили»
+t|причешись, ты в эфире
+t|ну что, второй раунд?
+t|у тебя рог в кадре… шучу
+[en]
+s3|WE'RE BACK!!
+s2|yay, you're back in frame!
+s|signal's back, let's go
+s|that's resilience
+s|legends never quit
+s|run while the bull's catching breath
+s|yay, picture's back
+s|come on, it's not over
+s|we didn't leave, we waited
+s|speed up, you got 3 seconds
+g|i already clipped it
+g|welcome back, pilot
+g|how was the view up there?
+t|oh, you again
+t|ok who's up for round two on the horns
+t|could've napped a little longer
+t|bull: "we're not done"
+t|fix your hair, you're live
+t|so, round two?
+t|there's a horn in frame... jk

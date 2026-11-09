@@ -1,0 +1,43 @@
+# occasion: viewer_record — зрители впервые за забег перешли порог (200, 300, 500, 750, 1000, 1500, 2000)
+[ru]
+s3|РЕКОРД ЗРИТЕЛЕЙ!!
+s2|нас всё больше!
+s|всем привет, кто только зашёл
+s|вот это онлайн
+s|стрим в топе улицы
+s|я тут с первой секунды, горжусь
+s|продолжай в том же духе
+s|новенькие, бык вон там
+s|это лучший стрим забега
+s|всем друзьям скинул ссылку
+s|мы растём, чат!
+t|ладно, ты популярный, признаём
+t|сколько из нас боты?
+t|все пришли посмотреть, как тебя подбросят
+t|не зазнавайся, бык рядом
+t|популярность — первый шаг к рогам
+t|новенькие, вы вовремя, сейчас будет фейл
+t|зрителей много, а донатов?
+t|держи их, а то уйдут к соседу
+t|звезда улицы, ага
+[en]
+s3|VIEWER RECORD!!
+s2|there's more of us!
+s|hi everyone who just joined
+s|look at that viewer count
+s|top stream on the street
+s|been here since second one, proud
+s|keep it up
+s|newcomers, the bull is over there
+s|best stream of the race
+s|sent the link to all my friends
+s|we're growing, chat!
+t|fine, you're popular, we admit it
+t|how many of us are bots?
+t|everyone came to see you get launched
+t|don't get cocky, the bull is close
+t|fame is the first step to the horns
+t|newcomers, perfect timing, a fail is coming
+t|lots of viewers, where are the donations?
+t|hold them, or they'll go to the neighbor
+t|street star, sure

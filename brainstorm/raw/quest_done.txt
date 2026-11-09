@@ -1,0 +1,57 @@
+# occasion: quest_done — квест выполнен
+[ru quest=*]
+s3|ЕЕЕЕЕ!!
+s2|ВЫПОЛНЕНО!!
+s|вот это я понимаю стример
+s|красава, держи донат
+s|ты лучший, без шуток
+s|чат доволен
+s|честно заработано
+s|я знал, что получится
+s|легенда
+g|а говорили — не сможет
+g|{name} там плачет, наверное
+g|соседние стримы завидуют
+t|давай ещё одно
+t|теперь сложнее хотим
+t|ладно, ладно, ты не скучный
+t|случайность, не считается
+[ru quest=hold_bull]
+s|5 секунд у быка, ну ты псих
+[ru quest=crash]
+s|{obstacle:acc} снесли эффектно
+t|{obstacle} в шоке
+[ru quest=down_neighbor]
+g|сосед лежит, мы платим, все счастливы
+[ru quest=overtake]
+g|{name} позади, как и положено
+[ru quest=clean_run]
+s|ни одной ошибки, уважение
+[en quest=*]
+s3|LETS GOOOO!!
+s2|DONE!!
+s|now that's a streamer
+s|nice, here's your donation
+s|you're the best, no joke
+s|chat is happy
+s|earned it fair and square
+s|knew you'd do it
+s|legend
+g|and they said it couldn't be done
+g|{name} is crying somewhere probably
+g|the other streams are jealous
+t|do another one
+t|we want something harder now
+t|ok ok, you're not boring
+t|luck, doesn't count
+[en quest=hold_bull]
+s|5 seconds near the bull, you're nuts
+[en quest=crash]
+s|the {obstacle}: wrecked in style
+t|poor {obstacle}
+[en quest=down_neighbor]
+g|neighbor's down, we pay, everyone's happy
+[en quest=overtake]
+g|{name} is behind you, as they should be
+[en quest=clean_run]
+s|not a single mistake, respect

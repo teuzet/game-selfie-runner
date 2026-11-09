@@ -1,0 +1,18 @@
+# формы препятствий и сторон. obstacle: id|иконка|ru им.|ru вин.|en
+# side: id|ru|en
+[obstacles]
+pole|🚏|столб|столб|pole
+stall|🍉|лоток с арбузами|лоток с арбузами|melon stall
+barrels|🛢️|бочки|бочки|barrels
+laundry|👕|бельё|бельё|laundry
+door|🚪|дверь|дверь|door
+pots|🪴|горшки|горшки|flower pots
+gawker|🤳|зевака|зеваку|gawker
+stairs_zone|🪜|лестница|лестницу|stairs
+pond|🦆|пруд|пруд|pond
+[sides]
+left|слева|on the left
+right|справа|on the right
+center|по центру|dead ahead
+full|поперёк улицы|across the street
+zone|впереди|ahead

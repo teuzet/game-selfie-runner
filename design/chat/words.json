@@ -1,0 +1,17 @@
+{"obstacles": {
+  "pole": {"icon": "🚏", "ru": {"nom": "столб", "acc": "столб"}, "en": {"nom": "pole"}},
+  "stall": {"icon": "🍉", "ru": {"nom": "лоток с арбузами", "acc": "лоток с арбузами"}, "en": {"nom": "melon stall"}},
+  "barrels": {"icon": "🛢️", "ru": {"nom": "бочки", "acc": "бочки"}, "en": {"nom": "barrels"}},
+  "laundry": {"icon": "👕", "ru": {"nom": "бельё", "acc": "бельё"}, "en": {"nom": "laundry"}},
+  "door": {"icon": "🚪", "ru": {"nom": "дверь", "acc": "дверь"}, "en": {"nom": "door"}},
+  "pots": {"icon": "🪴", "ru": {"nom": "горшки", "acc": "горшки"}, "en": {"nom": "flower pots"}},
+  "gawker": {"icon": "🤳", "ru": {"nom": "зевака", "acc": "зеваку"}, "en": {"nom": "gawker"}},
+  "stairs_zone": {"icon": "🪜", "ru": {"nom": "лестница", "acc": "лестницу"}, "en": {"nom": "stairs"}},
+  "pond": {"icon": "🦆", "ru": {"nom": "пруд", "acc": "пруд"}, "en": {"nom": "pond"}}
+}, "sides": {
+  "left": {"ru": "слева", "en": "on the left"},
+  "right": {"ru": "справа", "en": "on the right"},
+  "center": {"ru": "по центру", "en": "dead ahead"},
+  "full": {"ru": "поперёк улицы", "en": "across the street"},
+  "zone": {"ru": "впереди", "en": "ahead"}
+}}

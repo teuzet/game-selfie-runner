@@ -1,0 +1,45 @@
+# occasion: tossed — бык подбросил бегуна, начинается «нет сигнала»
+[ru]
+s2|НЕТ НЕТ НЕТ
+s|сигнал!! верните сигнал
+s|ты там как??
+s|держись, мы тут
+s|не уходите, сейчас вернётся картинка
+s|приземление хоть мягкое?
+s|бедняга, прямо на рога
+s|мы с тобой, стример
+g2|ПОЛЁТ НОРМАЛЬНЫЙ
+g|ахах, полёт как в мультике
+g|вот это я понимаю контент
+g|8 метров вперёд бесплатно
+g|бык доволен
+g|какое сальто, 10 из 10
+t|авиакомпания «Рога» приветствует вас
+t|а говорили, бык далеко
+t|зато теперь впереди всех
+t|бык сказал «быстрее» и помог
+t|минус стример
+t|ну что, держимся у быка?
+t|приз за самый близкий контакт
+[en]
+s2|NO NO NO
+s|signal!! bring it back
+s|are you ok in there??
+s|hang in there, we're here
+s|don't leave chat, picture's coming back
+s|hope that landing was soft
+s|poor thing, right on the horns
+s|we're with you streamer
+g2|LIFTOFF!!
+g|lmao launched like a cartoon
+g|now THIS is content
+g|free 8 meters forward
+g|the bull is pleased
+g|that flip was a 10/10
+t|welcome aboard Horn Airlines
+t|"the bull is far" they said
+t|well, you're ahead of everyone now
+t|bull said "go faster" and helped
+t|streamer has stopped working
+t|so how's staying close to the bull going
+t|award for closest contact
