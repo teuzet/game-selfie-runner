@@ -398,7 +398,7 @@
         "«Влез в кадр»: ≤2 м позади соседа дольше 1 с тянет 6 зрителей/с; у жертвы с перком GlamourLoyalViewers (Simulation.CharacterOf(seat).Perk, F-014) × perkValue 0.5 = 3/с; оба получают событие.",
         "Тесты: каждый факт даёт ровно одно событие и один скачок; влез в кадр переливает зрителей; буфер не аллоцирует; детерминизм."
       ],
-      "status": "running",
+      "status": "testing",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -736,8 +736,8 @@
         "Unity/Assets/Tests/EditMode: сборка SelfieRunner.Tests.EditMode (Editor only, UNITY_INCLUDE_TESTS, references только Game.Core и TestRunner) с одним тестом — typeof(Game.Core.Simulation).Assembly.GetName().Name == \"Game.Core\": пакет резолвится и компилируется.",
         "Проверка обязательна, хвост лога с итогом — в notes результата: тул `unity` `mode=open` без ошибок компиляции (`errors` пуст, `ok: true`) и `mode=test` (EditMode) зелёный. Имитировать прогон нельзя."
       ],
-      "status": "running",
-      "attempts": 2,
+      "status": "escalated",
+      "attempts": 3,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
       "owned_files": [
