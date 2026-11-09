@@ -40,6 +40,7 @@ namespace Game.Core
             Game.Core.Street.MovingObstacles.Init(street, Dyn);
             for (int i = 0; i < Runners.Length; i++)
                 RunnerState.Init(ref Runners[i], data.RunnerData, data.CharacterData.Get(config.GetSeat(i).CharacterId), data.EconomyData, lineS);
+            for (int i = 0; i < Runners.Length; i++) Game.Core.Hints.ChatHints.InitState(config.Seed, i, ref Runners[i].Hints);
             Rng = new DetRandom(config.Seed);
             for (int i = 0; i < Bots.Length; i++) Game.Core.Bots.BotMemory.Init(ref Bots[i], config.Seed, i);
             Game.Core.Race.Phases.InitState(data.BullData, out Phase, out PhaseTicks, out Best);

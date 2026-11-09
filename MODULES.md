@@ -19,7 +19,7 @@
 | Economy | `Economy/` | `RunnerState.Viewing`, `Frame[]` | `economy.json` | зоны дистанции, пассивный доход, потолок/пол, скачки за события (`EventBonuses.Add`), «влез в кадр», заморозка счёта на финише | Runners (факты и позиции), Bull (позиция), Math, Data |
 | Events | `Events/` | `Ev[]` (что сканер уже видел) | — | счётчики фактов → `RaceEvents` тика; скачки начисляет через функцию Economy | Runners, Bull, Economy |
 | Race | `Race/` | `Phase`, `PhaseTicks`, `Best`, `Trackers[]` | `bull.json` (`countdownSec`, `finishSec`) | отсчёт, вход на арену, таймер финиша, итоги и лучшие моменты | Street, Economy (заморозка счёта), Bull (данные таймеров), Events (выход) |
-| Hints (F-021) | `Hints/` | состояние подсказок по местам | `hints.json` | подсказка из кадра бегущего впереди с опережением и шумом; реализует `IBotHintSource` | Street, Runners, Events (выход) |
+| Hints (F-021) | `Hints/` | `RunnerState.Hints` (`HintState`) | `hints.json` | подсказка из кадра бегущего впереди с опережением и шумом; реализует `IBotHintSource` | Street, Runners, Events (выход) |
 | Bots | `Bots/` | `Bots[]` (`BotMemory`) | `bots.json` | наблюдения `BotView`, мозги характеров, решение по тику | Runners, Bull, Street, Race (фаза), Hints (только через `IBotHintSource`) |
 | Quests (F-022) | `Quests/` | состояние квестов | `quests.json` | выдача, условия, награды через функцию Economy | Events, Economy, Runners, Bull |
 | Хаб | `Simulation.cs`, `RaceState.cs`, `RaceConfig.cs`, `TickInputs.cs`, `InputLog.cs` | композиция | композиция (`GameData`) | порядок шагов, `Clone`/`CopyFrom`/`StateHash` как сумма хэшей модулей | все модули |
@@ -39,10 +39,10 @@
 9. Race: фазы, финиш, лучшие моменты.
 10. Хаб: общий ГСЧ продвигается, `Tick++`.
 
-Hints (F-021) встанет между 1 и 2 (подсказки тика нужны ботам того же тика), Quests (F-022) — после 8.
+Hints (F-021): `ChatHints.Step` стоит между 1 и 2 (подсказки тика нужны ботам того же тика); Quests (F-022) — после 8.
 
 ## Хэш состояния (`RaceState.StateHash`)
-Композиция хэшей модулей, порядок фиксирован (`Hashing.Mix` — `Math/Hashing.cs`; у каждой структуры состояния свой `Hash(ulong h)` рядом с ней): хаб (`Tick`, `Rng`) → места `RunnerState.Hash` (движение и `Stability` — Runners, затем `Collision`, `Action` — Runners, `Toss` — Bull, `Viewing` — Economy) → Street (`MovingObstacles.Hash`: `Dyn`, `Hit`) → Bull (`BullState`, `BullChargeState`) → Events (`EventState`) → Economy (`FrameState`) → Race (`Phases.Hash`: фаза, таймер, лучшие моменты, трекеры) → Bots (`BotMemory`). Новая структура состояния — `Hash` рядом и одна строка в `StateHash`; `StateLayoutTests.EveryRunnerFieldChangesStateHash` ловит поле `RunnerState`, не попавшее в хэш.
+Композиция хэшей модулей, порядок фиксирован (`Hashing.Mix` — `Math/Hashing.cs`; у каждой структуры состояния свой `Hash(ulong h)` рядом с ней): хаб (`Tick`, `Rng`) → места `RunnerState.Hash` (движение и `Stability` — Runners, затем `Collision`, `Action` — Runners, `Toss` — Bull, `Viewing` — Economy) → Street (`MovingObstacles.Hash`: `Dyn`, `Hit`) → Bull (`BullState`, `BullChargeState`) → Events (`EventState`) → Economy (`FrameState`) → Race (`Phases.Hash`: фаза, таймер, лучшие моменты, трекеры) → Bots (`BotMemory`). Hints (F-021) — `RunnerState.Hints` (`HintState.Hash`) хэшируется в конце хэша места. Новая структура состояния — `Hash` рядом и одна строка в `StateHash`; `StateLayoutTests.EveryRunnerFieldChangesStateHash` ловит поле `RunnerState`, не попавшее в хэш.
 
 ## История связей
 - 2026-11-09 · F-070 · код приведён к карте: отступлений от неё нет, новых связей нет. Подмена входов ботов — `BotBrains.FillInputs`, глушение входа лежащего — `RunnerMovement.MuteNoSignal`, движение мест — `RunnerMovement.StepAll`, бык за тик — `BullCharge.StepBull`; отсчёт — в `Simulation.StepCountdown` двумя вызовами (`BullMovement.Step`, `Phases.StepCountdown`), чтобы Race не вызывал движение Bull. Хэш забега переснят (порядок композиции).

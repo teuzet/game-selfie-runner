@@ -415,7 +415,7 @@ public class BotCowardTests
             RunRace(sim);
             for (int i = 0; i < 4; i++) hits += sim.State.Runners[i].Collision.Count;
             told += src.Told;
-            var blind = new Simulation(Cowards(seed), Data);
+            var blind = new Simulation(Cowards(seed), Data) { BotHints = null };
             RunRace(blind);
             for (int i = 0; i < 4; i++) hitsNoHints += blind.State.Runners[i].Collision.Count;
         }
@@ -467,7 +467,7 @@ public class BotCowardTests
     {
         // Без bots.json: BotData.None() — сборка вручную, из файлов такой набор не получить.
         var bare = new GameData(Data.RunnerData, Data.BullData, Data.StreetData, Data.CharacterData, Data.ActionData,
-            Data.EconomyData, Game.Core.Bots.BotData.None());
+            Data.EconomyData, Game.Core.Bots.BotData.None(), Data.HintData);
         var a = new Simulation(Cowards(3), bare).Running();
         var b = new Simulation(Cowards(3), bare).Running();
         for (int t = 0; t < 60; t++)
