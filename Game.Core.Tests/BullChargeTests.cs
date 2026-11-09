@@ -314,10 +314,11 @@ namespace Game.Core.Tests
             int bad = 0;
             for (ulong seed = 1; seed <= 20; seed++)
             {
-                var sim = new Simulation(Cfg(seed, SeatKind.Human, (int)(seed % 4), Nerd, Athlete, Glamour), Data);
+                var sim = new Simulation(Cfg(seed, SeatKind.Human, (int)(seed % 4), Nerd, Athlete, Glamour), Data).Running();
                 var rng = new DetRandom(seed);
                 int ticks = 0;
-                while (ticks < 9000 && sim.State.Bull.Phase != (int)BullPhase.Arena) { sim.Step(RandomInputs(ref rng)); ticks++; }
+                // забег закрыт (F-020) — рывков больше нет, как и после входа быка на арену
+                while (ticks < 9000 && sim.State.Bull.Phase != (int)BullPhase.Arena && sim.State.Phase != Game.Core.Race.RacePhase.Over) { sim.Step(RandomInputs(ref rng)); ticks++; }
                 int n = sim.State.Charge.Count;
                 // нормируем на 9000 тиков, если до арены дошли раньше
                 double per5 = n * 9000.0 / System.Math.Max(ticks, 1);

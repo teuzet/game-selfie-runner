@@ -40,7 +40,7 @@ namespace Game.Core.Tests
         /// <summary>Толкающий (место 0) на x=pushX, цель (место 1) на dx правее него.</summary>
         static Simulation Setup(int pusherChar, int targetChar, double dx, double ds = 0, double pushX = -2.4)
         {
-            var sim = new Simulation(Cfg(pusherChar, targetChar, Nerd, Nerd), Data);
+            var sim = new Simulation(Cfg(pusherChar, targetChar, Nerd, Nerd), Data).Running();
             double s = BaseS(sim);
             Place(sim, 0, s, pushX);
             Place(sim, 1, s + ds, pushX + dx);
@@ -186,7 +186,7 @@ namespace Game.Core.Tests
             double s = Dbl(stairs.Start) + 20;
             foreach (bool trip in new[] { false, true })
             {
-                var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data, street);
+                var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data, street).Running();
                 Place(sim, 0, s, trip ? 0 : -2.4);
                 Place(sim, 1, s + (trip ? 1.1 : 0), trip ? 0 : -1.2);
                 Park(sim, s, 2, 3);

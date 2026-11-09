@@ -41,6 +41,7 @@ namespace Game.Core.Economy
                 if (victim != f.Victim) { f.Victim = victim; f.Ticks = 0; }
                 f.Ticks++;
                 if (f.Ticks <= HoldTicks) continue;
+                if (st.Viewing[victim].FinishTick >= 0 || st.Viewing[thief].FinishTick >= 0) continue; // финишировавшие заморожены
                 Fixed rate = RateFor(sim, victim);
                 if (f.Ticks == HoldTicks + 1)
                 {

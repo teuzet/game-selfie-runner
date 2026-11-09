@@ -76,8 +76,8 @@ public class SimulationTests
     [Fact]
     public void DifferentInputsChangeHash()
     {
-        var a = new Simulation(Cfg(1));
-        var b = new Simulation(Cfg(1));
+        var a = new Simulation(Cfg(1)).Running();
+        var b = new Simulation(Cfg(1)).Running();
         a.Step(TickInputs.Empty);
         b.Step(TickInputs.Empty.With(0, new PlayerInput(1, 1, false)));
         Assert.NotEqual(a.StateHash(), b.StateHash());

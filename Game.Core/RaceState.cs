@@ -25,6 +25,12 @@ namespace Game.Core
         public readonly Game.Core.Events.EventState[] Ev = new Game.Core.Events.EventState[RaceConfig.SeatCount];
         /// <summary>«Влез в кадр» по местам-ворам (F-019).</summary>
         public readonly Game.Core.Economy.FrameState[] Frame = new Game.Core.Economy.FrameState[RaceConfig.SeatCount];
+        /// <summary>Фаза забега (F-020). PhaseTicks: Countdown — тиков до старта, Finishing — тиков до закрытия.</summary>
+        public Game.Core.Race.RacePhase Phase;
+        public int PhaseTicks;
+        /// <summary>Лучшие моменты (F-020) и их промежуточные счётчики по местам.</summary>
+        public Game.Core.Race.Highlights Best;
+        public readonly Game.Core.Race.HighlightTracker[] Trackers = new Game.Core.Race.HighlightTracker[RaceConfig.SeatCount];
         /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
         public readonly Game.Core.Street.ObstacleDyn[] Dyn;
         /// <summary>«Препятствие уже действовало на бегуна»: seat * stride + индекс (препятствия, затем фонтан/вода по блокам).</summary>
@@ -38,6 +44,9 @@ namespace Game.Core
             Game.Core.Street.MovingObstacles.Init(street, Dyn);
             for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Game.Core.Runners.Actions.InitState(ref Actions[i]); Stability[i] = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw; }
             Rng = new DetRandom(seed);
+            Phase = Game.Core.Race.RacePhase.Countdown;
+            PhaseTicks = Game.Core.Race.Phases.CountdownTicks(bullData);
+            Best = Game.Core.Race.Highlights.Empty;
             Game.Core.Bull.BullCharge.InitState(seed, ref Charge);
             for (int i = 0; i < Tosses.Length; i++) Game.Core.Bull.BullCharge.InitToss(ref Tosses[i]);
             for (int i = 0; i < Viewing.Length; i++) Game.Core.Economy.Viewers.InitState(economy, ref Viewing[i]);
@@ -69,6 +78,10 @@ namespace Game.Core
             Rng = o.Rng;
             Bull = o.Bull;
             Charge = o.Charge;
+            Phase = o.Phase;
+            PhaseTicks = o.PhaseTicks;
+            Best = o.Best;
+            System.Array.Copy(o.Trackers, Trackers, Trackers.Length);
             System.Array.Copy(o.Viewing, Viewing, Viewing.Length);
             System.Array.Copy(o.Ev, Ev, Ev.Length);
             System.Array.Copy(o.Frame, Frame, Frame.Length);
@@ -176,6 +189,20 @@ namespace Game.Core
                 h = Mix(h, (ulong)(uint)Frame[i].Victim);
                 h = Mix(h, (ulong)(uint)Frame[i].Ticks);
             }
+            h = Mix(h, (ulong)(uint)Phase);
+            h = Mix(h, (ulong)(uint)PhaseTicks);
+            h = MixMoment(h, Best.MaxViewers);
+            h = MixMoment(h, Best.LongestHot);
+            h = MixMoment(h, Best.CostliestFail);
+            for (int i = 0; i < Trackers.Length; i++)
+            {
+                h = Mix(h, (ulong)(uint)Trackers[i].HotRun);
+                h = Mix(h, (ulong)(uint)Trackers[i].HotStart);
+                h = Mix(h, (ulong)(uint)Trackers[i].FailActive);
+                h = Mix(h, (ulong)(uint)Trackers[i].FailTick);
+                h = Mix(h, (ulong)Trackers[i].FailViewers);
+                h = Mix(h, (ulong)(uint)Viewing[i].FinishTick);
+            }
             h = Mix(h, (ulong)Bull.S);
             h = Mix(h, (ulong)Bull.X);
             h = Mix(h, (ulong)Bull.Speed);
@@ -184,6 +211,13 @@ namespace Game.Core
             h = Mix(h, (ulong)Bull.SlowTicks);
             h = Mix(h, (ulong)Bull.Mode);
             return h;
+        }
+
+        private static ulong MixMoment(ulong h, Game.Core.Race.Moment m)
+        {
+            h = Mix(h, (ulong)(uint)m.Seat);
+            h = Mix(h, (ulong)(uint)m.Tick);
+            return Mix(h, (ulong)m.Value);
         }
 
         private static ulong Mix(ulong h, ulong v)

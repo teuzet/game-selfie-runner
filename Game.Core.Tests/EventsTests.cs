@@ -33,7 +33,7 @@ namespace Game.Core.Tests
         /// <summary>Все четыре бегуна разведены далеко друг от друга и от быка: ни действий, ни «влез в кадр».</summary>
         static Simulation Quiet(RaceConfig cfg)
         {
-            var sim = new Simulation(cfg, Data);
+            var sim = new Simulation(cfg, Data).Running();
             double s = BaseS(sim);
             for (int i = 0; i < 4; i++) Place(sim, i, s + 40 * i, 0);
             return sim;
@@ -106,7 +106,7 @@ namespace Game.Core.Tests
         [Fact]
         public void ShoveGivesTwoEventsPlus50AndMinus30()
         {
-            var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data);
+            var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data).Running();
             double s = BaseS(sim);
             Place(sim, 0, s, -2.4); Place(sim, 1, s, -1.2);
             Place(sim, 2, s + 300, 0); Place(sim, 3, s + 320, 0);
@@ -128,7 +128,7 @@ namespace Game.Core.Tests
         [Fact]
         public void TripGivesTripEventsAndPlus80()
         {
-            var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data);
+            var sim = new Simulation(Cfg(Nerd, Nerd, Nerd, Nerd), Data).Running();
             double s = BaseS(sim);
             Place(sim, 0, s, 0); Place(sim, 1, s + 1.1, 0);
             Place(sim, 2, s + 300, 0); Place(sim, 3, s + 320, 0);
@@ -198,8 +198,8 @@ namespace Game.Core.Tests
         static (Simulation sim, Simulation ctl) RunFrame(int victimChar, int ticks)
         {
             var cfg = Cfg(Nerd, victimChar, Nerd, Nerd);
-            var sim = new Simulation(cfg, Data);
-            var ctl = new Simulation(cfg, Data);
+            var sim = new Simulation(cfg, Data).Running();
+            var ctl = new Simulation(cfg, Data).Running();
             double s = BaseS(sim);
             for (int t = 0; t < ticks; t++)
             {
@@ -242,7 +242,7 @@ namespace Game.Core.Tests
         public void FrameStealBothGetEventOnce()
         {
             var cfg = Cfg(Nerd, Glamour, Nerd, Nerd);
-            var sim = new Simulation(cfg, Data);
+            var sim = new Simulation(cfg, Data).Running();
             double s = BaseS(sim);
             int framed = 0, inFrame = 0, firstTick = -1;
             for (int t = 0; t < 120; t++)
@@ -266,7 +266,7 @@ namespace Game.Core.Tests
         public void NoFrameStealBeyondTwoMetersOrInFront()
         {
             var cfg = Cfg(Nerd, Nerd, Nerd, Nerd);
-            var sim = new Simulation(cfg, Data);
+            var sim = new Simulation(cfg, Data).Running();
             double s = BaseS(sim);
             for (int t = 0; t < 90; t++)
             {
