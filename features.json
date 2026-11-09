@@ -1179,7 +1179,7 @@
         "Поведение не меняется: хэши забега на 3 сидах до и после равны (тест фиксирует их)",
         "`Clone` и `StateHash` покрывают все поля; тест детерминизма зелёный"
       ],
-      "status": "review",
+      "status": "unity_check",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
