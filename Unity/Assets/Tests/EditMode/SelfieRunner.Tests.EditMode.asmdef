@@ -1,7 +1,7 @@
 {
   "name": "SelfieRunner.Tests.EditMode",
   "rootNamespace": "SelfieRunner.Tests",
-  "references": ["Game.Core", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+  "references": ["Game.Core", "SelfieRunner.Sim","UnityEngine.TestRunner", "UnityEditor.TestRunner"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
