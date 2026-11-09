@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Game.Core;
+using Game.Core.Bull;
 using Game.Core.Economy;
 using Game.Core.Events;
 using Game.Core.Math;
@@ -16,6 +17,12 @@ namespace Game.Sim
         public string Character = "", Temperament = "";
         public int Donations, Viewers;
         public int Tosses, Collisions, Shoves, Trips, GotShoved, GotTripped;
+        /// <summary>F-077: подбросы по причине (Tossed.Param1: рывок / контакт); Tosses = TossesCharge + TossesContact.</summary>
+        public int TossesCharge, TossesContact;
+        /// <summary>Тиков с 0 зрителей и всего тиков места до его финиша (от старта забега).</summary>
+        public int ZeroViewerTicks, RaceTicks;
+        /// <summary>Донаты минус донаты за подброс (EconomyData.TossDonations × подбросы).</summary>
+        public int DonationsNoToss;
         /// <summary>Тиков в зонах дистанции до быка (ViewerZone: горячо, тепло, прохладно, холодно) до финиша места.</summary>
         public readonly int[] ZoneTicks = new int[4];
     }
@@ -33,6 +40,15 @@ namespace Game.Sim
         /// <summary>Самая долгая пауза между событиями ядра (кроме подсказок и смены зоны), тиков.</summary>
         public int LongestQuietTicks;
         public int DonationsFirst, DonationsSecond;
+        /// <summary>F-077: смены лидера по донатам без подбросов после 30-й с.</summary>
+        public int LeaderChangesNoToss;
+        /// <summary>Бык: сумма расстояний до медианы толпы по s (Fixed raw) и скоростей (raw) по тикам, тиков с дистанцией &gt; 25 м, всего тиков забега.</summary>
+        public long BullDistRawSum, BullSpeedRawSum;
+        public int BullFarTicks, BullTicks;
+        /// <summary>Рывки быка и рывки, кончившиеся подбросом (причина «рывок»).</summary>
+        public int Charges, ChargesEndedInToss;
+        /// <summary>Подбросы уже финишировавших (должно быть 0).</summary>
+        public int TossesOfFinished;
         public string Chronicle = "";
     }
 
@@ -47,6 +63,7 @@ namespace Game.Sim
         const int SnapshotEvery = 5 * Tps;
         const int LeaderGraceTicks = 30 * Tps; // design/overview.md, «Открытое»: смены лидера без первых 30 с
         const int MaxTicks = 20 * 60 * Tps;    // предохранитель: нормальный забег ≈ 5 минут
+        const int FarBullMeters = 25;          // playtest/iter-1.md, «Предложения» п. 9: доля тиков, когда бык дальше 25 м от медианы толпы
 
         public static RaceConfig MakeConfig(ulong seed, GameData data)
         {
@@ -86,19 +103,31 @@ namespace Game.Sim
             for (int i = 0; i < RaceConfig.SeatCount; i++) sb.Append(i > 0 ? ", " : "").Append(i + 1).Append(" — ").Append(Label(rec, i));
             sb.Append('\n').Append('\n');
 
-            int startTick = -1, finishTick = -1, lastQuiet = 0, leader = -1;
+            int startTick = -1, finishTick = -1, lastQuiet = 0, leader = -1, leaderNt = -1;
             var order = new int[RaceConfig.SeatCount];
+            var noToss = new int[RaceConfig.SeatCount];
+            bool chargeOpen = false;
+            var crowd = new long[RaceConfig.SeatCount];
+            long farRaw = Fixed.FromInt(FarBullMeters).Raw;
             var events = sim.Events;
             for (int n = 0; n < MaxTicks && st.Phase != RacePhase.Over; n++)
             {
                 int stepTick = st.Tick;
                 sim.Step(TickInputs.Empty);
+                bool chargeStarted = false, chargeToss = false;
                 for (int e = 0; e < events.Count; e++)
                 {
                     var ev = events[e];
-                    if (ev.Type == RaceEventType.RaceStart) { startTick = ev.Tick; lastQuiet = ev.Tick; leader = -1; }
+                    if (ev.Type == RaceEventType.RaceStart) { startTick = ev.Tick; lastQuiet = ev.Tick; leader = -1; leaderNt = -1; }
                     if (startTick < 0) continue;
                     Count(rec, ev);
+                    if (ev.Type == RaceEventType.BullCharge) { rec.Charges++; chargeStarted = true; }
+                    if (ev.Type == RaceEventType.Tossed)
+                    {
+                        if (ev.Param1 == TossCause.Charge) chargeToss = true;
+                        int ft = st.Runners[ev.Seat].Viewing.FinishTick;
+                        if (ft >= 0 && ft < ev.Tick) rec.TossesOfFinished++;
+                    }
                     if (IsQuietBreaker(ev.Type))
                     {
                         if (ev.Tick - lastQuiet > rec.LongestQuietTicks) rec.LongestQuietTicks = ev.Tick - lastQuiet;
@@ -108,12 +137,33 @@ namespace Game.Sim
                     Line(sb, sim, rec, ev, startTick, events, e);
                 }
                 if (startTick < 0) continue;
+                // один рывок кончается подбросом не больше одного раза; старт и подброс одного тика — в любом порядке мест
+                if (chargeToss && (chargeStarted || chargeOpen)) { rec.ChargesEndedInToss++; chargeOpen = false; }
+                else if (chargeStarted) chargeOpen = true;
 
                 int rel = stepTick - startTick;
                 for (int i = 0; i < RaceConfig.SeatCount; i++)
                 {
                     ref var v = ref st.Runners[i].Viewing;
                     if (v.FinishTick < 0 && v.Zone >= 0 && stepTick >= startTick) rec.Seats[i].ZoneTicks[v.Zone]++;
+                    if (v.FinishTick < 0)
+                    {
+                        rec.Seats[i].RaceTicks++;
+                        if (Viewers.ViewersOf(st, i) == 0) rec.Seats[i].ZeroViewerTicks++;
+                    }
+                    crowd[i] = st.Runners[i].S;
+                    noToss[i] = Viewers.DonationsOf(st, i) - sim.EconomyData.TossDonations * rec.Seats[i].Tosses;
+                }
+                System.Array.Sort(crowd);
+                long median = (crowd[RaceConfig.SeatCount / 2 - 1] + crowd[RaceConfig.SeatCount / 2]) / 2;
+                long dist = System.Math.Abs(st.Bull.S - median);
+                rec.BullDistRawSum += dist; rec.BullSpeedRawSum += st.Bull.Speed; rec.BullTicks++;
+                if (dist > farRaw) rec.BullFarTicks++;
+                int nowNt = LeaderByValues(noToss, leaderNt);
+                if (nowNt != leaderNt)
+                {
+                    if (leaderNt >= 0 && rel >= LeaderGraceTicks) rec.LeaderChangesNoToss++;
+                    leaderNt = nowNt;
                 }
                 int now = LeaderOf(st, leader);
                 if (now != leader)
@@ -141,6 +191,7 @@ namespace Game.Sim
             {
                 rec.Seats[i].Donations = Viewers.DonationsOf(st, i);
                 rec.Seats[i].Viewers = Viewers.ViewersOf(st, i);
+                rec.Seats[i].DonationsNoToss = rec.Seats[i].Donations - sim.EconomyData.TossDonations * rec.Seats[i].Tosses;
             }
             rec.DonationsFirst = rec.Seats[order[0]].Donations;
             rec.DonationsSecond = rec.Seats[order[1]].Donations;
@@ -159,7 +210,10 @@ namespace Game.Sim
             var s = rec.Seats[ev.Seat];
             switch (ev.Type)
             {
-                case RaceEventType.Tossed: s.Tosses++; break;
+                case RaceEventType.Tossed:
+                    s.Tosses++;
+                    if (ev.Param1 == TossCause.Charge) s.TossesCharge++; else s.TossesContact++;
+                    break;
                 case RaceEventType.Collision: s.Collisions++; break;
                 case RaceEventType.Shoved: s.Shoves++; break;
                 case RaceEventType.Tripped: s.Trips++; break;
@@ -176,6 +230,16 @@ namespace Game.Sim
                 if (st.Runners[i].Viewing.Donations > st.Runners[best].Viewing.Donations) best = i;
             return best;
         }
+
+        /// <summary>То же правило лидера, но по готовым числам (донаты без подбросов).</summary>
+        static int LeaderByValues(int[] v, int current)
+        {
+            int best = current < 0 ? 0 : current;
+            for (int i = 0; i < v.Length; i++) if (v[i] > v[best]) best = i;
+            return best;
+        }
+
+        static string Tenths(long raw) => Fmt.Tenths(raw * 10 / Fixed.OneRaw);
 
         // ---------- хроника ----------
 
@@ -215,7 +279,7 @@ namespace Game.Sim
                     break;
                 case RaceEventType.Tossed:
                     bonus = "+" + sim.EconomyData.TossViewers + " зрителей, +" + sim.EconomyData.TossDonations + " донатов";
-                    text = "Бык подбросил: " + Label(rec, seat);
+                    text = "Бык подбросил: " + Label(rec, seat) + (ev.Param1 == TossCause.Charge ? " (в рывке)" : " (догнал)");
                     break;
                 case RaceEventType.BullCharge:
                     text = "Бык рвётся на " + Names.CharacterAcc(rec.Seats[seat].Character) + " (" + Names.Temperament(rec.Seats[seat].Temperament) + ")";
@@ -287,6 +351,7 @@ namespace Game.Sim
             sb.Append(" | с, дистанция: ");
             for (int p = 0; p < RaceConfig.SeatCount; p++)
                 sb.Append(p > 0 ? ", " : "").Append(Fixed.FromRaw(st.Runners[order[p]].S).ToInt());
+            sb.Append(" | бык: s ").Append(Fixed.FromRaw(st.Bull.S).ToInt()).Append(" м, ").Append(Tenths(st.Bull.Speed)).Append(" м/с");
             sb.Append('\n');
         }
 
@@ -304,7 +369,7 @@ namespace Game.Sim
                   .Append(" | ").Append(s.Tosses).Append(" | ").Append(s.Collisions).Append(" | ").Append(s.Shoves).Append(" | ").Append(s.Trips).Append(" |\n");
             }
             sb.Append('\n').Append("Смены лидера по донатам: ").Append(rec.LeaderChanges).Append(" (после 30 с), ").Append(rec.LeaderChangesTotal)
-              .Append(" (всего). Самая долгая пауза без событий: ").Append(Fmt.Tenths(rec.LongestQuietTicks * 10L / Tps)).Append(" с.\n");
+              .Append(" (всего), ").Append(rec.LeaderChangesNoToss).Append(" (после 30 с, без донатов за подброс). Самая долгая пауза без событий: ").Append(Fmt.Tenths(rec.LongestQuietTicks * 10L / Tps)).Append(" с.\n");
         }
     }
 }

@@ -135,6 +135,48 @@ public class SimRunTests
     }
 
     [Fact]
+    public void F077MetricsAreConsistentAndDeterministic()
+    {
+        string a = TempDir(), b = TempDir();
+        try
+        {
+            Cli(a, 4, 1); Cli(b, 4, 1);
+            string json = File.ReadAllText(Path.Combine(a, "metrics.json"));
+            Assert.Equal(File.ReadAllBytes(Path.Combine(a, "metrics.json")), File.ReadAllBytes(Path.Combine(b, "metrics.json")));
+            Assert.DoesNotMatch(new Regex(@"\d[eE][+-]?\d|NaN|Infinity"), json); // формат Fmt: целые и десятые, без float
+            using var doc = JsonDocument.Parse(json);
+            foreach (var run in doc.RootElement.GetProperty("runs").EnumerateArray())
+            {
+                var bull = run.GetProperty("bull");
+                Assert.Equal(0, bull.GetProperty("tossesOfFinished").GetInt32());
+                double far = bull.GetProperty("farPct").GetDouble();
+                Assert.InRange(far, 0, 100);
+                Assert.True(bull.GetProperty("distToCrowdMedianM").GetDouble() >= 0);
+                Assert.True(bull.GetProperty("speedMps").GetDouble() > 0);
+                Assert.True(bull.GetProperty("charges").GetInt32() >= 0);
+                Assert.True(run.GetProperty("leaderChangesNoToss").GetInt32() >= 0);
+                foreach (var s in run.GetProperty("seats").EnumerateArray())
+                {
+                    Assert.Equal(s.GetProperty("tosses").GetInt32(), s.GetProperty("tossesCharge").GetInt32() + s.GetProperty("tossesContact").GetInt32());
+                    Assert.InRange(s.GetProperty("zeroViewerPct").GetDouble(), 0, 100);
+                    Assert.Equal(s.GetProperty("donations").GetInt32() - Data.EconomyData.TossDonations * s.GetProperty("tosses").GetInt32(),
+                        s.GetProperty("donationsNoToss").GetInt32());
+                }
+            }
+            var sum = doc.RootElement.GetProperty("summary");
+            foreach (string k in new[] { "bullDistToCrowdMedianM", "bullFarPct", "bullSpeedMps", "seatZeroViewerSec", "seatTossesCharge", "leaderChangesNoToss" })
+                Assert.True(sum.GetProperty(k).TryGetProperty("p90", out _), k);
+            foreach (var g in sum.GetProperty("byCharacter").EnumerateArray())
+                Assert.True(g.TryGetProperty("tossesChargeTotal", out _) && g.TryGetProperty("zeroViewerSecMedian", out _));
+
+            string chron = File.ReadAllText(Path.Combine(a, "chronicle-1.md"));
+            Assert.Matches(new Regex(@"^--- 0:05 \|.*\| бык: s \d+ м, \d+\.\d м/с$", RegexOptions.Multiline), chron);
+            Assert.Matches(new Regex(@"Бык подбросил: .* \((в рывке|догнал)\)"), chron);
+        }
+        finally { Directory.Delete(a, true); Directory.Delete(b, true); }
+    }
+
+    [Fact]
     public void ChronicleReadsAsStreamWithSnapshotsAndSummary()
     {
         string dir = TempDir();
