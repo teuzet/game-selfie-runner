@@ -67,7 +67,7 @@ namespace Game.Core.Events
 
                 for (int n = t.Tossed - e.SeenTossed; n > 0; n--)
                 {
-                    ev.Add(RaceEventType.Tossed, tick, i);
+                    ev.Add(RaceEventType.Tossed, tick, i, -1, t.LastCause);
                     EventBonuses.Add(d, ref v, d.TossViewers, d.TossDonations);
                 }
                 e.SeenTossed = t.Tossed;

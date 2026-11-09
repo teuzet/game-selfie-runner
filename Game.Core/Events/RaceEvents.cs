@@ -7,7 +7,7 @@ namespace Game.Core.Events
     {
         None = 0,
         Collision,     // Seat; Param1 = CollisionKind (тип препятствия; Water — пруд)
-        Tossed,        // Seat подброшен быком
+        Tossed,        // Seat подброшен быком; Param1 = TossCause (1 — рывок, 2 — контакт без рывка; F-100)
         Rose,          // Seat встал (кончилось «нет сигнала»)
         Shoved,        // Seat толкнул Target
         GotShoved,     // Seat толкнули; Target — кто

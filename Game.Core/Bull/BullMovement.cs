@@ -14,8 +14,9 @@ namespace Game.Core.Bull
             TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleWidth, Accel, SteerSpeed;
 
         // Рывок быка (BullCharge): секунды — целые, дистанции и скорости — Fixed.
-        public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec;
+        public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec, TossCooldownSec;
         public Fixed ChargeSpeed, ChargeReach, ChargeTargetRange, ChargeTossDistance, ChargeSteer;
+        public Fixed TossWaitGap, CatchUpClear; // F-100 §3.1: отступ от защищённого, порог резинки
 
         public const string FileName = "bull.json";
 
@@ -36,6 +37,7 @@ namespace Game.Core.Bull
                 ChargeTargetRange = j.Num("chargeTargetRange"), ChargeTossDistance = j.Num("chargeTossDistance"),
                 ChargeInvulnSec = j.Int("chargeInvulnSec"), ChargeTossGapSec = j.Int("chargeTossGapSec"),
                 ChargeBullSlowSec = j.Int("chargeBullSlowSec"), ChargeSteer = j.Num("chargeSteer"),
+                TossWaitGap = j.Num("tossWaitGap"), TossCooldownSec = j.Int("tossCooldownSec"), CatchUpClear = j.Num("catchUpClear"),
             };
         }
 
@@ -123,6 +125,13 @@ namespace Game.Core.Bull
             }
             Fixed baseSpeed = b.Mode == BullMode.Charge ? d.CatchUpSpeed
                 : b.Mode == BullMode.Close ? d.CloseSpeed : d.CruiseSpeed;
+            // F-100 §3.1 п.5: резинка не давит бегуна — разгон 9.5 только по пустой улице (никого впереди ближе catchUpClear).
+            if (b.Mode == BullMode.Charge && baseSpeed > d.CruiseSpeed)
+                for (int i = 0; i < runners.Length; i++)
+                {
+                    long ahead = runners[i].S - s.Raw;
+                    if (ahead >= 0 && ahead < d.CatchUpClear.Raw) { baseSpeed = d.CruiseSpeed; break; }
+                }
             b.Phase = b.Mode == BullMode.Charge ? (int)BullPhase.Charge : (int)BullPhase.Cruise;
 
             // Уклон блока и лестница действуют на все скорости быка.

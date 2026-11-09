@@ -89,10 +89,9 @@ namespace Game.Core.Tests
                     if (prevTick >= 0)
                     {
                         int gap = sim.State.Charge.LastChargeTick - prevTick;
-                        // цель может не найтись, пока подброшенный лежит («нет сигнала» персонажа) и неуязвим
-                        int maxNoSignal = 0;
-                        foreach (var c in Data.CharacterData.Characters) maxNoSignal = System.Math.Max(maxNoSignal, c.NoSignal.ToInt() + 1);
-                        int slack = (Data.BullData.ChargeInvulnSec + maxNoSignal) * 30;
+                        // F-100 §3.1 п.6: если допустимых целей нет (лежащий, охлаждение 30 с, порог арены), рывок пропускается и
+                        // следующий — через новый интервал: пропуск даёт до двух интервалов подряд плюс охлаждение
+                        int slack = (Data.BullData.TossCooldownSec + Data.BullData.ChargeMaxIntervalSec) * 30;
                         Assert.InRange(gap, Data.BullData.ChargeMinIntervalSec * 30, Data.BullData.ChargeMaxIntervalSec * 30 + slack);
                     }
                     prevTick = sim.State.Charge.LastChargeTick; prevCount = cnt;
@@ -156,7 +155,9 @@ namespace Game.Core.Tests
             {
                 sim.Step(sprint);
                 Assert.Equal(s0, sim.State.Runners[1].S);
-                Assert.Equal(0, sim.State.Runners[1].Speed);
+                // в тик подъёма (последний) встающий получает темп бега сразу — F-100 §3.1 п.4
+                if (i < noSignal - 1) Assert.Equal(0, sim.State.Runners[1].Speed);
+                else Assert.True(Fixed.FromRaw(sim.State.Runners[1].Speed) >= sim.SeatData(1).RunSpeed * sim.Street.SlopeAt(Fixed.FromRaw(s0)) * Fx(0.99));
             }
             Assert.Equal(0, sim.State.Runners[1].Toss.NoSignalTicks);
 
@@ -233,6 +234,143 @@ namespace Game.Core.Tests
             }
             _out.WriteLine($"athlete={athlete} grandma={grandma}");
             Assert.True(athlete > grandma * 2, $"athlete={athlete} grandma={grandma}");
+        }
+
+        // F-071, design/F-100.md → «Подброс закрывает эпизод» (3.1):
+        // «Бык держит дистанцию позади защищённого, а не паркуется на его `s` и не обходит: ближе 4 м к защищённому впереди бык не подходит — идёт не быстрее его.»
+        // «Защищённые. Бык не выбирает целью рывка и не подбрасывает: (а) лежащего и неуязвимого; (б) бегуна на пороге арены — последние 8 м перед ней — и на арене; (в) финишировавшего.»
+        // «Охлаждение цели: 30 с от подброса бык не выбирает этого бегуна целью рывка. Контакт при этом работает.»
+        // «Подброс с причиной — «рывок» (бык был в рывке) или «контакт» (вне рывка).»
+
+        static Simulation Prepared(ulong seed)
+        {
+            var sim = new Simulation(Cfg(seed, SeatKind.Human), Data);
+            RunTo(sim, Release + 20);
+            return sim;
+        }
+
+        [Fact]
+        public void BullHoldsGapBehindTossedRunner_NotOnHisS()
+        {
+            var sim = Prepared(4);
+            double bs = Dbl(sim.State.Bull.S);
+            sim.State.Runners[1].S = Fx(bs + 0.5).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw;
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(1, sim.State.Runners[1].Toss.Tossed);
+            double gap = Dbl(Data.BullData.TossWaitGap.Raw);
+            double minGap = double.MaxValue;
+            int downTicks = sim.State.Runners[1].Toss.NoSignalTicks + sim.State.Runners[1].Toss.InvulnTicks;
+            for (int t = 0; t < downTicks; t++)
+            {
+                sim.Step(TickInputs.Empty);
+                minGap = System.Math.Min(minGap, Dbl(sim.State.Runners[1].S - sim.State.Bull.S));
+                Assert.Equal(1, sim.State.Runners[1].Toss.Tossed); // повторного подброса нет
+            }
+            Assert.True(minGap >= gap - 0.01, $"бык подошёл к защищённому на {minGap:F2} м, отступ {gap}");
+        }
+
+        [Fact]
+        public void TossCauseIsChargeOrContact()
+        {
+            // контакт без рывка
+            var sim = Prepared(4);
+            double bs = Dbl(sim.State.Bull.S);
+            sim.State.Runners[1].S = Fx(bs + 0.5).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw;
+            Assert.Equal(0, sim.State.Charge.ChargeLeft);
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(TossCause.Contact, sim.State.Runners[1].Toss.LastCause);
+
+            // рывок: цель в 5 м прямо перед быком
+            sim = Prepared(4);
+            for (int t = 0; t < 3000 && sim.State.Charge.ChargeLeft == 0; t++)
+            {
+                double b0 = Dbl(sim.State.Bull.S);
+                sim.State.Runners[0].S = Fx(b0 + 5).Raw; sim.State.Runners[0].X = sim.State.Bull.X;
+                for (int i = 1; i < 4; i++) sim.State.Runners[i].S = Fx(b0 + 200 + i * 10).Raw; // единственная цель — место 0
+                sim.State.Bull.Speed = Fx(10.9).Raw; // как на разгоне: рывок стартует с высокой скорости
+                sim.Step(TickInputs.Empty);
+            }
+            Assert.True(sim.State.Charge.ChargeLeft > 0 || sim.State.Charge.Tosses > 0);
+            int tossed = -1;
+            for (int t = 0; t < 120 && tossed < 0; t++)
+            {
+                for (int i = 0; i < 4; i++) if (sim.State.Runners[i].Toss.Tossed > 0) tossed = i;
+                if (tossed < 0) { sim.State.Bull.Speed = Fx(10.9).Raw; sim.Step(TickInputs.Empty); }
+            }
+            Assert.True(tossed >= 0, $"рывок не закончился подбросом: left={sim.State.Charge.ChargeLeft} tg={sim.State.Charge.Target} bull={Dbl(sim.State.Bull.S):F1} r0={Dbl(sim.State.Runners[0].S):F1} r1={Dbl(sim.State.Runners[1].S):F1} ph={sim.State.Bull.Phase}");
+            Assert.Equal(TossCause.Charge, sim.State.Runners[tossed].Toss.LastCause);
+        }
+
+        [Fact]
+        public void FinishedRunnerIsNotTossed()
+        {
+            var sim = Prepared(4);
+            double bs = Dbl(sim.State.Bull.S);
+            sim.State.Runners[1].S = Fx(bs + 0.5).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            sim.State.Runners[1].Viewing.FinishTick = 1;
+            for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw;
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(0, sim.State.Runners[1].Toss.Tossed);
+        }
+
+        [Fact]
+        public void RunnerOnArenaThresholdIsNotTossedNorTargeted()
+        {
+            var sim = Prepared(4);
+            double arena = Dbl(sim.ArenaStart.Raw);
+            double thr = Dbl(Data.BullData.ChargeTossDistance.Raw);
+            double bs = Dbl(sim.State.Bull.S);
+            // бык вплотную к бегуну на пороге (arena − 4 м): не подбрасывает и не выбирает целью
+            sim.State.Runners[1].S = Fx(arena - thr + 4).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            sim.State.Bull.S = Fx(arena - thr + 3.5).Raw;
+            for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(arena - 200 - i).Raw;
+            Assert.True(BullCharge.Shielded(sim, 1));
+            Assert.False(BullCharge.Shielded(sim, 0));
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(0, sim.State.Runners[1].Toss.Tossed);
+            Assert.True(bs < arena);
+        }
+
+        [Fact]
+        public void TossedRunnerIsNotChargeTargetDuringCooldown_ContactStillTosses()
+        {
+            var sim = Prepared(4);
+            int cd = Data.BullData.TossCooldownSec * 30;
+            double bs = Dbl(sim.State.Bull.S);
+            sim.State.Runners[1].S = Fx(bs + 0.5).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(bs + 500 + i * 10).Raw;
+            sim.Step(TickInputs.Empty);
+            int tossTick = sim.State.Runners[1].Toss.LastTossTick;
+            int charges = sim.State.Charge.Count;
+            // место 1 — единственное в досягаемости, остальные далеко: за охлаждение ни одного рывка на него
+            while (sim.Tick < tossTick + cd)
+            {
+                double b0 = Dbl(sim.State.Bull.S);
+                for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(b0 + 500 + i * 10).Raw;
+                if (sim.State.Runners[1].S < sim.State.Bull.S + Fx(8).Raw) sim.State.Runners[1].S = sim.State.Bull.S + Fx(10).Raw;
+                sim.Step(TickInputs.Empty);
+                if (sim.State.Charge.Count != charges)
+                    Assert.NotEqual(1, sim.State.Charge.LastChargeTarget);
+                charges = sim.State.Charge.Count;
+            }
+        }
+
+        [Fact]
+        public void BullDoesNotAccelerateTo9_5WhileRunnerAheadWithin8m()
+        {
+            var sim = Prepared(9);
+            // отставание от медианы большое (резинка хочет разгон), но один бегун в 6 м впереди — крейсер
+            for (int t = 0; t < 120; t++)
+            {
+                double b0 = Dbl(sim.State.Bull.S);
+                sim.State.Runners[0].S = Fx(b0 + 6).Raw; sim.State.Runners[0].X = sim.State.Bull.X;
+                for (int i = 1; i < 4; i++) sim.State.Runners[i].S = Fx(b0 + 60 + i * 5).Raw;
+                sim.State.Charge.Cooldown = 100000; // без рывков: проверяем только резинку
+                sim.Step(TickInputs.Empty);
+                Assert.True(Dbl(sim.State.Bull.Speed) <= Dbl(Data.BullData.CruiseSpeed.Raw) * 1.2 + 0.01, "бык разогнался при бегуне впереди ближе порога");
+            }
         }
 
         [Fact]
@@ -365,7 +503,9 @@ namespace Game.Core.Tests
                 // нормируем на 9000 тиков, если до арены дошли раньше
                 double per5 = n * 9000.0 / System.Math.Max(ticks, 1);
                 sb.AppendLine($"seed {seed}: ticks={ticks} charges={n} per5min={per5:F1} tosses={sim.State.Charge.Tosses}");
-                if (per5 < 15 || per5 > 30) bad++; // нижняя граница 15 (не 20): лежащий подброшенный не даёт быку цель, см. вопрос F-062 в result.json
+                // F-071: нижняя граница 2 (было 15): лежащий и 30 с охлаждения после подброса не дают быку цели (F-100 §3.1 п.6),
+                // а при случайном входе бык часто подбрасывает контактом; 20–30 рывков вернёт F-072 (рывок 2 с на 11 м/с, F-100 §3.2)
+                if (per5 < 2 || per5 > 30) bad++;
             }
             _out.WriteLine(sb.ToString());
             Assert.True(bad == 0, sb.ToString());
