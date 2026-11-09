@@ -59,7 +59,8 @@ namespace Game.Core.Bots
         public string Quest;
         public bool HasQuestTarget; // цель квеста — бегун QuestTarget
         public int QuestTarget;
-        public bool Arena;          // финиш-арена (Phase.Finishing): действия не проверяются
+        public bool Arena;          // идёт финиш (Phase.Finishing, кто-то уже вбежал): темп — бег до арены, действия и квесты как обычно
+        public bool OnArena;        // сам этот бот уже на арене (финишировал): действия не проверяются (§2.5)
 
         public bool Down => StunTicks > 0 || NoSignalTicks > 0;
         public const int MaxHints = 2;
@@ -74,7 +75,7 @@ namespace Game.Core.Bots
         /// <summary>Собирает наблюдения места из состояния. Зовёт Simulation, раз в тик; без аллокаций.</summary>
         public static BotView Build(RaceState st, StreetMap street, BotData bd, int seat, IBotHintSource? hints)
         {
-            var v = new BotView { Seat = seat, Tick = st.Tick, Quest = "", Arena = st.Phase == Game.Core.Race.RacePhase.Finishing };
+            var v = new BotView { Seat = seat, Tick = st.Tick, Quest = "", Arena = st.Phase == Game.Core.Race.RacePhase.Finishing, OnArena = Game.Core.Race.Phases.IsFinished(st, seat) };
             ref readonly RunnerState me = ref st.Runners[seat];
             v.S = Fixed.FromRaw(me.S); v.X = Fixed.FromRaw(me.X); v.Speed = Fixed.FromRaw(me.Speed);
             v.Stamina = Fixed.FromRaw(me.Stamina);

@@ -6,7 +6,9 @@ namespace Game.Core.Bots
     /// или от рывка, запас выносливости; толкает при помехе; квесты — все, кроме «Чистого пробега». Числа — из BotDef/BotData.</summary>
     public sealed class Adrenaline : BotBrain
     {
-        public Adrenaline(BotData data, BotDef def) : base(data, def) { }
+        readonly BotDef _hunter; // охота «Уложи соседа»: радиус, период и агрессия тролля (§2.4)
+
+        public Adrenaline(BotData data, BotDef def) : base(data, def) { _hunter = data.Find("troll") ?? def; }
 
         protected override int HuntVictim(in BotMemory m) => m.HuntVictim;
 
@@ -15,7 +17,7 @@ namespace Game.Core.Bots
             tx = Fixed.Zero;
             if (Quest(v, "floor_neighbor"))
             {
-                HuntStep(v, ref m, Data.QuestHuntRadius, Data.QuestHuntPeriod);
+                HuntStep(v, ref m, _hunter.HuntRadius, _hunter.ActionPeriod);
                 tx = Fixed.FromRaw(m.HuntTx);
                 return m.HuntKind == 1;
             }
@@ -52,12 +54,12 @@ namespace Game.Core.Bots
             Fixed lo = Def.BandMin, hi = Def.BandMax;
             bool chase = Quest(v, "overtake") && QuestTargetAhead(v, ref m);
             if (Quest(v, "stay_hot")) { lo = Data.StayHotMin; hi = Data.StayHotMax; }
-            if (chase) hi = Data.OvertakeBand;
+            if (chase) hi = Data.OvertakeBand; // коридор расширяется до 15 м: дальше — трусца, бык подходит
             m.Sprinting = v.InvulnTicks == 0 && Below(m.Sprinting != 0, v.BullDist, Def.SprintBelow, Def.Hysteresis) ? 1 : 0;
             int pace = m.Pace > 0 ? 0 : m.Pace; // спринт — не состояние коридора
             if (m.Sprinting != 0 && v.Stamina > Def.SprintUntilStamina) pace = 1;
-            else if (chase && v.Stamina >= Def.OvertakeSprint && v.Stamina > Def.ReserveStamina) pace = 1; // без угрозы — только из запаса
-            else if (chase) pace = 0;
+            else if (chase && v.Stamina >= Def.OvertakeSprint && v.BullDist <= hi + Def.Hysteresis) pace = 1; // без угрозы — только из запаса
+            else if (chase) pace = (pace < 0 ? v.BullDist > hi - Def.Hysteresis : v.BullDist > hi + Def.Hysteresis) ? -1 : 0; // бег, пока d ≤ 15 м
             else if (pace == 0 && v.BullDist > hi + Def.Hysteresis) pace = -1;
             else if (pace < 0 && v.BullDist < lo - Def.Hysteresis) pace = 0;
             m.Pace = pace;
@@ -66,8 +68,8 @@ namespace Game.Core.Bots
 
         protected override bool ChooseAction(in BotView v, ref BotMemory m)
         {
-            if (v.Arena) return false;
-            if (Quest(v, "floor_neighbor")) return HuntPress(v, ref m); // агрессия 1.0, охота как у тролля
+            if (v.OnArena) return false;
+            if (Quest(v, "floor_neighbor")) return HuntPress(v, ref m); // агрессия 1.0 (= агрессия тролля), охота как у тролля
             if (v.Tick < m.ActionNext) return false;
             m.ActionNext = v.Tick + Def.ActionPeriod;
             if (v.ShoveCd > 0) return false;

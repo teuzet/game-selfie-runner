@@ -28,8 +28,8 @@ namespace Game.Core.Bots
         public BotDef[] Temperaments = new BotDef[0];
         public Fixed DeadZone, WallMargin, DodgeDiv, CenterDodgeMargin, SideFrame, RearFrame, NeighborReact,
             NeighborSeparation, RushSidestep, PassMargin, MarketAxis, PlazaExtra, PondEdge, LaneSwitch, ShiftEps,
-            TripReach, PushShift, WallZone, ThirdDiv, QuestHuntRadius, QuestAggression, StayHotMin, StayHotMax, OvertakeBand;
-        public int AheadMemory, NeighborHold, HuntTicks, QuestHuntPeriod;
+            TripReach, PushShift, WallZone, ThirdDiv, StayHotMin, StayHotMax, OvertakeBand;
+        public int AheadMemory, NeighborHold, HuntTicks;
 
         public static BotData None() => new BotData();
 
@@ -38,6 +38,13 @@ namespace Game.Core.Bots
             if (temperament < 0 || temperament >= Temperaments.Length)
                 throw new ArgumentOutOfRangeException(nameof(temperament), "bots.json: нет характера " + temperament);
             return Temperaments[temperament];
+        }
+
+        /// <summary>Характер по id или null (охота адреналинщика на квесте берёт числа тролля).</summary>
+        public BotDef? Find(string id)
+        {
+            for (int i = 0; i < Temperaments.Length; i++) if (Temperaments[i].Id == id) return Temperaments[i];
+            return null;
         }
 
         public static BotData Parse(string json)
@@ -54,8 +61,7 @@ namespace Game.Core.Bots
                 PlazaExtra = c.Num("plazaExtra"), PondEdge = c.Num("pondEdge"), LaneSwitch = c.Num("laneSwitch"),
                 ShiftEps = c.Num("shiftEps"), AheadMemory = c.Int("aheadMemory"), NeighborHold = c.Int("neighborHold"),
                 TripReach = c.Num("tripReach"), PushShift = c.Num("pushShift"), WallZone = c.Num("wallZone"),
-                ThirdDiv = c.Num("thirdDiv"), HuntTicks = c.Int("huntTicks"), QuestHuntRadius = c.Num("questHuntRadius"),
-                QuestHuntPeriod = c.Int("questHuntPeriod"), QuestAggression = c.Num("questAggression"),
+                ThirdDiv = c.Num("thirdDiv"), HuntTicks = c.Int("huntTicks"),
                 StayHotMin = c.Arr("stayHotBand").Num(0), StayHotMax = c.Arr("stayHotBand").Num(1), OvertakeBand = c.Num("overtakeBand"),
                 Temperaments = new BotDef[t.Count],
             };

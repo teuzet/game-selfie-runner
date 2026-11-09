@@ -73,6 +73,9 @@ namespace Game.Core.Runners
             }
         }
 
+        /// <summary>«Впереди» для подножки: сосед дальше по s и больше впереди, чем сбоку. Тем же правилом пользуются боты.</summary>
+        public static bool IsAhead(Fixed ds, Fixed dx) => ds > Fixed.Zero && ds >= Fixed.Abs(dx);
+
         static void TryAct(ActionData ad, CharacterData cd, RunnerData[] seatData, StreetMap street, RaceState st, int me, CharacterDef pusher)
         {
             ref RunnerState mr = ref st.Runners[me];
@@ -87,7 +90,7 @@ namespace Game.Core.Runners
                 Fixed ds = Fixed.FromRaw(st.Runners[t].S) - ms, dx = Fixed.FromRaw(st.Runners[t].X) - mx;
                 Fixed d2 = ds * ds + dx * dx;
                 // Впереди: сосед дальше по s и «больше впереди, чем сбоку»; иначе — сбоку.
-                if (ds > Fixed.Zero && ds >= Fixed.Abs(dx))
+                if (IsAhead(ds, dx))
                 {
                     if (d2 <= tripSq && (trip < 0 || d2 < tripBest)) { trip = t; tripBest = d2; }
                 }

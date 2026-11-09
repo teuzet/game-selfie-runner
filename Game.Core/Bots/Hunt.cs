@@ -42,7 +42,7 @@ namespace Game.Core.Bots
         protected void HuntStep(in BotView v, ref BotMemory m, Fixed radius, int period)
         {
             m.HuntKind = 0;
-            if (v.Arena) { m.HuntVictim = -1; return; }
+            if (v.OnArena) { m.HuntVictim = -1; return; }
             Fixed ds, dx; bool visible;
             if (m.HuntVictim < 0)
             {
@@ -66,8 +66,8 @@ namespace Game.Core.Bots
             bool beside = visible && Fixed.Abs(ds) <= Data.SideFrame && ds * ds + dx * dx <= Data.SideFrame * Data.SideFrame;
             if (v.Tick >= m.HuntEnd)
             {
-                // п.3: охота кончается — толкает просто так, если жертва сбоку
-                if (beside) HuntAct(v, ref m, 2); else m.HuntVictim = -1;
+                // п.3: охота кончается — толкает просто так, если жертва сбоку и толчок готов; иначе охота закрыта
+                if (beside && v.ShoveCd == 0) HuntAct(v, ref m, 2); else m.HuntVictim = -1;
                 return;
             }
             ref BotPlan p = ref NearPlan(ref m);
@@ -89,14 +89,14 @@ namespace Game.Core.Bots
             {
                 m.HuntKind = 2;
                 m.HuntTx = vx.Raw;
-                if (ds <= Data.TripReach && ds >= Fixed.Abs(dx)) HuntAct(v, ref m, 1);
+                if (ds <= Data.TripReach && Game.Core.Runners.Actions.IsAhead(ds, dx)) HuntAct(v, ref m, 1);
             }
         }
 
         /// <summary>Нажатие действия охоты: подножка/толчок, когда перезарядка готова; охота после нажатия кончается.</summary>
         protected bool HuntPress(in BotView v, ref BotMemory m)
         {
-            if (m.HuntActTick != v.Tick || v.Arena) return false;
+            if (m.HuntActTick != v.Tick || v.OnArena) return false;
             if (m.HuntAct == 1 ? v.TripCd > 0 : v.ShoveCd > 0) return false;
             m.HuntVictim = -1; m.HuntActTick = -1;
             return true;
