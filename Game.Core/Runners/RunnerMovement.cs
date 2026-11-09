@@ -56,14 +56,15 @@ namespace Game.Core.Runners
             r.Exhausted = 0;
         }
 
-        /// <summary>Один тик одного бегуна (без взаимодействия с другими).</summary>
-        public static void StepRunner(RunnerData d, StreetMap street, ref RunnerState r, PlayerInput inp)
+        /// <summary>Один тик одного бегуна (без взаимодействия с другими). down — «нет сигнала» (лежит после подброса): скорость 0, без руля и спринта.</summary>
+        public static void StepRunner(RunnerData d, StreetMap street, ref RunnerState r, PlayerInput inp, bool down = false)
         {
             Fixed s = Fixed.FromRaw(r.S), x = Fixed.FromRaw(r.X), speed = Fixed.FromRaw(r.Speed);
             Fixed stamina = Fixed.FromRaw(r.Stamina);
 
             bool stunned = r.StunTicks > 0;
             if (stunned) r.StunTicks--;
+            if (down) { stunned = true; speed = Fixed.Zero; } // лежит: стоит на месте, дальше разгон с нуля
 
             // Выносливость и допустимость спринта.
             bool sprint = inp.Pace > 0 && r.Exhausted == 0 && stamina > Fixed.Zero && !stunned;
