@@ -73,10 +73,13 @@ namespace Game.Core.Bull
     {
         private static readonly Fixed Dt = Fixed.FromFraction(1, Simulation.TicksPerSecond);
 
-        /// <summary>Загон: 25 м позади линии; срыв через countdown + releaseDelay после старта забега.</summary>
-        public static void Init(BullData d, ref BullState b)
+        /// <summary>Линия старта бегунов: lineS метров от начала блока start улицы.</summary>
+        public static Fixed StartLine(BullData d, StreetMap street) => street.Blocks[0].Start + d.LineS;
+
+        /// <summary>Загон: 25 м позади линии старта (line); срыв через countdown + releaseDelay после старта забега.</summary>
+        public static void Init(BullData d, Fixed line, ref BullState b)
         {
-            b.S = (d.LineS - d.PenOffset).Raw;
+            b.S = (line - d.PenOffset).Raw;
             b.X = 0;
             b.Speed = 0;
             b.Phase = (int)BullPhase.Pen;
@@ -149,11 +152,12 @@ namespace Game.Core.Bull
             else speed = Fixed.Max(speed - dv, target);
             s = s + speed * Dt;
 
-            // x тянется к ближайшему бегуну по |ds|+|dx|.
+            // x тянется к ближайшему бегуну по |ds|+|dx| среди тех, кто не позади быка (ds >= 0):
+            // подброшенный/отставший за спину бегун не разворачивает быка.
             int best = -1; long bestD = long.MaxValue;
             for (int i = 0; i < runners.Length; i++)
             {
-                long ds = runners[i].S - s.Raw; if (ds < 0) ds = -ds;
+                long ds = runners[i].S - s.Raw; if (ds < 0) continue;
                 long dx = runners[i].X - x.Raw; if (dx < 0) dx = -dx;
                 long dist = ds + dx;
                 if (dist < bestD) { bestD = dist; best = i; }

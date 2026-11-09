@@ -16,7 +16,7 @@ namespace Game.Core.Tests
 
         static double Dbl(long raw) => raw / (double)Fixed.OneRaw;
 
-        static BullState NewBull() { var b = new BullState(); BullMovement.Init(D, ref b); return b; }
+        static BullState NewBull() { var b = new BullState(); BullMovement.Init(D, BullMovement.StartLine(D, Street), ref b); return b; }
 
         static RunnerState[] Dummies(double s)
         {
@@ -193,7 +193,6 @@ namespace Game.Core.Tests
                 double s0 = (double)stairs.Start + 20;
                 b.S = Fixed.FromFraction((int)(s0 * 100), 100).Raw;
                 var r = Dummies(s0 + crowdLag[k]);
-                for (int i = 0; i < 4; i++) r[i].S = (Fixed.FromRaw(r[i].S)).Raw;
                 b.Speed = Fixed.FromFraction((int)(want[k] * 80), 100).Raw;
                 for (int t = 0; t < 5; t++) BullMovement.Step(D, st, ref b, r);
                 Assert.Equal(want[k] * 0.8, Dbl(b.Speed), 2);
@@ -201,7 +200,52 @@ namespace Game.Core.Tests
         }
 
         [Fact]
-        public void IgnoresObstaclesAndSteersTowardNearestRunner()
+        public void BullPassesThroughObstaclesWithoutSlowing()
+        {
+            Assert.NotEmpty(Street.Obstacles);
+            var o = Street.Obstacles[0];
+            var b = NewBull();
+            b.Phase = (int)BullPhase.Cruise; b.Timer = 0;
+            b.S = (o.S - Fixed.FromInt(2)).Raw; b.Speed = D.CruiseSpeed.Raw; b.X = o.X.Raw;
+            var r = Dummies(Dbl(b.S) + 15);
+            for (int t = 0; t < 30; t++)
+            {
+                MoveDummies(r, D.CruiseSpeed);
+                BullMovement.Step(D, Street, ref b, r);
+                // допуск на уклон соседнего блока (×0.9 минимум); просадки до стана/«в ноль» нет
+                Assert.True(b.Speed >= (D.CruiseSpeed * Fixed.FromFraction(9, 10)).Raw - 1, "бык затормозил на препятствии");
+                Assert.NotEqual((int)BullPhase.Slowed, b.Phase);
+            }
+            Assert.True(Fixed.FromRaw(b.S) > o.S + o.SizeAlong);
+        }
+
+        [Fact]
+        public void RunnerBehindBullDoesNotPullX()
+        {
+            var b = NewBull();
+            var r = Dummies(100);
+            for (int i = 0; i < 4; i++) { r[i].S = Fixed.FromInt(50).Raw; r[i].X = Fixed.FromInt(2).Raw; }
+            r[0].S = Fixed.FromInt(35).Raw; r[0].X = Fixed.FromInt(-2).Raw; // позади быка (s=40)
+            b.Phase = (int)BullPhase.Cruise; b.Timer = 0; b.S = Fixed.FromInt(40).Raw; b.Speed = Fixed.FromInt(6).Raw;
+            for (int t = 0; t < 10; t++) BullMovement.Step(D, Street, ref b, r);
+            Assert.True(Dbl(b.X) > 0, $"x={Dbl(b.X):F2}");
+        }
+
+        [Fact]
+        public void SimulationStartsRunnersOnLineAndBull25mBehind()
+        {
+            var cfg = new RaceConfig(7, new[]
+            {
+                new SeatConfig(SeatKind.Human, 0), new SeatConfig(SeatKind.Human, 1),
+                new SeatConfig(SeatKind.Human, 2), new SeatConfig(SeatKind.Bot, 3, 1),
+            });
+            var sim = new Simulation(cfg);
+            Assert.Equal(25.0, (double)(BullMovement.MedianS(sim.State.Runners) - Fixed.FromRaw(sim.State.Bull.S)), 3);
+            Assert.Equal((double)BullMovement.StartLine(D, sim.Street), Dbl(sim.State.Runners[0].S), 3);
+        }
+
+        [Fact]
+        public void SteersTowardNearestRunner()
         {
             // Ближайший бегун справа (x=+2, впереди), остальные далеко слева (x=-2): бык уходит вправо.
             var b = NewBull();

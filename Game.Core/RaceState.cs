@@ -10,12 +10,15 @@ namespace Game.Core
         public readonly RunnerState[] Runners = new RunnerState[RaceConfig.SeatCount];
         public BullState Bull;
 
-        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData)
+        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData, Fixed lineS)
         {
             Rng = new DetRandom(seed);
-            Game.Core.Bull.BullMovement.Init(bullData, ref Bull);
+            Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
+            {
                 Game.Core.Runners.RunnerMovement.InitRunner(runnerData, ref Runners[i]);
+                Runners[i].S = lineS.Raw; // бегуны на линии старта, бык — 25 м позади
+            }
         }
 
         private RaceState() { }

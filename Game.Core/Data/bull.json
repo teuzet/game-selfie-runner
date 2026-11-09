@@ -15,5 +15,5 @@
   "capsuleWidth": 1.2,
   "accel": 8,
   "steerSpeed": 3,
-  "srcNote": "penOffset 25 м, countdownSec 3, releaseDelaySec 2, chargeSpeed 9.5 — overview (Старт); lineS 30 — F-003 блок start; cruiseSpeed/closeSpeed/targetBehind/lagFar/lagNear — overview (таблица быка); stairsMul 0.8 — F-003 stairs_zone; slowedMul 0.7 (на 30% медленнее) — overview (Нет сигнала); capsuleWidth 1.2 (ширина капсулы) — overview, таблица быка; accel 8 и steerSpeed 3 — решение исполнителя F-016"
+  "srcNote": "penOffset 25 м, countdownSec 3, releaseDelaySec 2, chargeSpeed 9.5 — overview (Старт); lineS 30 — F-003 блок start (смещение линии от начала блока start, не абсолютный s); cruiseSpeed/closeSpeed/targetBehind/lagFar/lagNear — overview (таблица быка); stairsMul 0.8 — F-003 stairs_zone; slowedMul 0.7 (на 30% медленнее) — overview (Нет сигнала); capsuleWidth 1.2 (ширина капсулы) — overview, таблица быка; accel 8 и steerSpeed 3 — решение исполнителя F-016"
 }

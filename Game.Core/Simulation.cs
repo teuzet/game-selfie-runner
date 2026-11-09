@@ -31,8 +31,8 @@ namespace Game.Core
             Config = config;
             RunnerData = _defaultRunnerData ??= RunnerData.Load();
             BullData = _defaultBullData ??= BullData.Load();
-            State = new RaceState(config.Seed, RunnerData, BullData);
             Street = street ?? StreetGenerator.Build(config.Seed, _defaultData ??= StreetData.Load(), StreetPool.Core);
+            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street));
         }
 
         private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd) { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; }
