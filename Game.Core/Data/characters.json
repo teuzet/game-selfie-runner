@@ -9,5 +9,5 @@
     { "id": "grandma", "speed": 0.88, "stability": 1.6, "viewers": 1.2, "tastiness": 0.6, "noSignal": 5, "perk": "grandmaBag", "perkValue": 2.5 },
     { "id": "nerd", "speed": 1.00, "stability": 0.9, "viewers": 1.0, "tastiness": 1.0, "noSignal": 3, "perk": "nerdModerator", "perkValue": 0 }
   ],
-  "perkNote": "perkValue: glamourLoyalViewers — доля стоимости «влез в кадр» (0.5 = в 2 раза меньше); athleteEndurance — множитель восстановления выносливости (1.5 = на 50% быстрее); grandmaBag — дальность её толчка, м; nerdModerator — не используется (подсказки без шума)."
+  "perkNote": "perkValue: glamourLoyalViewers — доля стоимости «влез в кадр» (0.5 = в 2 раза меньше); athleteEndurance — множитель восстановления выносливости (1.5 = на 50% быстрее); grandmaBag — дальность её толчка, м (читает F-015, сдвиг цели не меняет); nerdModerator — не используется (подсказки без шума)."
 }

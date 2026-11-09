@@ -11,7 +11,7 @@ namespace Game.Core.Runners
         None = 0,
         GlamourLoyalViewers = 1, // «влез в кадр» тянет зрителей в 1/PerkValue раз меньше (F-015)
         AthleteEndurance = 2,    // восстановление выносливости × PerkValue (здесь)
-        GrandmaBag = 3,          // её толчок бьёт на PerkValue м (здесь)
+        GrandmaBag = 3,          // дальность её толчка PerkValue м (F-015); сдвиг цели не меняет
         NerdModerator = 4,       // подсказки чата без шума (F-021)
     }
 
@@ -139,19 +139,18 @@ namespace Game.Core.Runners
             };
         }
 
-        /// <summary>Сдвиг цели толчком по x, м: дальность толчка (у бабули — сумка) / устойчивость цели.</summary>
-        public static Fixed ShoveDistance(CharacterData d, CharacterDef pusher, Fixed targetStability)
+        /// <summary>Сдвиг цели толчком по x, м: shoveDistance / устойчивость цели, от толкающего не зависит (сумка бабули — дальность, F-015).</summary>
+        public static Fixed ShoveDistance(CharacterData d, Fixed targetStability)
         {
-            Fixed dist = pusher.Perk == Perk.GrandmaBag ? pusher.PerkValue : d.ShoveDistance;
             if (targetStability <= Fixed.Zero) targetStability = Fixed.One;
-            return dist / targetStability;
+            return d.ShoveDistance / targetStability;
         }
 
         /// <summary>Толчок: цель сдвигается на dir (−1 влево, +1 вправо) × ShoveDistance, теряет долю скорости. Вызывает механика толчка.</summary>
         public static void ApplyShove(CharacterData d, RunnerData rd, StreetMap street, RaceState st, CharacterDef pusher, int target, int dir)
         {
             ref RunnerState r = ref st.Runners[target];
-            Fixed dist = ShoveDistance(d, pusher, Fixed.FromRaw(st.Stability[target]));
+            Fixed dist = ShoveDistance(d, Fixed.FromRaw(st.Stability[target]));
             Fixed x = Fixed.FromRaw(r.X) + Fixed.FromInt(dir < 0 ? -1 : 1) * dist;
             r.X = RunnerMovement.ClampToStreet(rd, street, Fixed.FromRaw(r.S), x).Raw;
             r.Speed = (Fixed.FromRaw(r.Speed) * (Fixed.One - d.ShoveSpeedLoss)).Raw;
