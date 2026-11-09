@@ -225,7 +225,7 @@
         "Факт столкновения (тип, место, тик) записывается в RunnerState для событий F-019; повторное столкновение с тем же препятствием во время стана не считается.",
         "Тесты: столб даёт стан 0.6 с при устойчивости 1.0 и 0.375 с при 1.6; бельё не станит; зевака движется детерминированно; детерминизм."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -698,7 +698,7 @@
         "Проверка обязательна, хвост лога с итогом — в notes результата: `Unity -batchmode -nographics -quit -projectPath Unity -logFile Unity/Logs/batch.log` без ошибок компиляции и `Unity -batchmode -nographics -projectPath Unity -runTests -testPlatform EditMode -testResults Unity/Logs/editmode.xml -logFile -` зелёный (Unity.exe — из C:/Program Files/Unity/Hub/Editor/6000.3*/Editor/ или переменной UNITY_PATH). Если редактора на машине нет — не имитировать: записать это в notes и остановиться без коммита, фича вернётся техлиду."
       ],
       "status": "running",
-      "attempts": 0,
+      "attempts": 1,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
       "owned_files": [
