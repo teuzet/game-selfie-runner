@@ -68,6 +68,11 @@ namespace Game.Core
             Collisions.BeforeMove(st);
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
+                // «Нет сигнала» (F-017): вход игнорируется и для движения, и для действий.
+                if (st.Tosses[i].NoSignalTicks > 0) inputs = inputs.With(i, default);
+            }
+            for (int i = 0; i < RaceConfig.SeatCount; i++)
+            {
                 // Внешний вход бота игнорируется (место ведёт сам Simulation; мозги ботов — позже).
                 var inp = Config.GetSeat(i).Kind == SeatKind.Bot ? default : inputs.Get(i);
                 RunnerMovement.StepRunner(_seatData[i], Street, ref st.Runners[i], inp);
@@ -76,7 +81,9 @@ namespace Game.Core
             MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);
             Collisions.After(RunnerData, Street, st);
             Actions.Step(ActionData, CharacterData, _seatData, Street, st, Config, inputs);
+            long prevBullS = st.Bull.S;
             BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
+            BullCharge.Step(this, prevBullS);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
         }
