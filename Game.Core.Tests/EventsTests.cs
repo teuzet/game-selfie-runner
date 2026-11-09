@@ -76,7 +76,7 @@ namespace Game.Core.Tests
             var files = GameData.ReadFiles();
             string json = files.Get("economy.json")
                 .Replace("\"collisionViewers\": 40", "\"collisionViewers\": 25")
-                .Replace("\"tossDonations\": 50", "\"tossDonations\": 70");
+                .Replace("\"tossDonations\": 20", "\"tossDonations\": 70"); // 20 — ручка плейтеста итерации 2 (playtest/iter-2.md)
             var data = GameData.Parse(files.Add("economy.json", json));
             var (sim, ctl) = StepWithFact(new Simulation(Cfg(0, 1, 2, 3), data).Running(), s =>
             {
@@ -101,14 +101,17 @@ namespace Game.Core.Tests
         }
 
         [Fact]
-        public void TossGivesOneEventPlus120ViewersAnd50Donations()
+        public void TossGivesOneEventPlus120ViewersAndTossDonations()
         {
+            // Донаты за подброс — ручка плейтеста (economy.json tossDonations, предел 0–80): итерация 2 поставила 20 вместо 50
+            // (playtest/iter-2.md → «Тюнинг»), поэтому число берётся из данных, а не литералом.
             var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s => s.Runners[3].Toss.Tossed++);
             Assert.Equal(1, sim.Events.Count);
             Assert.Equal(RaceEventType.Tossed, sim.Events[0].Type);
             Assert.Equal(3, sim.Events[0].Seat);
             Assert.Equal(V(120), DV(sim, ctl, 3));
-            Assert.Equal(V(50), DD(sim, ctl, 3));
+            Assert.Equal(20, sim.EconomyData.TossDonations);
+            Assert.Equal(V(sim.EconomyData.TossDonations), DD(sim, ctl, 3));
         }
 
         [Fact]

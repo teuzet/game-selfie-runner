@@ -112,9 +112,10 @@ public class ViewersTests
     public void WarmZoneAndMultiplierOnGainsOnly()
     {
         var sim = Make();
-        Run(sim, 12, 300); // +5/с × 10 с
-        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers), 149.9, 150.01);
-        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[0].Viewing.Viewers), 169.9, 170.01); // ×1.4
+        // Зона «тепло» +8/с — ручка плейтеста итерации 2 (playtest/iter-2.md → «Тюнинг»; предел +2…+8), было +5/с.
+        Run(sim, 12, 300); // +8/с × 10 с
+        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers), 179.9, 180.01);
+        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[0].Viewing.Viewers), 211.9, 212.01); // ×1.4
         var sim2 = Make();
         Run(sim2, 30, 150); // убыль без множителя: у гламура как у ботаника
         Assert.Equal(sim2.State.Runners[3].Viewing.Viewers, sim2.State.Runners[0].Viewing.Viewers);
@@ -183,6 +184,9 @@ public class ViewersTests
         Assert.Equal(Fixed.FromInt(50), d.CoolRange);
         Assert.Equal(Fixed.FromInt(-2), d.CoolRate);
         Assert.Equal(Fixed.FromInt(-6), d.ColdRate);
+        // Ручки плейтеста итерации 2 (playtest/iter-2.md → «Тюнинг»): тепло +8/с (предел +2…+8), донаты за подброс 20 (предел 0–80).
+        Assert.Equal(Fixed.FromInt(8), d.WarmRate);
+        Assert.Equal(20, d.TossDonations);
     }
 
     [Fact]
