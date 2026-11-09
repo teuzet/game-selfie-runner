@@ -13,9 +13,11 @@ namespace Game.Core.Runners
         public Fixed JogSpeed, RunSpeed, SprintSpeed, StaminaMax, SprintDrain, StaminaRegen, SprintResume,
             Accel, SteerSpeed, Radius, Separation;
 
+        public const string FileName = "runners.json";
+
         public static RunnerData Parse(string json)
         {
-            var j = Json.Parse("runners.json", json, truncate: true);
+            var j = Json.Parse(FileName, json, truncate: true);
             return new RunnerData
             {
                 JogSpeed = j.Num("jogSpeed"), RunSpeed = j.Num("runSpeed"), SprintSpeed = j.Num("sprintSpeed"),
@@ -54,6 +56,20 @@ namespace Game.Core.Runners
         {
             r.Stamina = d.StaminaMax.Raw;
             r.Exhausted = 0;
+        }
+
+        /// <summary>«Нет сигнала» (F-017): вход лежащего места игнорируется и для движения, и для действий.</summary>
+        public static void MuteNoSignal(ref TickInputs inputs, RunnerState[] runners)
+        {
+            for (int i = 0; i < runners.Length; i++)
+                if (runners[i].Toss.NoSignalTicks > 0) inputs = inputs.With(i, default);
+        }
+
+        /// <summary>Один тик всех мест (темп, выносливость, руль, уклон, стены); у лежащего («нет сигнала») скорость 0.</summary>
+        public static void StepAll(RunnerData[] seatData, StreetMap street, RunnerState[] runners, TickInputs inputs)
+        {
+            for (int i = 0; i < runners.Length; i++)
+                StepRunner(seatData[i], street, ref runners[i], inputs.Get(i), runners[i].Toss.NoSignalTicks > 0);
         }
 
         /// <summary>Один тик одного бегуна (без взаимодействия с другими). down — «нет сигнала» (лежит после подброса): скорость 0, без руля и спринта.</summary>

@@ -210,6 +210,28 @@ namespace Game.Core.Bots
             }
         }
 
+        /// <summary>Мозги по местам конфига (null у людей и у ботов, если в bots.json нет характеров); неизменяемы.</summary>
+        public static IBotBrain?[] CreateAll(BotData data, RaceConfig config)
+        {
+            var brains = new IBotBrain?[RaceConfig.SeatCount];
+            for (int i = 0; i < brains.Length; i++)
+                if (config.GetSeat(i).Kind == SeatKind.Bot && data.Temperaments.Length > 0)
+                    brains[i] = Create(data, config.GetSeat(i).BotTemperament);
+            return brains;
+        }
+
+        /// <summary>Подмена входов мест-ботов (F-023): внешний вход игнорируется, место ведёт мозг по наблюдениям; бот без мозга стоит.</summary>
+        public static void FillInputs(IBotBrain?[] brains, RaceState st, Game.Core.Street.Street street, BotData data,
+            RaceConfig config, IBotHintSource? hints, ref TickInputs inputs)
+        {
+            for (int i = 0; i < brains.Length; i++)
+            {
+                IBotBrain? brain = brains[i];
+                if (brain != null) inputs = inputs.With(i, Think(brain, st, street, data, i, hints));
+                else if (config.GetSeat(i).Kind == SeatKind.Bot) inputs = inputs.With(i, default);
+            }
+        }
+
         /// <summary>Один тик мозга места: наблюдения → решение. Память лежит в RaceState.Bots.</summary>
         public static PlayerInput Think(IBotBrain brain, RaceState st, Game.Core.Street.Street street, BotData data, int seat, IBotHintSource? hints)
         {

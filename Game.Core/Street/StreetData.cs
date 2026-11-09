@@ -48,9 +48,11 @@ namespace Game.Core.Street
             return Parse(File.ReadAllText(path, Encoding.UTF8));
         }
 
+        public const string FileName = "street.json";
+
         public static StreetData Parse(string json)
         {
-            var root = Json.Parse("street.json", json);
+            var root = Json.Parse(FileName, json);
             var d = new StreetData();
             var blocks = root.Arr("blocks");
             d.Blocks = new BlockDef[blocks.Count];

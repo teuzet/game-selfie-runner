@@ -57,16 +57,11 @@ namespace Game.Core
             ActionData = data.ActionData;
             EconomyData = data.EconomyData;
             BotData = data.BotData;
-            _brains = new IBotBrain?[RaceConfig.SeatCount];
-            for (int i = 0; i < _brains.Length; i++)
-                if (config.GetSeat(i).Kind == SeatKind.Bot && BotData.Temperaments.Length > 0)
-                    _brains[i] = BotBrains.Create(BotData, config.GetSeat(i).BotTemperament);
-            _seatData = new RunnerData[RaceConfig.SeatCount];
-            for (int i = 0; i < _seatData.Length; i++)
-                _seatData[i] = Characters.ForSeat(RunnerData, CharacterData.Get(config.GetSeat(i).CharacterId));
+            _brains = BotBrains.CreateAll(BotData, config);
+            _seatData = Characters.ForSeats(RunnerData, CharacterData, config);
             Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
             ArenaStart = Phases.ArenaStart(Street);
-            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData, EconomyData);
+            State = new RaceState(config, data, Street, BullMovement.StartLine(BullData, Street));
         }
 
         private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData, Fixed arenaStart, BotData bots, IBotBrain?[] brains)
@@ -90,50 +85,36 @@ namespace Game.Core
 
         public ulong StateHash() => State.StateHash();
 
-        /// <summary>Тик: движение бегунов (темп, выносливость, руль, уклон, стены), затем расталкивание.</summary>
+        /// <summary>Тик: список вызовов модулей в порядке MODULES.md → «Порядок шага». Логики здесь нет.</summary>
         public void Step(TickInputs inputs)
         {
             var st = State;
             Events.Clear();
             if (st.Phase == RacePhase.Over) { st.Tick++; return; } // итоги: состояние заморожено
-            if (st.Phase == RacePhase.Countdown)
-            {
-                // Отсчёт: бегуны стоят, зрители не меняются; бык в загоне только ведёт таймер срыва.
-                BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
-                Phases.StepCountdown(this);
-                st.Tick++;
-                return;
-            }
+            if (st.Phase == RacePhase.Countdown) { StepCountdown(); return; }
             Collisions.BeforeMove(st);
-            for (int i = 0; i < RaceConfig.SeatCount; i++)
-            {
-                // Место бота ведёт мозг (F-023): внешний вход игнорируется, подменяется решением по наблюдениям.
-                IBotBrain? brain = _brains[i];
-                if (brain != null) inputs = inputs.With(i, BotBrains.Think(brain, st, Street, BotData, i, BotHints));
-                else if (Config.GetSeat(i).Kind == SeatKind.Bot) inputs = inputs.With(i, default);
-            }
-            for (int i = 0; i < RaceConfig.SeatCount; i++)
-            {
-                // «Нет сигнала» (F-017): вход игнорируется и для движения, и для действий.
-                if (st.Runners[i].Toss.NoSignalTicks > 0) inputs = inputs.With(i, default);
-            }
-            for (int i = 0; i < RaceConfig.SeatCount; i++)
-            {
-                RunnerMovement.StepRunner(_seatData[i], Street, ref st.Runners[i], inputs.Get(i), st.Runners[i].Toss.NoSignalTicks > 0);
-            }
+            BotBrains.FillInputs(_brains, st, Street, BotData, Config, BotHints, ref inputs);
+            RunnerMovement.MuteNoSignal(ref inputs, st.Runners);
+            RunnerMovement.StepAll(_seatData, Street, st.Runners, inputs);
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
             MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);
             Collisions.After(RunnerData, Street, st);
             Actions.Step(ActionData, CharacterData, _seatData, Street, st, Config, inputs);
-            long prevBullS = st.Bull.S;
-            BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
-            BullCharge.Step(this, prevBullS);
+            BullCharge.StepBull(this);
             Viewers.Step(this);
             FrameSteal.Step(this);
             EventScan.Run(this);
             Phases.Step(this);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
+        }
+
+        /// <summary>Отсчёт (шаг 1): бегуны стоят, зрители не меняются; бык в загоне только ведёт таймер срыва.</summary>
+        private void StepCountdown()
+        {
+            BullMovement.Step(BullData, Street, ref State.Bull, State.Runners);
+            Phases.StepCountdown(this);
+            State.Tick++;
         }
     }
 }

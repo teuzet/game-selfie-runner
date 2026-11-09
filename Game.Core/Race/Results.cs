@@ -10,6 +10,13 @@ namespace Game.Core.Race
         public long Value;
 
         public static Moment None => new Moment { Seat = -1, Tick = -1, Value = 0 };
+
+        public ulong Hash(ulong h)
+        {
+            h = Math.Hashing.Mix(h, (ulong)(uint)Seat);
+            h = Math.Hashing.Mix(h, (ulong)(uint)Tick);
+            return Math.Hashing.Mix(h, (ulong)Value);
+        }
     }
 
     /// <summary>3 лучших момента забега, накапливаются по ходу и входят в RaceState и хэш (design/overview.md, «итоговый экран»).</summary>
@@ -20,6 +27,8 @@ namespace Game.Core.Race
         public Moment CostliestFail;   // самый дорогой фейл: подброс, потеря зрителей за «нет сигнала»
 
         public static Highlights Empty => new Highlights { MaxViewers = Moment.None, LongestHot = Moment.None, CostliestFail = Moment.None };
+
+        public ulong Hash(ulong h) => CostliestFail.Hash(LongestHot.Hash(MaxViewers.Hash(h)));
     }
 
     /// <summary>Итоги забега: порядок мест; лучшие моменты лежат в RaceState.Best.</summary>

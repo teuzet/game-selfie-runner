@@ -465,7 +465,9 @@ public class BotCowardTests
     [Fact]
     public void BotSeatWithoutBotsJsonStaysIdle()
     {
-        var bare = new GameData(Data.RunnerData, Data.BullData, Data.StreetData);
+        // Без bots.json: BotData.None() — сборка вручную, из файлов такой набор не получить.
+        var bare = new GameData(Data.RunnerData, Data.BullData, Data.StreetData, Data.CharacterData, Data.ActionData,
+            Data.EconomyData, Game.Core.Bots.BotData.None());
         var a = new Simulation(Cowards(3), bare).Running();
         var b = new Simulation(Cowards(3), bare).Running();
         for (int t = 0; t < 60; t++)

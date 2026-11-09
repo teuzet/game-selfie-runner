@@ -16,6 +16,19 @@ namespace Game.Core.Street
     {
         static readonly Fixed Dt = Fixed.FromFraction(1, Simulation.TicksPerSecond);
 
+        /// <summary>Хэш состояния модуля Street: динамика подвижных препятствий и флаги «уже действовало» (Hit).</summary>
+        public static ulong Hash(ulong h, ObstacleDyn[] dyn, byte[] hit)
+        {
+            for (int i = 0; i < dyn.Length; i++)
+            {
+                h = Hashing.Mix(h, (ulong)dyn[i].X);
+                h = Hashing.Mix(h, (ulong)(uint)dyn[i].Dir);
+                h = Hashing.Mix(h, (ulong)(uint)dyn[i].OpenTick);
+            }
+            for (int i = 0; i < hit.Length; i++) h = Hashing.Mix(h, hit[i]);
+            return h;
+        }
+
         public static void Init(StreetMap street, ObstacleDyn[] dyn)
         {
             for (int i = 0; i < street.Obstacles.Length; i++)

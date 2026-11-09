@@ -15,5 +15,13 @@ namespace Game.Core
         public int Timer;     // Pen: тиков до срыва из загона
         public int Mode;      // BullMode
         public int SlowTicks; // оставшиеся тики замедления (ставят другие фичи через BullMovement.Slow)
+
+        public ulong Hash(ulong h)
+        {
+            h = Math.Hashing.Mix(h, (ulong)S); h = Math.Hashing.Mix(h, (ulong)X); h = Math.Hashing.Mix(h, (ulong)Speed);
+            h = Math.Hashing.Mix(h, (ulong)Phase); h = Math.Hashing.Mix(h, (ulong)Timer);
+            h = Math.Hashing.Mix(h, (ulong)Mode);
+            return Math.Hashing.Mix(h, (ulong)SlowTicks);
+        }
     }
 }

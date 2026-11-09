@@ -12,7 +12,7 @@
 | Модуль | Папка / файлы | Состояние (в `RaceState`) | Данные | Логика | Может зависеть от |
 |---|---|---|---|---|---|
 | Math | `Math/` | — | — | `Fixed`, `DetRandom` | — |
-| Data | `Data/Json.cs`, `GameData.cs` | — | все `Data/*.json` как тексты | парсер JSON, сборка `GameData` из текстов | Math |
+| Data | `Data/Json.cs`, `Data/DataFiles.cs`, `GameData.cs` | — | все `Data/*.json` как набор `DataFiles` («имя файла → текст») | парсер JSON, сборка `GameData` из набора (каждый модуль объявляет `*Data.FileName` и парсит себя) | Math |
 | Street | `Street/` | `Dyn[]` (подвижные препятствия), `Hit[]` (кто с чем уже столкнулся) | `street.json` | генератор по сиду, запросы `WidthAt/SlopeAt/BlockIndexAt`, движение препятствий | Math, Data |
 | Runners | `Runners/` | `RunnerState`: движение, `Collision`, `Action`, `Stability` | `runners.json`, `characters.json`, `actions.json` | движение и темп, расталкивание, столкновения, толчок и подножка, персонажи | Street, Math, Data |
 | Bull | `Bull/` | `Bull`, `Charge`, `RunnerState.Toss` | `bull.json` | загон и срыв, резинка, рывок, выбор цели, подброс и «нет сигнала» (переносит `S` цели — это и есть подброс) | Runners (позиции, персонаж), Street, Math, Data |
@@ -41,5 +41,9 @@
 
 Hints (F-021) встанет между 1 и 2 (подсказки тика нужны ботам того же тика), Quests (F-022) — после 8.
 
+## Хэш состояния (`RaceState.StateHash`)
+Композиция хэшей модулей, порядок фиксирован (`Hashing.Mix` — `Math/Hashing.cs`; у каждой структуры состояния свой `Hash(ulong h)` рядом с ней): хаб (`Tick`, `Rng`) → места `RunnerState.Hash` (движение и `Stability` — Runners, затем `Collision`, `Action` — Runners, `Toss` — Bull, `Viewing` — Economy) → Street (`MovingObstacles.Hash`: `Dyn`, `Hit`) → Bull (`BullState`, `BullChargeState`) → Events (`EventState`) → Economy (`FrameState`) → Race (`Phases.Hash`: фаза, таймер, лучшие моменты, трекеры) → Bots (`BotMemory`). Новая структура состояния — `Hash` рядом и одна строка в `StateHash`; `StateLayoutTests.EveryRunnerFieldChangesStateHash` ловит поле `RunnerState`, не попавшее в хэш.
+
 ## История связей
+- 2026-11-09 · F-070 · код приведён к карте: отступлений от неё нет, новых связей нет. Подмена входов ботов — `BotBrains.FillInputs`, глушение входа лежащего — `RunnerMovement.MuteNoSignal`, движение мест — `RunnerMovement.StepAll`, бык за тик — `BullCharge.StepBull`; отсчёт — в `Simulation.StepCountdown` двумя вызовами (`BullMovement.Step`, `Phases.StepCountdown`), чтобы Race не вызывал движение Bull. Хэш забега переснят (порядок композиции).
 - 2026-11-09 · техлид · карта составлена при закрытии итерации 1 по фактическому коду; расхождения с кодом (хэш в `RaceState` по полям чужих структур, 7 позиционных аргументов `GameData.Parse`, логика подмены входов в `Simulation.Step`) исправляет F-070.

@@ -72,36 +72,38 @@ namespace Game.Core.Bots
 
         public ulong Hash(ulong h)
         {
-            h = RaceState.Mix(h, Rng.State); h = RaceState.Mix(h, Rng.Inc);
-            h = RaceState.Mix(h, (ulong)(uint)TempoNext); h = RaceState.Mix(h, (ulong)(uint)Sprinting); h = RaceState.Mix(h, (ulong)(uint)Pace);
-            h = RaceState.Mix(h, (ulong)(uint)RushSeen); h = RaceState.Mix(h, (ulong)(uint)RushReactAt);
+            h = Mix(h, Rng.State); h = Mix(h, Rng.Inc);
+            h = Mix(h, (ulong)(uint)TempoNext); h = Mix(h, (ulong)(uint)Sprinting); h = Mix(h, (ulong)(uint)Pace);
+            h = Mix(h, (ulong)(uint)RushSeen); h = Mix(h, (ulong)(uint)RushReactAt);
             h = HashPlan(h, P0); h = HashPlan(h, P1);
-            h = RaceState.Mix(h, (ulong)(uint)NbReactAt); h = RaceState.Mix(h, (ulong)(uint)NbDir);
-            h = RaceState.Mix(h, (ulong)(uint)NbHoldUntil); h = RaceState.Mix(h, (ulong)NbTargetX);
-            h = RaceState.Mix(h, (ulong)(uint)LaneSide);
+            h = Mix(h, (ulong)(uint)NbReactAt); h = Mix(h, (ulong)(uint)NbDir);
+            h = Mix(h, (ulong)(uint)NbHoldUntil); h = Mix(h, (ulong)NbTargetX);
+            h = Mix(h, (ulong)(uint)LaneSide);
             h = HashNb(h, N0); h = HashNb(h, N1); h = HashNb(h, N2); h = HashNb(h, N3);
-            h = RaceState.Mix(h, (ulong)(uint)HuntVictim); h = RaceState.Mix(h, (ulong)(uint)HuntEnd);
-            h = RaceState.Mix(h, (ulong)(uint)HuntNext); h = RaceState.Mix(h, (ulong)(uint)HuntReady);
-            h = RaceState.Mix(h, (ulong)(uint)HuntKind); h = RaceState.Mix(h, (ulong)HuntTx);
-            h = RaceState.Mix(h, (ulong)(uint)HuntAct); h = RaceState.Mix(h, (ulong)(uint)HuntActTick);
-            h = RaceState.Mix(h, (ulong)(uint)ActionNext); h = RaceState.Mix(h, (ulong)LastTx);
+            h = Mix(h, (ulong)(uint)HuntVictim); h = Mix(h, (ulong)(uint)HuntEnd);
+            h = Mix(h, (ulong)(uint)HuntNext); h = Mix(h, (ulong)(uint)HuntReady);
+            h = Mix(h, (ulong)(uint)HuntKind); h = Mix(h, (ulong)HuntTx);
+            h = Mix(h, (ulong)(uint)HuntAct); h = Mix(h, (ulong)(uint)HuntActTick);
+            h = Mix(h, (ulong)(uint)ActionNext); h = Mix(h, (ulong)LastTx);
             return h;
         }
 
+        static ulong Mix(ulong h, ulong v) => Hashing.Mix(h, v);
+
         static ulong HashPlan(ulong h, in BotPlan p)
         {
-            h = RaceState.Mix(h, (ulong)(uint)p.Used); h = RaceState.Mix(h, (ulong)(uint)p.ReactAt);
-            h = RaceState.Mix(h, (ulong)p.ExpectedS); h = RaceState.Mix(h, (ulong)(uint)p.Side);
-            h = RaceState.Mix(h, (ulong)(uint)p.Full);
-            return RaceState.Mix(h, (ulong)(uint)p.Stall);
+            h = Mix(h, (ulong)(uint)p.Used); h = Mix(h, (ulong)(uint)p.ReactAt);
+            h = Mix(h, (ulong)p.ExpectedS); h = Mix(h, (ulong)(uint)p.Side);
+            h = Mix(h, (ulong)(uint)p.Full);
+            return Mix(h, (ulong)(uint)p.Stall);
         }
 
         static ulong HashNb(ulong h, in BotNeighborMem n)
         {
-            h = RaceState.Mix(h, (ulong)(uint)n.LastTick); h = RaceState.Mix(h, (ulong)n.DS);
-            h = RaceState.Mix(h, (ulong)n.DX); h = RaceState.Mix(h, (ulong)n.Speed);
-            h = RaceState.Mix(h, (ulong)n.PrevX); h = RaceState.Mix(h, (ulong)(uint)n.PrevTick);
-            return RaceState.Mix(h, (ulong)(uint)n.Dir);
+            h = Mix(h, (ulong)(uint)n.LastTick); h = Mix(h, (ulong)n.DS);
+            h = Mix(h, (ulong)n.DX); h = Mix(h, (ulong)n.Speed);
+            h = Mix(h, (ulong)n.PrevX); h = Mix(h, (ulong)(uint)n.PrevTick);
+            return Mix(h, (ulong)(uint)n.Dir);
         }
     }
 }

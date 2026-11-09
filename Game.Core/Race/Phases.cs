@@ -14,12 +14,37 @@ namespace Game.Core.Race
         public int HotRun, HotStart;       // текущий отрезок подряд в горячей зоне: тиков и тик начала
         public int FailActive, FailTick;   // идёт «нет сигнала» после подброса; тик подброса
         public long FailViewers;           // зрители в начале фейла
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, (ulong)(uint)HotRun); h = Hashing.Mix(h, (ulong)(uint)HotStart);
+            h = Hashing.Mix(h, (ulong)(uint)FailActive); h = Hashing.Mix(h, (ulong)(uint)FailTick);
+            return Hashing.Mix(h, (ulong)FailViewers);
+        }
     }
 
     /// <summary>Фазы забега, финиш на арене и запись лучших моментов. Числа — Data/bull.json (countdownSec, finishSec). Без аллокаций.</summary>
     public static class Phases
     {
         const int Tps = Simulation.TicksPerSecond;
+
+        /// <summary>Начало забега: отсчёт, пустые лучшие моменты.</summary>
+        public static void InitState(BullData d, out RacePhase phase, out int phaseTicks, out Highlights best)
+        {
+            phase = RacePhase.Countdown;
+            phaseTicks = CountdownTicks(d);
+            best = Highlights.Empty;
+        }
+
+        /// <summary>Хэш состояния модуля Race: фаза, таймер, лучшие моменты, трекеры по местам.</summary>
+        public static ulong Hash(ulong h, RacePhase phase, int phaseTicks, in Highlights best, HighlightTracker[] trackers)
+        {
+            h = Hashing.Mix(h, (ulong)(uint)phase);
+            h = Hashing.Mix(h, (ulong)(uint)phaseTicks);
+            h = best.Hash(h);
+            for (int i = 0; i < trackers.Length; i++) h = trackers[i].Hash(h);
+            return h;
+        }
 
         public static int CountdownTicks(BullData d) => (d.CountdownSec * Fixed.FromInt(Tps)).ToInt();
         public static int FinishTicks(BullData d) => (d.FinishSec * Fixed.FromInt(Tps)).ToInt();

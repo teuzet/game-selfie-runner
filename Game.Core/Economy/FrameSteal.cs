@@ -9,6 +9,8 @@ namespace Game.Core.Economy
     {
         public int Victim;  // сосед, перед которым вор в кадре; -1 — никого
         public int Ticks;   // сколько тиков подряд
+
+        public ulong Hash(ulong h) => Hashing.Mix(Hashing.Mix(h, (ulong)(uint)Victim), (ulong)(uint)Ticks);
     }
 
     /// <summary>«Влез в кадр»: ≤2 м позади соседа дольше 1 с тянет 6 зрителей/с (design/overview.md, «Зрители и донаты»).

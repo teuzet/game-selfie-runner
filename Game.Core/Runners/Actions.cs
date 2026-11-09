@@ -17,9 +17,11 @@ namespace Game.Core.Runners
             TripStun = Fixed.FromFraction(3, 5), StairsPushBack = Fixed.FromFraction(3, 5),
         };
 
+        public const string FileName = "actions.json";
+
         public static ActionData Parse(string json)
         {
-            var j = Json.Parse("actions.json", json, truncate: true);
+            var j = Json.Parse(FileName, json, truncate: true);
             return new ActionData
             {
                 ShoveRange = j.Num("shoveRange"), ShoveCooldown = j.Num("shoveCooldown"),
@@ -37,6 +39,18 @@ namespace Game.Core.Runners
         public int GotShoved, GotTripped;     // «тебя толкнули», «упал от подножки» (я — цель)
         public int LastShoveTick, LastTripTick, LastGotShovedTick, LastGotTrippedTick; // -1 — не было
         public int LastShoveTarget, LastTripTarget, LastShovedBy, LastTrippedBy;       // место, -1 — нет
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, (ulong)(uint)ShoveCd); h = Hashing.Mix(h, (ulong)(uint)TripCd);
+            h = Hashing.Mix(h, (ulong)(uint)Shoved); h = Hashing.Mix(h, (ulong)(uint)Tripped);
+            h = Hashing.Mix(h, (ulong)(uint)GotShoved); h = Hashing.Mix(h, (ulong)(uint)GotTripped);
+            h = Hashing.Mix(h, (ulong)(uint)LastShoveTick); h = Hashing.Mix(h, (ulong)(uint)LastTripTick);
+            h = Hashing.Mix(h, (ulong)(uint)LastGotShovedTick); h = Hashing.Mix(h, (ulong)(uint)LastGotTrippedTick);
+            h = Hashing.Mix(h, (ulong)(uint)LastShoveTarget); h = Hashing.Mix(h, (ulong)(uint)LastTripTarget);
+            h = Hashing.Mix(h, (ulong)(uint)LastShovedBy);
+            return Hashing.Mix(h, (ulong)(uint)LastTrippedBy);
+        }
     }
 
     /// <summary>Контекстное действие (PlayerInput.action): подножка впереди приоритетнее толчка сбоку. Без аллокаций.</summary>

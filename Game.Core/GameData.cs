@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Game.Core.Bots;
 using Game.Core.Bull;
+using Game.Core.Data;
 using Game.Core.Economy;
 using Game.Core.Runners;
 using Game.Core.Street;
@@ -10,60 +11,67 @@ using Game.Core.Street;
 namespace Game.Core
 {
     /// <summary>
-    /// Все Data/*.json ядра одним объектом. Новая core-фича с JSON добавляет сюда поле и аргумент Parse.
-    /// Parse диск не трогает; Load нужен только тестам и RaceRunner (хост Unity читает файлы сам).
+    /// Все Data/*.json ядра одним объектом: сумма данных модулей. Модуль сам объявляет имя своего файла (*Data.FileName)
+    /// и парсит себя; новый JSON — одно поле здесь и одна строка сборки в Parse, сигнатура Parse не меняется.
+    /// Parse диск не трогает; Load нужен только тестам и Game.Sim (хост Unity читает файлы сам и зовёт Parse).
     /// </summary>
     public sealed class GameData
     {
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
         public StreetData StreetData { get; }
-
         public CharacterData CharacterData { get; }
         public ActionData ActionData { get; }
-
         public EconomyData EconomyData { get; }
-
-        /// <summary>Характеры ботов (bots.json); без файла — BotData.None, боты стоят без мозга.</summary>
         public BotData BotData { get; }
 
-        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData? characterData = null, ActionData? actionData = null, EconomyData? economyData = null, BotData? botData = null)
+        /// <summary>Сборка из готовых данных модулей (Parse и тесты, которым нужен нестандартный набор).</summary>
+        public GameData(RunnerData runnerData, BullData bullData, StreetData streetData, CharacterData characterData,
+            ActionData actionData, EconomyData economyData, BotData botData)
         {
-            BotData = botData ?? BotData.None();
-            EconomyData = economyData ?? EconomyData.Default();
-            ActionData = actionData ?? ActionData.Default();
-            CharacterData = characterData ?? CharacterData.Neutral();
             RunnerData = runnerData;
             BullData = bullData;
             StreetData = streetData;
+            CharacterData = characterData;
+            ActionData = actionData;
+            EconomyData = economyData;
+            BotData = botData;
         }
 
-        public static GameData Parse(string runnersJson, string bullJson, string streetJson, string? charactersJson = null, string? actionsJson = null, string? economyJson = null, string? botsJson = null) =>
-            new GameData(RunnerData.Parse(runnersJson), BullData.Parse(bullJson), StreetData.Parse(streetJson),
-                charactersJson == null ? null : CharacterData.Parse(charactersJson),
-                actionsJson == null ? null : ActionData.Parse(actionsJson),
-                economyJson == null ? null : EconomyData.Parse(economyJson),
-                botsJson == null ? null : BotData.Parse(botsJson));
+        public static GameData Parse(DataFiles files) => new GameData(
+            RunnerData.Parse(files.Get(RunnerData.FileName)),
+            BullData.Parse(files.Get(BullData.FileName)),
+            StreetData.Parse(files.Get(StreetData.FileName)),
+            CharacterData.Parse(files.Get(CharacterData.FileName)),
+            ActionData.Parse(files.Get(ActionData.FileName)),
+            EconomyData.Parse(files.Get(EconomyData.FileName)),
+            BotData.Parse(files.Get(BotData.FileName)));
 
-        /// <summary>Читает файлы из dir; null — искать Game.Core/Data вверх от AppContext.BaseDirectory.</summary>
-        public static GameData Load(string? dir = null)
+        /// <summary>Читает все *.json папки в набор файлов (для тестов и Game.Sim).</summary>
+        public static DataFiles ReadFiles(string? dir = null)
         {
-            if (dir == null)
-            {
-                string? d = AppContext.BaseDirectory;
-                while (d != null)
-                {
-                    string c = Path.Combine(d, "Game.Core", "Data");
-                    if (File.Exists(Path.Combine(c, "street.json"))) { dir = c; break; }
-                    c = Path.Combine(d, "Data");
-                    if (File.Exists(Path.Combine(c, "street.json"))) { dir = c; break; }
-                    d = Path.GetDirectoryName(d.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-                }
-                if (dir == null) throw new FileNotFoundException("Game.Core/Data not found");
-            }
-            return Parse(Read(dir, "runners.json"), Read(dir, "bull.json"), Read(dir, "street.json"), Read(dir, "characters.json"), Read(dir, "actions.json"), Read(dir, "economy.json"), Read(dir, "bots.json"));
+            dir ??= FindDataDir();
+            var files = new DataFiles();
+            foreach (string path in Directory.GetFiles(dir, "*.json"))
+                files.Add(Path.GetFileName(path), File.ReadAllText(path, Encoding.UTF8));
+            return files;
         }
 
-        private static string Read(string dir, string name) => File.ReadAllText(Path.Combine(dir, name), Encoding.UTF8);
+        /// <summary>Читает папку dir; null — искать Game.Core/Data вверх от AppContext.BaseDirectory.</summary>
+        public static GameData Load(string? dir = null) => Parse(ReadFiles(dir));
+
+        private static string FindDataDir()
+        {
+            string? d = AppContext.BaseDirectory;
+            while (d != null)
+            {
+                string c = Path.Combine(d, "Game.Core", "Data");
+                if (File.Exists(Path.Combine(c, StreetData.FileName))) return c;
+                c = Path.Combine(d, "Data");
+                if (File.Exists(Path.Combine(c, StreetData.FileName))) return c;
+                d = Path.GetDirectoryName(d.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            }
+            throw new FileNotFoundException("Game.Core/Data not found");
+        }
     }
 }
