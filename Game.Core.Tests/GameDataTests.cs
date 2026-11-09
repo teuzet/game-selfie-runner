@@ -47,7 +47,8 @@ public class GameDataTests
             File.ReadAllText(Path.Combine(dir, "bull.json")), File.ReadAllText(Path.Combine(dir, "street.json")),
             File.ReadAllText(Path.Combine(dir, "characters.json")),
             File.ReadAllText(Path.Combine(dir, "actions.json")),
-            File.ReadAllText(Path.Combine(dir, "economy.json")));
+            File.ReadAllText(Path.Combine(dir, "economy.json")),
+            File.ReadAllText(Path.Combine(dir, "bots.json")));
     }
 
     [Fact]

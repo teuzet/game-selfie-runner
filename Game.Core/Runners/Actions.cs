@@ -67,7 +67,7 @@ namespace Game.Core.Runners
             for (int me = 0; me < n; me++)
             {
                 var seat = config.GetSeat(me);
-                if (seat.Kind == SeatKind.Bot || !inputs.Get(me).Action) continue;
+                if (!inputs.Get(me).Action) continue;
                 if (st.Runners[me].StunTicks > 0) continue;
                 TryAct(ad, cd, seatData, street, st, me, cd.Get(seat.CharacterId));
             }
