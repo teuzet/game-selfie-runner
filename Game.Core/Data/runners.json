@@ -1,0 +1,15 @@
+{
+  "note": "Источник: design/overview.md, таблица чисел (темп, выносливость, радиус тела, разгон 6 м/с²) и критерии F-012 (руль 3 м/с). Метры и секунды. Плоский файл: ключ — число.",
+  "jogSpeed": 5.5,
+  "runSpeed": 7.0,
+  "sprintSpeed": 8.5,
+  "staminaMax": 100,
+  "sprintDrain": 25,
+  "staminaRegen": 20,
+  "sprintResume": 20,
+  "accel": 6,
+  "steerSpeed": 3,
+  "radius": 0.4,
+  "separation": 0.5,
+  "srcNote": "sprintResume (порог выносливости, с которого снова разрешён спринт после обнуления) и separation (доля перекрытия, снимаемая за тик) — решение исполнителя F-012"
+}
