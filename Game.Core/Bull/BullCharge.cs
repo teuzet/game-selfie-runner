@@ -27,21 +27,9 @@ namespace Game.Core.Bull
         public int LastChargeTick, LastChargeTarget; // -1 — не было
     }
 
-    /// <summary>Рывок быка: цель по вкусности, подброс, «нет сигнала» и неуязвимость. Числа — design/overview.md (таблица быка; «Нет сигнала»). Без аллокаций.</summary>
+    /// <summary>Рывок быка: цель по вкусности, подброс, «нет сигнала» и неуязвимость. Числа — Data/bull.json (BullData.Charge*). Без аллокаций.</summary>
     public static class BullCharge
     {
-        // Отдельного JSON нет (GameData вне owned_files F-017), числа — константы с источником.
-        public const int MinIntervalSec = 8, MaxIntervalSec = 15; // рывок каждые 8–15 с (старт к старту)
-        public const int ChargeSec = 3;                           // рывок длится 3 с
-        public static readonly Fixed ChargeSpeed = Fixed.FromInt(11);   // 11 м/с
-        public static readonly Fixed Reach = Fixed.One;                 // достал: ≤1 м
-        public static readonly Fixed TargetRange = Fixed.FromInt(30);   // цель — впереди в 30 м
-        public static readonly Fixed TossDistance = Fixed.FromInt(8);   // подброс на 8 м вперёд
-        public const int InvulnSec = 3;                                 // неуязвимость 3 с после «нет сигнала»
-        public const int MinTossGapSec = 6;                             // между подбросами одного бегуна ≥ 6 с
-        public const int BullSlowSec = 2;                               // бык 2 с на 30% медленнее
-        public static readonly Fixed ChargeSteer = Fixed.FromInt(6);    // м/с поперёк в рывке (решение исполнителя F-017)
-
         const int Tps = Simulation.TicksPerSecond;
         static readonly Fixed Dt = Fixed.FromFraction(1, Tps);
 
@@ -81,7 +69,7 @@ namespace Game.Core.Bull
 
             if (b.Phase == (int)BullPhase.Pen || b.Phase == (int)BullPhase.Arena) return;
 
-            if (c.Cooldown < 0) c.Cooldown = NextInterval(ref c.Rng);
+            if (c.Cooldown < 0) c.Cooldown = NextInterval(sim.BullData, ref c.Rng);
             else if (c.Cooldown > 0) c.Cooldown--;
 
             if (c.ChargeLeft == 0 && c.Cooldown == 0) TryStartCharge(sim, ref c, b);
@@ -95,7 +83,7 @@ namespace Game.Core.Bull
             if (b.Phase != (int)BullPhase.Arena) Contacts(sim, street, ref b, ref c);
         }
 
-        static int NextInterval(ref DetRandom rng) => rng.Range(MinIntervalSec * Tps, MaxIntervalSec * Tps + 1);
+        static int NextInterval(BullData bd, ref DetRandom rng) => rng.Range(bd.ChargeMinIntervalSec * Tps, bd.ChargeMaxIntervalSec * Tps + 1);
 
         static void TryStartCharge(Simulation sim, ref BullChargeState c, in BullState b)
         {
@@ -117,10 +105,10 @@ namespace Game.Core.Bull
             else if (pick < w0 + w1 + w2) target = 2;
             else target = w3 > Fixed.Zero ? 3 : w2 > Fixed.Zero ? 2 : w1 > Fixed.Zero ? 1 : 0; // округление: последний с весом
             c.Target = target;
-            c.ChargeLeft = ChargeSec * Tps;
+            c.ChargeLeft = sim.BullData.ChargeSec * Tps;
             c.Count++;
             c.LastChargeTick = st.Tick; c.LastChargeTarget = target;
-            c.Cooldown = NextInterval(ref c.Rng);
+            c.Cooldown = NextInterval(sim.BullData, ref c.Rng);
         }
 
         /// <summary>Вес цели: вкусность / (1 + d/10); 0 — не цель (позади, дальше 30 м, неуязвим).</summary>
@@ -128,7 +116,7 @@ namespace Game.Core.Bull
         {
             if (Protected(st.Tosses[seat])) return Fixed.Zero;
             Fixed ds = Fixed.FromRaw(st.Runners[seat].S) - bs;
-            if (ds < Fixed.Zero || ds > TargetRange) return Fixed.Zero;
+            if (ds < Fixed.Zero || ds > sim.BullData.ChargeTargetRange) return Fixed.Zero;
             Fixed dx = Fixed.FromRaw(st.Runners[seat].X) - bx;
             Fixed d = Fixed.Sqrt(ds * ds + dx * dx);
             return sim.CharacterOf(seat).Tastiness / (Fixed.One + d / Fixed.FromInt(10));
@@ -141,13 +129,13 @@ namespace Game.Core.Bull
             Fixed s = Fixed.FromRaw(prevBullS), x = Fixed.FromRaw(b.X), speed = Fixed.FromRaw(b.Speed);
             Fixed mul = street.SlopeAt(s);
             if (street.Blocks[street.BlockIndexAt(s)].Def.Id == "stairs") mul = mul * bd.StairsMul;
-            Fixed target = ChargeSpeed * mul;
+            Fixed target = bd.ChargeSpeed * mul;
             Fixed dv = bd.Accel * Dt;
             speed = speed < target ? Fixed.Min(speed + dv, target) : Fixed.Max(speed - dv, target);
             s = s + speed * Dt;
 
             Fixed diff = Fixed.FromRaw(st.Runners[c.Target].X) - x;
-            Fixed step = ChargeSteer * Dt;
+            Fixed step = bd.ChargeSteer * Dt;
             x = x + Fixed.Clamp(diff, -step, step);
             Fixed lim = street.WidthAt(s) / Fixed.FromInt(2) - bd.CapsuleWidth / Fixed.FromInt(2);
             if (lim < Fixed.Zero) lim = Fixed.Zero;
@@ -166,6 +154,7 @@ namespace Game.Core.Bull
         static void Contacts(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c)
         {
             var st = sim.State;
+            Fixed reach = sim.BullData.ChargeReach;
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref RunnerState r = ref st.Runners[i];
@@ -179,7 +168,7 @@ namespace Game.Core.Bull
                 if (!hit)
                 {
                     Fixed ds = Fixed.FromRaw(dsRaw), dx = Fixed.FromRaw(r.X - b.X);
-                    hit = ds * ds + dx * dx <= Reach * Reach;
+                    hit = ds * ds + dx * dx <= reach * reach;
                 }
                 if (hit) Toss(sim, street, ref b, ref c, i);
             }
@@ -188,23 +177,25 @@ namespace Game.Core.Bull
         static void Toss(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c, int seat)
         {
             var st = sim.State;
+            var bd = sim.BullData;
             ref RunnerState r = ref st.Runners[seat];
             ref TossState t = ref st.Tosses[seat];
             t.LastTossFromS = r.S;
             long baseS = r.S > b.S ? r.S : b.S;
-            long ns = baseS + TossDistance.Raw;
+            long ns = baseS + bd.ChargeTossDistance.Raw;
             if (ns > street.Length.Raw) ns = street.Length.Raw;
             r.S = ns;
             int noSignal = (sim.CharacterOf(seat).NoSignal * Fixed.FromInt(Tps)).ToInt();
-            int invuln = InvulnSec * Tps;
-            if (noSignal + invuln < MinTossGapSec * Tps) invuln = MinTossGapSec * Tps - noSignal; // у атлета noSignal 2.5 с — добираем до 6 с
+            int invuln = bd.ChargeInvulnSec * Tps;
+            int gap = bd.ChargeTossGapSec * Tps;
+            if (noSignal + invuln < gap) invuln = gap - noSignal; // у атлета noSignal 2.5 с — добираем до 6 с
             t.NoSignalTicks = noSignal;
             t.InvulnTicks = invuln;
             t.Tossed++;
             t.LastTossTick = st.Tick;
             c.Tosses++;
             c.ChargeLeft = 0; c.Target = -1;
-            BullMovement.Slow(ref b, BullSlowSec * Tps);
+            BullMovement.Slow(ref b, bd.ChargeBullSlowSec * Tps);
         }
     }
 }

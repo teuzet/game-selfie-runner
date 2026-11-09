@@ -4,7 +4,7 @@
   "lineS": 30,
   "countdownSec": 3,
   "releaseDelaySec": 2,
-  "chargeSpeed": 9.5,
+  "catchUpSpeed": 9.5,
   "cruiseSpeed": 6.0,
   "closeSpeed": 5.0,
   "targetBehind": 12,
@@ -15,5 +15,16 @@
   "capsuleWidth": 1.2,
   "accel": 8,
   "steerSpeed": 3,
-  "srcNote": "penOffset 25 м, countdownSec 3, releaseDelaySec 2, chargeSpeed 9.5 — overview (Старт); lineS 30 — F-003 блок start (смещение линии от начала блока start, не абсолютный s); cruiseSpeed/closeSpeed/targetBehind/lagFar/lagNear — overview (таблица быка); stairsMul 0.8 — F-003 stairs_zone; slowedMul 0.7 (на 30% медленнее) — overview (Нет сигнала); capsuleWidth 1.2 (ширина капсулы) — overview, таблица быка; accel 8 и steerSpeed 3 — решение исполнителя F-016"
+  "chargeMinIntervalSec": 8,
+  "chargeMaxIntervalSec": 15,
+  "chargeSec": 3,
+  "chargeSpeed": 11,
+  "chargeReach": 1,
+  "chargeTargetRange": 30,
+  "chargeTossDistance": 8,
+  "chargeInvulnSec": 3,
+  "chargeTossGapSec": 6,
+  "chargeBullSlowSec": 2,
+  "chargeSteer": 6,
+  "srcNote": "penOffset 25 м, countdownSec 3, releaseDelaySec 2, catchUpSpeed 9.5 — overview (Старт; таблица быка, резинка при отставании >25 м: это разгон, не рывок); lineS 30 — F-003 блок start (смещение линии от начала блока start, не абсолютный s); cruiseSpeed/closeSpeed/targetBehind/lagFar/lagNear — overview (таблица быка); stairsMul 0.8 — F-003 stairs_zone; slowedMul 0.7 (на 30% медленнее) — overview (Нет сигнала); capsuleWidth 1.2 (ширина капсулы) — overview, таблица быка; accel 8 и steerSpeed 3 — решение исполнителя F-016; рывок (overview, таблица быка, строка «рывок»): chargeMinIntervalSec/chargeMaxIntervalSec 8–15 с, chargeSec 3 с, chargeSpeed 11 м/с (отдельно от catchUpSpeed 9.5), chargeReach 1 м (достал ≤1 м), chargeTargetRange 30 м, chargeTossDistance 8 м, chargeInvulnSec 3 с и chargeBullSlowSec 2 с — overview («Нет сигнала»), chargeTossGapSec 6 с — overview (между подбросами ≥6 с); chargeSteer 6 м/с поперёк — решение исполнителя F-017"
 }

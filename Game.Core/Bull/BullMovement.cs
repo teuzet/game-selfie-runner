@@ -10,8 +10,12 @@ namespace Game.Core.Bull
     /// <summary>Числа быка из Data/bull.json.</summary>
     public sealed class BullData
     {
-        public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, ChargeSpeed, CruiseSpeed, CloseSpeed,
+        public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, CatchUpSpeed, CruiseSpeed, CloseSpeed,
             TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleWidth, Accel, SteerSpeed;
+
+        // Рывок быка (BullCharge): секунды — целые, дистанции и скорости — Fixed.
+        public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec;
+        public Fixed ChargeSpeed, ChargeReach, ChargeTargetRange, ChargeTossDistance, ChargeSteer;
 
         public static BullData Parse(string json)
         {
@@ -19,11 +23,16 @@ namespace Game.Core.Bull
             return new BullData
             {
                 PenOffset = j.Num("penOffset"), LineS = j.Num("lineS"), CountdownSec = j.Num("countdownSec"),
-                ReleaseDelaySec = j.Num("releaseDelaySec"), ChargeSpeed = j.Num("chargeSpeed"),
+                ReleaseDelaySec = j.Num("releaseDelaySec"), CatchUpSpeed = j.Num("catchUpSpeed"),
                 CruiseSpeed = j.Num("cruiseSpeed"), CloseSpeed = j.Num("closeSpeed"),
                 TargetBehind = j.Num("targetBehind"), LagFar = j.Num("lagFar"), LagNear = j.Num("lagNear"),
                 StairsMul = j.Num("stairsMul"), SlowedMul = j.Num("slowedMul"),
                 CapsuleWidth = j.Num("capsuleWidth"), Accel = j.Num("accel"), SteerSpeed = j.Num("steerSpeed"),
+                ChargeMinIntervalSec = j.Int("chargeMinIntervalSec"), ChargeMaxIntervalSec = j.Int("chargeMaxIntervalSec"),
+                ChargeSec = j.Int("chargeSec"), ChargeSpeed = j.Num("chargeSpeed"), ChargeReach = j.Num("chargeReach"),
+                ChargeTargetRange = j.Num("chargeTargetRange"), ChargeTossDistance = j.Num("chargeTossDistance"),
+                ChargeInvulnSec = j.Int("chargeInvulnSec"), ChargeTossGapSec = j.Int("chargeTossGapSec"),
+                ChargeBullSlowSec = j.Int("chargeBullSlowSec"), ChargeSteer = j.Num("chargeSteer"),
             };
         }
 
@@ -109,7 +118,7 @@ namespace Game.Core.Bull
                 if (lag > d.LagFar) b.Mode = BullMode.Charge;
                 else if (lag < d.LagNear) b.Mode = BullMode.Close;
             }
-            Fixed baseSpeed = b.Mode == BullMode.Charge ? d.ChargeSpeed
+            Fixed baseSpeed = b.Mode == BullMode.Charge ? d.CatchUpSpeed
                 : b.Mode == BullMode.Close ? d.CloseSpeed : d.CruiseSpeed;
             b.Phase = b.Mode == BullMode.Charge ? (int)BullPhase.Charge : (int)BullPhase.Cruise;
 

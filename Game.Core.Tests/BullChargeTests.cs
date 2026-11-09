@@ -228,6 +228,51 @@ namespace Game.Core.Tests
             Assert.InRange(Dbl(maxSpeed), 9.5, 11.01);
         }
 
+        static string BullJsonPath()
+        {
+            string? d = AppContext.BaseDirectory;
+            while (d != null)
+            {
+                string c = System.IO.Path.Combine(d, "Game.Core", "Data", "bull.json");
+                if (System.IO.File.Exists(c)) return c;
+                d = System.IO.Path.GetDirectoryName(d.TrimEnd(System.IO.Path.DirectorySeparatorChar, System.IO.Path.AltDirectorySeparatorChar));
+            }
+            throw new System.IO.FileNotFoundException("Game.Core/Data/bull.json");
+        }
+
+        static double MaxChargeSpeed(GameData data)
+        {
+            var sim = new Simulation(Cfg(21, SeatKind.Human), data);
+            RunTo(sim, Release);
+            while (sim.State.Charge.ChargeLeft == 0) sim.Step(TickInputs.Empty);
+            long max = 0; int ticks = 0;
+            while (sim.State.Charge.ChargeLeft > 0 && ticks < 400)
+            {
+                double bs = Dbl(sim.State.Bull.S);
+                for (int i = 0; i < 4; i++) sim.State.Runners[i].S = Fx(bs + 25 + i).Raw;
+                sim.Step(TickInputs.Empty);
+                max = sim.State.Bull.Speed; // скорость к концу рывка (старт идёт с крейсерской)
+                ticks++;
+            }
+            return Dbl(max);
+        }
+
+        [Fact]
+        public void ChargeNumbersComeFromJson_ChangingSpeedChangesCharge()
+        {
+            Assert.Equal(11.0, (double)Data.BullData.ChargeSpeed);
+            Assert.Equal(9.5, (double)Data.BullData.CatchUpSpeed); // разгон/резинка — другой ключ
+            string json = System.IO.File.ReadAllText(BullJsonPath(), Encoding.UTF8);
+            Assert.Contains("\"chargeSpeed\": 11,", json);
+            var slow = new GameData(Data.RunnerData, BullData.Parse(json.Replace("\"chargeSpeed\": 11,", "\"chargeSpeed\": 7,")),
+                Data.StreetData, Data.CharacterData, Data.ActionData, Data.EconomyData);
+            double normal = MaxChargeSpeed(Data), slowed = MaxChargeSpeed(slow);
+            _out.WriteLine($"normal={normal} slowed={slowed}");
+            // BullMovement.Step перед рывком подтягивает скорость к разгону 9.5, поэтому разница меньше 4 м/с
+            Assert.True(slowed < normal - 0.3, $"normal={normal} slowed={slowed}");
+            Assert.InRange(normal, 10.5, 11.01);
+        }
+
         [Fact]
         public void Random500Runs_NoRunnerBehindBull_TossGapAtLeast6s()
         {
