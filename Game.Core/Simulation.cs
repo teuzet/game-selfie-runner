@@ -20,6 +20,9 @@ namespace Game.Core
 
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
+        public CharacterData CharacterData { get; }
+        /// <summary>RunnerData по местам с применённым персонажем (скорость, перк выносливости).</summary>
+        private readonly RunnerData[] _seatData;
 
         private static GameData? _defaultGameData;
 
@@ -33,13 +36,24 @@ namespace Game.Core
             Config = config;
             RunnerData = data.RunnerData;
             BullData = data.BullData;
+            CharacterData = data.CharacterData;
+            _seatData = new RunnerData[RaceConfig.SeatCount];
+            for (int i = 0; i < _seatData.Length; i++)
+                _seatData[i] = Characters.ForSeat(RunnerData, CharacterData.Get(config.GetSeat(i).CharacterId));
             Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
-            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street);
+            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData);
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd) { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, RunnerData[] seatData)
+        { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; _seatData = seatData; }
 
-        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData);
+        /// <summary>Набор параметров персонажа места (SeatConfig.CharacterId).</summary>
+        public CharacterDef CharacterOf(int seat) => CharacterData.Get(Config.GetSeat(seat).CharacterId);
+
+        /// <summary>RunnerData места с применённым персонажем.</summary>
+        public RunnerData SeatData(int seat) => _seatData[seat];
+
+        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, _seatData);
 
         public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
 
@@ -54,7 +68,7 @@ namespace Game.Core
             {
                 // Внешний вход бота игнорируется (место ведёт сам Simulation; мозги ботов — позже).
                 var inp = Config.GetSeat(i).Kind == SeatKind.Bot ? default : inputs.Get(i);
-                RunnerMovement.StepRunner(RunnerData, Street, ref st.Runners[i], inp);
+                RunnerMovement.StepRunner(_seatData[i], Street, ref st.Runners[i], inp);
             }
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
             MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);

@@ -11,6 +11,11 @@ namespace Game.Core.Tests
     {
         static readonly StreetData Data = StreetData.Load();
 
+        // До F-014 все места имели устойчивость 1.0: тесты столкновений берут нейтральных персонажей (GameData без characters.json).
+        static readonly GameData Base = GameData.Load();
+        static Simulation Neutral(RaceConfig c, StreetMap? street = null) =>
+            new Simulation(c, new GameData(Base.RunnerData, Base.BullData, Base.StreetData), street);
+
         static RaceConfig Cfg(ulong seed) => new RaceConfig(seed, new[]
         {
             new SeatConfig(SeatKind.Human, 0), new SeatConfig(SeatKind.Human, 1),
@@ -25,7 +30,7 @@ namespace Game.Core.Tests
                 var street = StreetGenerator.Build(seed, Data, pool);
                 for (int i = 0; i < street.Obstacles.Length; i++)
                     if (street.Obstacles[i].Type == type && (pred == null || pred(street.Obstacles[i])))
-                        return (new Simulation(Cfg(seed), street), i);
+                        return (Neutral(Cfg(seed), street), i);
             }
             throw new InvalidOperationException("нет препятствия " + type);
         }
@@ -147,7 +152,7 @@ namespace Game.Core.Tests
         public void GawkerMovesDeterministicallyAndTurnsAtWall()
         {
             var (a, i) = Find("gawker");
-            var b = new Simulation(Cfg(a.Street.Seed), a.Street);
+            var b = Neutral(Cfg(a.Street.Seed), a.Street);
             var o = a.Street.Obstacles[i];
             MovingObstacles.GawkerLimits(a.Street, o, out Fixed lo, out Fixed hi);
             long prev = a.State.Dyn[i].X;
@@ -243,7 +248,7 @@ namespace Game.Core.Tests
             {
                 var st = StreetGenerator.Build(seed, Data, StreetPool.CorePlusLater);
                 for (int b = 0; b < st.Blocks.Length; b++)
-                    if (st.Blocks[b].WaterSide != 0) { street = st; bi = b; sim = new Simulation(Cfg(seed), st); break; }
+                    if (st.Blocks[b].WaterSide != 0) { street = st; bi = b; sim = Neutral(Cfg(seed), st); break; }
             }
             Assert.NotNull(street);
             var pb = street!.Blocks[bi];
@@ -294,7 +299,7 @@ namespace Game.Core.Tests
 
         static double RunClean(ulong seed, StreetMap street, double startS)
         {
-            var sim = new Simulation(Cfg(seed), street);
+            var sim = Neutral(Cfg(seed), street);
             for (int i = 0; i < sim.State.Hit.Length; i++) sim.State.Hit[i] = 1; // препятствия не действуют
             Place(sim, startS, Fixed.Zero);
             for (int t = 0; t < 30; t++) sim.Step(default);
@@ -314,7 +319,7 @@ namespace Game.Core.Tests
                     if (st.Blocks[b].Def.Id == "plaza") { street = st; bi = b; break; }
             }
             Assert.NotNull(street);
-            var sim = new Simulation(Cfg(seed), street);
+            var sim = Neutral(Cfg(seed), street);
             Place(sim, Dbl(street!.Blocks[bi].Start) + 40 - 3.5, Fixed.Zero);
             Assert.True(RunUntilHit(sim) >= 0);
             Assert.Equal((int)CollisionKind.Fountain, sim.State.Collisions[0].LastKind);
