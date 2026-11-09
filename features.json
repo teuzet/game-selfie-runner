@@ -597,7 +597,7 @@
         "Тесты (Game.Core.Tests/GameDataTests.cs): Simulation из GameData.Parse(тексты трёх файлов, прочитанные тестом) и из GameData.Load() дают равные хэши на 3000 тиках со случайными входами; Step по-прежнему не аллоцирует; все прежние тесты ядра зелёные."
       ],
       "status": "running",
-      "attempts": 0,
+      "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
       "owned_files": [
