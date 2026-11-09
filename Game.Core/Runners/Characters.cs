@@ -1,5 +1,5 @@
 using System;
-using System.Globalization;
+using Game.Core.Data;
 using Game.Core.Math;
 using StreetMap = Game.Core.Street.Street;
 
@@ -52,28 +52,21 @@ namespace Game.Core.Runners
 
         public static CharacterData Parse(string json)
         {
-            var d = new CharacterData { ShoveDistance = Num(json, "shoveDistance"), ShoveSpeedLoss = Num(json, "shoveSpeedLoss") };
-            int arr = json.IndexOf("\"characters\"", StringComparison.Ordinal);
-            if (arr < 0) throw new FormatException("characters.json: нет characters");
-            var list = new System.Collections.Generic.List<CharacterDef>();
-            int p = json.IndexOf('[', arr);
-            while (true)
+            var j = Json.Parse("characters.json", json, truncate: true);
+            var d = new CharacterData { ShoveDistance = j.Num("shoveDistance"), ShoveSpeedLoss = j.Num("shoveSpeedLoss") };
+            var arr = j.Arr("characters");
+            if (arr.Count < RaceConfig.SeatCount) throw new FormatException("characters.json: меньше 4 персонажей");
+            d.Characters = new CharacterDef[arr.Count];
+            for (int i = 0; i < arr.Count; i++)
             {
-                int o = json.IndexOf('{', p);
-                int end = json.IndexOf(']', p);
-                if (o < 0 || (end >= 0 && end < o)) break;
-                int c = json.IndexOf('}', o);
-                string obj = json.Substring(o, c - o + 1);
-                list.Add(new CharacterDef
+                var o = arr.Obj(i);
+                d.Characters[i] = new CharacterDef
                 {
-                    Id = Str(obj, "id"), Speed = Num(obj, "speed"), Stability = Num(obj, "stability"),
-                    Viewers = Num(obj, "viewers"), Tastiness = Num(obj, "tastiness"), NoSignal = Num(obj, "noSignal"),
-                    PerkValue = Num(obj, "perkValue"), Perk = ParsePerk(Str(obj, "perk")),
-                });
-                p = c + 1;
+                    Id = o.Str("id"), Speed = o.Num("speed"), Stability = o.Num("stability"),
+                    Viewers = o.Num("viewers"), Tastiness = o.Num("tastiness"), NoSignal = o.Num("noSignal"),
+                    PerkValue = o.Num("perkValue"), Perk = ParsePerk(o.Str("perk")),
+                };
             }
-            if (list.Count < RaceConfig.SeatCount) throw new FormatException("characters.json: меньше 4 персонажей");
-            d.Characters = list.ToArray();
             return d;
         }
 
@@ -88,39 +81,6 @@ namespace Game.Core.Runners
                 case "none": return Perk.None;
                 default: throw new FormatException("characters.json: неизвестный перк " + s);
             }
-        }
-
-        static string Str(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("characters.json: нет ключа " + key);
-            int a = json.IndexOf('"', json.IndexOf(':', k) + 1) + 1;
-            return json.Substring(a, json.IndexOf('"', a) - a);
-        }
-
-        static Fixed Num(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("characters.json: нет ключа " + key);
-            int p = json.IndexOf(':', k) + 1;
-            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
-            int e = p;
-            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
-            string t = json.Substring(p, e - p);
-            if (t.Length == 0) throw new FormatException("characters.json: ключ " + key + " не число");
-            bool neg = t[0] == '-';
-            if (neg) t = t.Substring(1);
-            int dot = t.IndexOf('.');
-            string ip = dot < 0 ? t : t.Substring(0, dot);
-            string fp = dot < 0 ? "" : t.Substring(dot + 1);
-            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
-            if (fp.Length > 0)
-            {
-                long den = 1;
-                for (int i = 0; i < fp.Length; i++) den *= 10;
-                v = v + Fixed.FromRaw((long.Parse(fp, CultureInfo.InvariantCulture) * Fixed.OneRaw) / den);
-            }
-            return neg ? -v : v;
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Game.Core.Data;
 using Game.Core.Math;
 
 namespace Game.Core.Street
@@ -49,14 +50,14 @@ namespace Game.Core.Street
 
         public static StreetData Parse(string json)
         {
-            var root = (Dictionary<string, object?>)new Json(json).ReadDocument()!;
+            var root = Json.Parse("street.json", json);
             var d = new StreetData();
-            var blocks = (List<object?>)root["blocks"]!;
+            var blocks = root.Arr("blocks");
             d.Blocks = new BlockDef[blocks.Count];
-            for (int i = 0; i < blocks.Count; i++) d.Blocks[i] = ReadBlock((Dictionary<string, object?>)blocks[i]!);
-            var obs = (List<object?>)root["obstacles"]!;
+            for (int i = 0; i < blocks.Count; i++) d.Blocks[i] = ReadBlock(blocks.Obj(i));
+            var obs = root.Arr("obstacles");
             d.Obstacles = new ObstacleDef[obs.Count];
-            for (int i = 0; i < obs.Count; i++) d.Obstacles[i] = ReadObstacle((Dictionary<string, object?>)obs[i]!);
+            for (int i = 0; i < obs.Count; i++) d.Obstacles[i] = ReadObstacle(obs.Obj(i));
             return d;
         }
 
@@ -93,218 +94,70 @@ namespace Game.Core.Street
 
         // ---- чтение узлов ----
 
-        static BlockDef ReadBlock(Dictionary<string, object?> j)
+        static BlockDef ReadBlock(JsonObject j)
         {
             var b = new BlockDef
             {
-                Id = Str(j, "id"), Name = Str(j, "name"), Tier = Str(j, "tier"),
-                Special = (bool)j["special"]!,
-                Rise = Num(j, "rise"), SlotStep = Num(j, "slotStep"), SlotMargin = Num(j, "slotMargin"), DensityMul = Num(j, "densityMul"),
-                Note = Str(j, "note"),
+                Id = j.Str("id"), Name = j.Str("name"), Tier = j.Str("tier"),
+                Special = j.Bool("special"),
+                Rise = j.Num("rise"), SlotStep = j.Num("slotStep"), SlotMargin = j.Num("slotMargin"), DensityMul = j.Num("densityMul"),
+                Note = j.Str("note"),
             };
-            var len = Obj(j, "length");
-            b.LengthMin = Num(len, "min"); b.LengthMax = Num(len, "max");
-            b.LengthStep = len.ContainsKey("step") ? Num(len, "step") : Fixed.Zero;
-            switch (Str(j, "slope"))
+            var len = j.Obj("length");
+            b.LengthMin = len.Num("min"); b.LengthMax = len.Num("max");
+            b.LengthStep = len.NumOr("step");
+            switch (j.Str("slope"))
             {
                 case "flat": b.Slope = Slope.Flat; break;
                 case "down": b.Slope = Slope.Down; break;
                 case "up": b.Slope = Slope.Up; break;
                 default: throw new FormatException("bad slope in " + b.Id);
             }
-            var wl = (List<object?>)j["width"]!;
+            var wl = j.Arr("width");
             b.Width = new WidthPoint[wl.Count];
             for (int i = 0; i < wl.Count; i++)
             {
-                var p = (List<object?>)wl[i]!;
-                b.Width[i] = new WidthPoint(ToFixed(p[0]), ToFixed(p[1]));
+                var p = wl.Arr(i);
+                b.Width[i] = new WidthPoint(p.Num(0), p.Num(1));
             }
-            var ol = (List<object?>)j["obstacles"]!;
+            var ol = j.Arr("obstacles");
             b.Obstacles = new BlockObstacleDef[ol.Count];
             for (int i = 0; i < ol.Count; i++)
             {
-                var o = (Dictionary<string, object?>)ol[i]!;
-                b.Obstacles[i] = new BlockObstacleDef { Type = Str(o, "type"), Lanes = StrList(o, "lanes"), Weight = (int)Num(o, "weight").ToInt() };
+                var o = ol.Obj(i);
+                b.Obstacles[i] = new BlockObstacleDef { Type = o.Str("type"), Lanes = o.StrList("lanes"), Weight = o.Int("weight") };
             }
-            var fl = (List<object?>)j["fixed"]!;
+            var fl = j.Arr("fixed");
             b.Fixed = new FixedElementDef[fl.Count];
             for (int i = 0; i < fl.Count; i++)
             {
-                var f = (Dictionary<string, object?>)fl[i]!;
+                var f = fl.Obj(i);
                 b.Fixed[i] = new FixedElementDef
                 {
-                    Kind = Str(f, "kind"), Type = f.ContainsKey("type") ? Str(f, "type") : "", Side = f.ContainsKey("side") ? Str(f, "side") : "",
-                    S = Opt(f, "s"), X = Opt(f, "x"), Size = Opt(f, "size"), S0 = Opt(f, "s0"), S1 = Opt(f, "s1"), Across = Opt(f, "across"),
+                    Kind = f.Str("kind"), Type = f.StrOr("type", ""), Side = f.StrOr("side", ""),
+                    S = f.NumOr("s"), X = f.NumOr("x"), Size = f.NumOr("size"), S0 = f.NumOr("s0"), S1 = f.NumOr("s1"), Across = f.NumOr("across"),
                 };
             }
-            b.Next = StrList(j, "next");
+            b.Next = j.StrList("next");
             return b;
         }
 
-        static ObstacleDef ReadObstacle(Dictionary<string, object?> j)
+        static ObstacleDef ReadObstacle(JsonObject j)
         {
             var o = new ObstacleDef
             {
-                Id = Str(j, "id"), Name = Str(j, "name"), Tier = Str(j, "tier"), Shape = Str(j, "shape"),
-                Size = Opt(j, "size"), SizeAlong = Opt(j, "sizeAlong"), SizeAcross = Opt(j, "sizeAcross"),
-                FullWidth = j.ContainsKey("fullWidth") && (bool)j["fullWidth"]!,
-                Lanes = StrList(j, "lanes"), Effect = Str(j, "effect"),
-                Stun = Num(j, "stun"), SlowMul = Num(j, "slowMul"), SlowTime = Num(j, "slowTime"), PushBack = Opt(j, "pushBack"),
-                Note = Str(j, "note"),
+                Id = j.Str("id"), Name = j.Str("name"), Tier = j.Str("tier"), Shape = j.Str("shape"),
+                Size = j.NumOr("size"), SizeAlong = j.NumOr("sizeAlong"), SizeAcross = j.NumOr("sizeAcross"),
+                FullWidth = j.BoolOr("fullWidth", false),
+                Lanes = j.StrList("lanes"), Effect = j.Str("effect"),
+                Stun = j.Num("stun"), SlowMul = j.Num("slowMul"), SlowTime = j.Num("slowTime"), PushBack = j.NumOr("pushBack"),
+                Note = j.Str("note"),
             };
-            var m = Obj(j, "motion");
-            o.MotionKind = Str(m, "kind");
-            o.OpenTime = Opt(m, "openTime"); o.TriggerMin = Opt(m, "triggerMin"); o.TriggerMax = Opt(m, "triggerMax");
-            o.Speed = Opt(m, "speed"); o.WallGap = Opt(m, "wallGap");
+            var m = j.Obj("motion");
+            o.MotionKind = m.Str("kind");
+            o.OpenTime = m.NumOr("openTime"); o.TriggerMin = m.NumOr("triggerMin"); o.TriggerMax = m.NumOr("triggerMax");
+            o.Speed = m.NumOr("speed"); o.WallGap = m.NumOr("wallGap");
             return o;
-        }
-
-        static string Str(Dictionary<string, object?> j, string k) => (string)j[k]!;
-        static Dictionary<string, object?> Obj(Dictionary<string, object?> j, string k) => (Dictionary<string, object?>)j[k]!;
-        static Fixed Num(Dictionary<string, object?> j, string k) => ToFixed(j[k]);
-        static Fixed Opt(Dictionary<string, object?> j, string k) => j.ContainsKey(k) ? ToFixed(j[k]) : Fixed.Zero;
-        static string[] StrList(Dictionary<string, object?> j, string k)
-        {
-            var l = (List<object?>)j[k]!;
-            var r = new string[l.Count];
-            for (int i = 0; i < r.Length; i++) r[i] = (string)l[i]!;
-            return r;
-        }
-
-        static Fixed ToFixed(object? n) => ParseFixed(((JNum)n!).Text);
-
-        /// <summary>Десятичная строка → Fixed целочисленно (округление к ближайшему), без float.</summary>
-        public static Fixed ParseFixed(string text)
-        {
-            int i = 0;
-            bool neg = false;
-            if (text[0] == '-') { neg = true; i = 1; }
-            long ip = 0;
-            while (i < text.Length && text[i] >= '0' && text[i] <= '9') { ip = ip * 10 + (text[i] - '0'); i++; }
-            long num = 0, den = 1;
-            if (i < text.Length && text[i] == '.')
-            {
-                i++;
-                while (i < text.Length && text[i] >= '0' && text[i] <= '9' && den < 1_000_000_000L) { num = num * 10 + (text[i] - '0'); den *= 10; i++; }
-            }
-            if (i < text.Length && text[i] != '.' && !(text[i] >= '0' && text[i] <= '9'))
-                throw new FormatException("unsupported number: " + text);
-            long raw = (ip << Fixed.FractionBits) + (num * Fixed.OneRaw * 2 + den) / (den * 2);
-            return Fixed.FromRaw(neg ? -raw : raw);
-        }
-
-        sealed class JNum { public readonly string Text; public JNum(string t) { Text = t; } }
-
-        /// <summary>Минимальный JSON-парсер: объекты, массивы, строки, числа (как текст), true/false/null.</summary>
-        sealed class Json
-        {
-            readonly string _s;
-            int _p;
-            public Json(string s) { _s = s; }
-
-            public object? ReadDocument()
-            {
-                var v = ReadValue();
-                SkipWs();
-                if (_p != _s.Length) throw Err("trailing data");
-                return v;
-            }
-
-            FormatException Err(string m) => new FormatException("JSON: " + m + " at " + _p.ToString(CultureInfo.InvariantCulture));
-
-            void SkipWs() { while (_p < _s.Length && char.IsWhiteSpace(_s[_p])) _p++; }
-
-            object? ReadValue()
-            {
-                SkipWs();
-                if (_p >= _s.Length) throw Err("unexpected end");
-                char c = _s[_p];
-                if (c == '{') return ReadObject();
-                if (c == '[') return ReadArray();
-                if (c == '"') return ReadString();
-                if (c == '-' || (c >= '0' && c <= '9')) return ReadNumber();
-                if (Lit("true")) return true;
-                if (Lit("false")) return false;
-                if (Lit("null")) return null;
-                throw Err("unexpected char");
-            }
-
-            bool Lit(string w)
-            {
-                if (string.CompareOrdinal(_s, _p, w, 0, w.Length) != 0) return false;
-                _p += w.Length;
-                return true;
-            }
-
-            Dictionary<string, object?> ReadObject()
-            {
-                var d = new Dictionary<string, object?>();
-                _p++;
-                SkipWs();
-                if (_s[_p] == '}') { _p++; return d; }
-                while (true)
-                {
-                    SkipWs();
-                    string k = ReadString();
-                    SkipWs();
-                    if (_s[_p++] != ':') throw Err("expected ':'");
-                    d[k] = ReadValue();
-                    SkipWs();
-                    char c = _s[_p++];
-                    if (c == '}') return d;
-                    if (c != ',') throw Err("expected ',' or '}'");
-                }
-            }
-
-            List<object?> ReadArray()
-            {
-                var l = new List<object?>();
-                _p++;
-                SkipWs();
-                if (_s[_p] == ']') { _p++; return l; }
-                while (true)
-                {
-                    l.Add(ReadValue());
-                    SkipWs();
-                    char c = _s[_p++];
-                    if (c == ']') return l;
-                    if (c != ',') throw Err("expected ',' or ']'");
-                }
-            }
-
-            string ReadString()
-            {
-                if (_s[_p] != '"') throw Err("expected string");
-                _p++;
-                var sb = new StringBuilder();
-                while (true)
-                {
-                    char c = _s[_p++];
-                    if (c == '"') return sb.ToString();
-                    if (c != '\\') { sb.Append(c); continue; }
-                    char e = _s[_p++];
-                    switch (e)
-                    {
-                        case 'n': sb.Append('\n'); break;
-                        case 't': sb.Append('\t'); break;
-                        case 'r': sb.Append('\r'); break;
-                        case 'b': sb.Append('\b'); break;
-                        case 'f': sb.Append('\f'); break;
-                        case 'u':
-                            sb.Append((char)int.Parse(_s.Substring(_p, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
-                            _p += 4; break;
-                        default: sb.Append(e); break;
-                    }
-                }
-            }
-
-            JNum ReadNumber()
-            {
-                int st = _p;
-                if (_s[_p] == '-') _p++;
-                while (_p < _s.Length && ((_s[_p] >= '0' && _s[_p] <= '9') || _s[_p] == '.')) _p++;
-                return new JNum(_s.Substring(st, _p - st));
-            }
         }
     }
 }

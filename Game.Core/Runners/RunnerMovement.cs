@@ -1,7 +1,7 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Text;
+using Game.Core.Data;
 using Game.Core.Math;
 using StreetMap = Game.Core.Street.Street;
 
@@ -15,13 +15,14 @@ namespace Game.Core.Runners
 
         public static RunnerData Parse(string json)
         {
+            var j = Json.Parse("runners.json", json, truncate: true);
             return new RunnerData
             {
-                JogSpeed = Num(json, "jogSpeed"), RunSpeed = Num(json, "runSpeed"), SprintSpeed = Num(json, "sprintSpeed"),
-                StaminaMax = Num(json, "staminaMax"), SprintDrain = Num(json, "sprintDrain"),
-                StaminaRegen = Num(json, "staminaRegen"), SprintResume = Num(json, "sprintResume"),
-                Accel = Num(json, "accel"), SteerSpeed = Num(json, "steerSpeed"), Radius = Num(json, "radius"),
-                Separation = Num(json, "separation"),
+                JogSpeed = j.Num("jogSpeed"), RunSpeed = j.Num("runSpeed"), SprintSpeed = j.Num("sprintSpeed"),
+                StaminaMax = j.Num("staminaMax"), SprintDrain = j.Num("sprintDrain"),
+                StaminaRegen = j.Num("staminaRegen"), SprintResume = j.Num("sprintResume"),
+                Accel = j.Num("accel"), SteerSpeed = j.Num("steerSpeed"), Radius = j.Num("radius"),
+                Separation = j.Num("separation"),
             };
         }
 
@@ -41,33 +42,6 @@ namespace Game.Core.Runners
                 if (path == null) throw new FileNotFoundException("Game.Core/Data/runners.json not found");
             }
             return Parse(File.ReadAllText(path, Encoding.UTF8));
-        }
-
-        // Десятичное число без double: целая и дробная часть в Fixed.
-        private static Fixed Num(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("runners.json: нет ключа " + key);
-            int p = json.IndexOf(':', k) + 1;
-            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
-            int e = p;
-            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
-            string t = json.Substring(p, e - p);
-            if (t.Length == 0) throw new FormatException("runners.json: ключ " + key + " не число");
-            bool neg = t[0] == '-';
-            if (neg) t = t.Substring(1);
-            int dot = t.IndexOf('.');
-            string ip = dot < 0 ? t : t.Substring(0, dot);
-            string fp = dot < 0 ? "" : t.Substring(dot + 1);
-            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
-            if (fp.Length > 0)
-            {
-                long den = 1;
-                for (int i = 0; i < fp.Length; i++) den *= 10;
-                long num = long.Parse(fp, CultureInfo.InvariantCulture);
-                v = v + Fixed.FromRaw((num * Fixed.OneRaw) / den);
-            }
-            return neg ? -v : v;
         }
     }
 
