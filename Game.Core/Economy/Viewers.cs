@@ -1,5 +1,4 @@
-using System;
-using System.Globalization;
+using Game.Core.Data;
 using Game.Core.Math;
 
 namespace Game.Core.Economy
@@ -31,39 +30,14 @@ namespace Game.Core.Economy
 
         public static EconomyData Parse(string json)
         {
+            var j = Json.Parse("economy.json", json);
             return new EconomyData
             {
-                HotRange = Num(json, "hotRange"), WarmRange = Num(json, "warmRange"), CoolRange = Num(json, "coolRange"),
-                HotRate = Num(json, "hotRate"), WarmRate = Num(json, "warmRate"), CoolRate = Num(json, "coolRate"), ColdRate = Num(json, "coldRate"),
-                Start = Num(json, "start"), Cap = Num(json, "cap"), Floor = Num(json, "floor"),
-                DonationDivisor = Num(json, "donationDivisor"), NoSignalLoss = Num(json, "noSignalLoss"),
+                HotRange = j.Num("hotRange"), WarmRange = j.Num("warmRange"), CoolRange = j.Num("coolRange"),
+                HotRate = j.Num("hotRate"), WarmRate = j.Num("warmRate"), CoolRate = j.Num("coolRate"), ColdRate = j.Num("coldRate"),
+                Start = j.Num("start"), Cap = j.Num("cap"), Floor = j.Num("floor"),
+                DonationDivisor = j.Num("donationDivisor"), NoSignalLoss = j.Num("noSignalLoss"),
             };
-        }
-
-        static Fixed Num(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("economy.json: нет ключа " + key);
-            int p = json.IndexOf(':', k) + 1;
-            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
-            int e = p;
-            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
-            string t = json.Substring(p, e - p);
-            if (t.Length == 0) throw new FormatException("economy.json: ключ " + key + " не число");
-            bool neg = t[0] == '-';
-            if (neg) t = t.Substring(1);
-            int dot = t.IndexOf('.');
-            string ip = dot < 0 ? t : t.Substring(0, dot);
-            string fp = dot < 0 ? "" : t.Substring(dot + 1);
-            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
-            if (fp.Length > 0)
-            {
-                long den = 1;
-                for (int i = 0; i < fp.Length; i++) den *= 10;
-                long num = long.Parse(fp, CultureInfo.InvariantCulture);
-                v = v + Fixed.FromRaw((num * Fixed.OneRaw + den / 2) / den);
-            }
-            return neg ? -v : v;
         }
     }
 

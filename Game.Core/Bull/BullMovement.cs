@@ -1,7 +1,7 @@
 using System;
-using System.Globalization;
 using System.IO;
 using System.Text;
+using Game.Core.Data;
 using Game.Core.Math;
 using StreetMap = Game.Core.Street.Street;
 
@@ -13,15 +13,19 @@ namespace Game.Core.Bull
         public Fixed PenOffset, LineS, CountdownSec, ReleaseDelaySec, ChargeSpeed, CruiseSpeed, CloseSpeed,
             TargetBehind, LagFar, LagNear, StairsMul, SlowedMul, CapsuleWidth, Accel, SteerSpeed;
 
-        public static BullData Parse(string json) => new BullData
+        public static BullData Parse(string json)
         {
-            PenOffset = Num(json, "penOffset"), LineS = Num(json, "lineS"), CountdownSec = Num(json, "countdownSec"),
-            ReleaseDelaySec = Num(json, "releaseDelaySec"), ChargeSpeed = Num(json, "chargeSpeed"),
-            CruiseSpeed = Num(json, "cruiseSpeed"), CloseSpeed = Num(json, "closeSpeed"),
-            TargetBehind = Num(json, "targetBehind"), LagFar = Num(json, "lagFar"), LagNear = Num(json, "lagNear"),
-            StairsMul = Num(json, "stairsMul"), SlowedMul = Num(json, "slowedMul"),
-            CapsuleWidth = Num(json, "capsuleWidth"), Accel = Num(json, "accel"), SteerSpeed = Num(json, "steerSpeed"),
-        };
+            var j = Json.Parse("bull.json", json, truncate: true);
+            return new BullData
+            {
+                PenOffset = j.Num("penOffset"), LineS = j.Num("lineS"), CountdownSec = j.Num("countdownSec"),
+                ReleaseDelaySec = j.Num("releaseDelaySec"), ChargeSpeed = j.Num("chargeSpeed"),
+                CruiseSpeed = j.Num("cruiseSpeed"), CloseSpeed = j.Num("closeSpeed"),
+                TargetBehind = j.Num("targetBehind"), LagFar = j.Num("lagFar"), LagNear = j.Num("lagNear"),
+                StairsMul = j.Num("stairsMul"), SlowedMul = j.Num("slowedMul"),
+                CapsuleWidth = j.Num("capsuleWidth"), Accel = j.Num("accel"), SteerSpeed = j.Num("steerSpeed"),
+            };
+        }
 
         public static BullData Load(string? path = null)
         {
@@ -39,32 +43,6 @@ namespace Game.Core.Bull
                 if (path == null) throw new FileNotFoundException("Game.Core/Data/bull.json not found");
             }
             return Parse(File.ReadAllText(path, Encoding.UTF8));
-        }
-
-        private static Fixed Num(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("bull.json: нет ключа " + key);
-            int p = json.IndexOf(':', k) + 1;
-            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
-            int e = p;
-            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
-            string t = json.Substring(p, e - p);
-            if (t.Length == 0) throw new FormatException("bull.json: ключ " + key + " не число");
-            bool neg = t[0] == '-';
-            if (neg) t = t.Substring(1);
-            int dot = t.IndexOf('.');
-            string ip = dot < 0 ? t : t.Substring(0, dot);
-            string fp = dot < 0 ? "" : t.Substring(dot + 1);
-            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
-            if (fp.Length > 0)
-            {
-                long den = 1;
-                for (int i = 0; i < fp.Length; i++) den *= 10;
-                long num = long.Parse(fp, CultureInfo.InvariantCulture);
-                v = v + Fixed.FromRaw((num * Fixed.OneRaw) / den);
-            }
-            return neg ? -v : v;
         }
     }
 

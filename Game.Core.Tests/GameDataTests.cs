@@ -51,6 +51,37 @@ public class GameDataTests
     }
 
     [Fact]
+    public void MissingKeyThrowsWithFileAndKey()
+    {
+        var e = Assert.Throws<FormatException>(() => Game.Core.Bull.BullData.Parse("{ \"penOffset\": 25 }"));
+        Assert.Contains("bull.json", e.Message);
+        Assert.Contains("lineS", e.Message);
+        e = Assert.Throws<FormatException>(() => Game.Core.Runners.ActionData.Parse("{ \"shoveRange\": 1.5 }"));
+        Assert.Contains("actions.json", e.Message);
+        Assert.Contains("shoveCooldown", e.Message);
+    }
+
+    [Fact]
+    public void NotANumberThrowsWithFileAndKey()
+    {
+        string json = File.ReadAllText(Path.Combine(DataDir(), "economy.json"))
+            .Replace("\"cap\":", "\"cap\": \"many\", \"x\":");
+        var e = Assert.Throws<FormatException>(() => Game.Core.Economy.EconomyData.Parse(json));
+        Assert.Contains("economy.json", e.Message);
+        Assert.Contains("cap", e.Message);
+    }
+
+    [Fact]
+    public void BrokenCharacterEntryNamesIndexAndKey()
+    {
+        string json = File.ReadAllText(Path.Combine(DataDir(), "characters.json")).Replace("\"tastiness\": 0.6", "\"tastyness\": 0.6");
+        var e = Assert.Throws<FormatException>(() => Game.Core.Runners.CharacterData.Parse(json));
+        Assert.Contains("characters.json", e.Message);
+        Assert.Contains("characters[2]", e.Message);
+        Assert.Contains("tastiness", e.Message);
+    }
+
+    [Fact]
     public void ParseAndLoadGiveEqualHashes()
     {
         var inputs = MakeInputs(3000, 5);

@@ -11,7 +11,7 @@ namespace Game.Core.Tests
     {
         static readonly StreetData D = StreetData.Load();
 
-        static Fixed F(string s) => StreetData.ParseFixed(s);
+        static Fixed F(string s) => Game.Core.Data.Json.ParseFixed(s);
 
         // id, tier, lenMin, lenMax, width "s:w,s:w", slope, rise, special, obstacles "type:weight:lanes", next
         static readonly (string id, string tier, int lmin, int lmax, string width, Slope slope, int rise, bool special, string obs, string next)[] ExpectedBlocks =

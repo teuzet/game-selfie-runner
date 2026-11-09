@@ -1,5 +1,5 @@
 using System;
-using System.Globalization;
+using Game.Core.Data;
 using Game.Core.Math;
 using StreetMap = Game.Core.Street.Street;
 
@@ -17,36 +17,15 @@ namespace Game.Core.Runners
             TripStun = Fixed.FromFraction(3, 5), StairsPushBack = Fixed.FromFraction(3, 5),
         };
 
-        public static ActionData Parse(string json) => new ActionData
+        public static ActionData Parse(string json)
         {
-            ShoveRange = Num(json, "shoveRange"), ShoveCooldown = Num(json, "shoveCooldown"),
-            TripRange = Num(json, "tripRange"), TripCooldown = Num(json, "tripCooldown"),
-            TripStun = Num(json, "tripStun"), StairsPushBack = Num(json, "stairsPushBack"),
-        };
-
-        static Fixed Num(string json, string key)
-        {
-            int k = json.IndexOf("\"" + key + "\"", StringComparison.Ordinal);
-            if (k < 0) throw new FormatException("actions.json: нет ключа " + key);
-            int p = json.IndexOf(':', k) + 1;
-            while (p < json.Length && char.IsWhiteSpace(json[p])) p++;
-            int e = p;
-            while (e < json.Length && (char.IsDigit(json[e]) || json[e] == '.' || json[e] == '-')) e++;
-            string t = json.Substring(p, e - p);
-            if (t.Length == 0) throw new FormatException("actions.json: ключ " + key + " не число");
-            bool neg = t[0] == '-';
-            if (neg) t = t.Substring(1);
-            int dot = t.IndexOf('.');
-            string ip = dot < 0 ? t : t.Substring(0, dot);
-            string fp = dot < 0 ? "" : t.Substring(dot + 1);
-            Fixed v = Fixed.FromInt(int.Parse(ip, CultureInfo.InvariantCulture));
-            if (fp.Length > 0)
+            var j = Json.Parse("actions.json", json, truncate: true);
+            return new ActionData
             {
-                long den = 1;
-                for (int i = 0; i < fp.Length; i++) den *= 10;
-                v = v + Fixed.FromRaw((long.Parse(fp, CultureInfo.InvariantCulture) * Fixed.OneRaw) / den);
-            }
-            return neg ? -v : v;
+                ShoveRange = j.Num("shoveRange"), ShoveCooldown = j.Num("shoveCooldown"),
+                TripRange = j.Num("tripRange"), TripCooldown = j.Num("tripCooldown"),
+                TripStun = j.Num("tripStun"), StairsPushBack = j.Num("stairsPushBack"),
+            };
         }
     }
 
