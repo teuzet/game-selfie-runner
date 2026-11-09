@@ -65,6 +65,12 @@ namespace Game.Core.Runners
                 if (runners[i].Toss.NoSignalTicks > 0) inputs = inputs.With(i, default);
         }
 
+        /// <summary>Подъём после «нет сигнала» (F-100 §3.1 п.4): сразу темп бега × уклон, без разгона с нуля.</summary>
+        public static void Rise(RunnerData d, StreetMap street, ref RunnerState r)
+        {
+            r.Speed = (d.RunSpeed * street.SlopeAt(Fixed.FromRaw(r.S))).Raw;
+        }
+
         /// <summary>Один тик всех мест (темп, выносливость, руль, уклон, стены); у лежащего («нет сигнала») скорость 0.</summary>
         public static void StepAll(RunnerData[] seatData, StreetMap street, RunnerState[] runners, TickInputs inputs)
         {
