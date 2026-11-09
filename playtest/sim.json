@@ -1,0 +1,1 @@
+{"command": ["dotnet", "run", "--project", "Game.Sim", "-c", "Release", "--", "--seeds", "{seeds}", "--from", "{first_seed}", "--out", "{out}"]}
