@@ -368,7 +368,7 @@
         "Смена зоны записывается как факт для F-019 (горячо/холодно).",
         "Тесты: 10 с в горячей зоне у ботаника даёт 250 зрителей, у гламура 310; убежать на 50 м — зрители падают; за 5 минут при 500 зрителях ≈ 1500 донатов; детерминизм."
       ],
-      "status": "review",
+      "status": "unity_check",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -737,7 +737,7 @@
         "Проверка обязательна, хвост лога с итогом — в notes результата: тул `unity` `mode=open` без ошибок компиляции (`errors` пуст, `ok: true`) и `mode=test` (EditMode) зелёный. Имитировать прогон нельзя."
       ],
       "status": "running",
-      "attempts": 0,
+      "attempts": 1,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
       "owned_files": [
