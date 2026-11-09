@@ -58,9 +58,9 @@ namespace Game.Core.Economy
             dist < d.HotRange ? ViewerZone.Hot : dist < d.WarmRange ? ViewerZone.Warm : dist < d.CoolRange ? ViewerZone.Cool : ViewerZone.Cold;
 
         /// <summary>Целые зрители места.</summary>
-        public static int ViewersOf(RaceState st, int seat) => Fixed.FromRaw(st.Viewing[seat].Viewers).ToInt();
+        public static int ViewersOf(RaceState st, int seat) => Fixed.FromRaw(st.Runners[seat].Viewing.Viewers).ToInt();
         /// <summary>Целые донаты места.</summary>
-        public static int DonationsOf(RaceState st, int seat) => Fixed.FromRaw(st.Viewing[seat].Donations).ToInt();
+        public static int DonationsOf(RaceState st, int seat) => Fixed.FromRaw(st.Runners[seat].Viewing.Donations).ToInt();
 
         /// <summary>Один тик по всем местам (после движения бегунов и быка).</summary>
         public static void Step(Simulation sim)
@@ -69,7 +69,7 @@ namespace Game.Core.Economy
             var d = sim.EconomyData;
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
-                ref var v = ref st.Viewing[i];
+                ref var v = ref st.Runners[i].Viewing;
                 if (v.FinishTick >= 0) continue; // финишировал: зрители не меняются
                 var r = st.Runners[i];
                 var fs = Fixed.FromRaw(r.S - st.Bull.S);
@@ -81,7 +81,7 @@ namespace Game.Core.Economy
                     v.Zone = zone;
                 }
                 long delta;
-                if (st.Tosses[i].NoSignalTicks > 0)
+                if (st.Runners[i].Toss.NoSignalTicks > 0)
                 {
                     delta = -((v.Viewers * d.NoSignalLoss.Raw) >> Fixed.FractionBits) / Tps;
                 }

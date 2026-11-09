@@ -110,7 +110,7 @@ namespace Game.Core.Runners
         public static void ApplyShove(CharacterData d, RunnerData rd, StreetMap street, RaceState st, CharacterDef pusher, int target, int dir)
         {
             ref RunnerState r = ref st.Runners[target];
-            Fixed dist = ShoveDistance(d, Fixed.FromRaw(st.Stability[target]));
+            Fixed dist = ShoveDistance(d, Fixed.FromRaw(r.Stability));
             Fixed x = Fixed.FromRaw(r.X) + Fixed.FromInt(dir < 0 ? -1 : 1) * dist;
             r.X = RunnerMovement.ClampToStreet(rd, street, Fixed.FromRaw(r.S), x).Raw;
             r.Speed = (Fixed.FromRaw(r.Speed) * (Fixed.One - d.ShoveSpeedLoss)).Raw;

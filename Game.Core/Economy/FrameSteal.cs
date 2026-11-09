@@ -41,7 +41,7 @@ namespace Game.Core.Economy
                 if (victim != f.Victim) { f.Victim = victim; f.Ticks = 0; }
                 f.Ticks++;
                 if (f.Ticks <= HoldTicks) continue;
-                if (st.Viewing[victim].FinishTick >= 0 || st.Viewing[thief].FinishTick >= 0) continue; // финишировавшие заморожены
+                if (st.Runners[victim].Viewing.FinishTick >= 0 || st.Runners[thief].Viewing.FinishTick >= 0) continue; // финишировавшие заморожены
                 Fixed rate = RateFor(sim, victim);
                 if (f.Ticks == HoldTicks + 1)
                 {
@@ -49,8 +49,8 @@ namespace Game.Core.Economy
                     ev.Add(RaceEventType.InYourFrame, st.Tick, victim, thief, (int)rate.Raw);
                 }
                 long amount = rate.Raw / Simulation.TicksPerSecond;
-                ref ViewerState vv = ref st.Viewing[victim];
-                ref ViewerState tv = ref st.Viewing[thief];
+                ref ViewerState vv = ref st.Runners[victim].Viewing;
+                ref ViewerState tv = ref st.Runners[thief].Viewing;
                 if (amount > vv.Viewers) amount = vv.Viewers;
                 if (amount > d.Cap.Raw - tv.Viewers) amount = d.Cap.Raw - tv.Viewers;
                 if (amount < 0) amount = 0;

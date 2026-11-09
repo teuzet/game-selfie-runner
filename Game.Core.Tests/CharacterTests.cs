@@ -42,9 +42,9 @@ namespace Game.Core.Tests
         public void CharacterIdSetsStability()
         {
             var sim = new Simulation(Cfg(2, 0, 1, 3), Data);
-            Assert.Equal(1.6, Dbl(Fixed.FromRaw(sim.State.Stability[0])), 3);
-            Assert.Equal(0.7, Dbl(Fixed.FromRaw(sim.State.Stability[1])), 3);
-            Assert.Equal(1.2, Dbl(Fixed.FromRaw(sim.State.Stability[2])), 3);
+            Assert.Equal(1.6, Dbl(Fixed.FromRaw(sim.State.Runners[0].Stability)), 3);
+            Assert.Equal(0.7, Dbl(Fixed.FromRaw(sim.State.Runners[1].Stability)), 3);
+            Assert.Equal(1.2, Dbl(Fixed.FromRaw(sim.State.Runners[2].Stability)), 3);
         }
 
         static int TicksTo1800(int characterId)
@@ -75,7 +75,7 @@ namespace Game.Core.Tests
             Characters.ApplyShove(cd, sim.RunnerData, sim.Street, sim.State, sim.CharacterOf(0), 1, 1);
             Assert.Equal(2.0 / 1.6, Dbl(Fixed.FromRaw(sim.State.Runners[1].X) - x0), 2);
             // гламур (0.7): сдвиг 2/0.7 независимо от толкающего; бабуля (место 1) толкает так же
-            Assert.Equal(2.0 / 0.7, Dbl(Characters.ShoveDistance(cd, Fixed.FromRaw(sim.State.Stability[0]))), 2);
+            Assert.Equal(2.0 / 0.7, Dbl(Characters.ShoveDistance(cd, Fixed.FromRaw(sim.State.Runners[0].Stability))), 2);
             Fixed g0 = Fixed.FromRaw(sim.State.Runners[0].X);
             Characters.ApplyShove(cd, sim.RunnerData, sim.Street, sim.State, sim.CharacterOf(1), 0, 1);
             Assert.Equal(2.0 / 0.7, Dbl(Fixed.FromRaw(sim.State.Runners[0].X) - g0), 2);

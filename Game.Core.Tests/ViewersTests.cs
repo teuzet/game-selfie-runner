@@ -33,11 +33,11 @@ public class ViewersTests
     {
         var sim = Make();
         Run(sim, 4, 300);
-        double nerd = (double)Fixed.FromRaw(sim.State.Viewing[3].Viewers);
-        double glam = (double)Fixed.FromRaw(sim.State.Viewing[0].Viewers);
+        double nerd = (double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers);
+        double glam = (double)Fixed.FromRaw(sim.State.Runners[0].Viewing.Viewers);
         Assert.InRange(nerd, 249.9, 250.01);
         Assert.InRange(glam, 309.8, 310.01);
-        Assert.Equal(ViewerZone.Hot, sim.State.Viewing[3].Zone);
+        Assert.Equal(ViewerZone.Hot, sim.State.Runners[3].Viewing.Zone);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class ViewersTests
         Assert.Equal(0, Viewers.ViewersOf(sim.State, 3));
         var sim2 = Make();
         Run(sim2, 30, 150); // −4/с × 5 с = −20
-        Assert.InRange((double)Fixed.FromRaw(sim2.State.Viewing[3].Viewers), 79.9, 80.01);
+        Assert.InRange((double)Fixed.FromRaw(sim2.State.Runners[3].Viewing.Viewers), 79.9, 80.01);
     }
 
     [Fact]
@@ -56,11 +56,11 @@ public class ViewersTests
     {
         var sim = Make();
         Run(sim, 12, 300); // +5/с × 10 с
-        Assert.InRange((double)Fixed.FromRaw(sim.State.Viewing[3].Viewers), 149.9, 150.01);
-        Assert.InRange((double)Fixed.FromRaw(sim.State.Viewing[0].Viewers), 169.9, 170.01); // ×1.4
+        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers), 149.9, 150.01);
+        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[0].Viewing.Viewers), 169.9, 170.01); // ×1.4
         var sim2 = Make();
         Run(sim2, 30, 150); // убыль без множителя: у гламура как у ботаника
-        Assert.Equal(sim2.State.Viewing[3].Viewers, sim2.State.Viewing[0].Viewers);
+        Assert.Equal(sim2.State.Runners[3].Viewing.Viewers, sim2.State.Runners[0].Viewing.Viewers);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class ViewersTests
         // Держим 500 зрителей: зона 20–40 м убывает, поэтому фиксируем значение каждый тик.
         for (int t = 0; t < 300 * 30; t++)
         {
-            sim.State.Viewing[3].Viewers = Fixed.FromInt(500).Raw;
+            sim.State.Runners[3].Viewing.Viewers = Fixed.FromInt(500).Raw;
             sim.State.Runners[3].S = sim.State.Bull.S + Fixed.FromInt(4).Raw;
             Viewers.Step(sim);
             sim.State.Tick++;
@@ -90,10 +90,10 @@ public class ViewersTests
     public void NoSignalDrainsTenPercentAndNoIncome()
     {
         var sim = Make();
-        sim.State.Viewing[3].Viewers = Fixed.FromInt(1000).Raw;
-        sim.State.Tosses[3].NoSignalTicks = 1000;
+        sim.State.Runners[3].Viewing.Viewers = Fixed.FromInt(1000).Raw;
+        sim.State.Runners[3].Toss.NoSignalTicks = 1000;
         Run(sim, 4, 30); // 1 с: ×0.9 с непрерывным начислением по тикам ≈ 905
-        double v = (double)Fixed.FromRaw(sim.State.Viewing[3].Viewers);
+        double v = (double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers);
         Assert.InRange(v, 900, 910);
         Assert.Equal(0, Viewers.DonationsOf(sim.State, 3));
     }
@@ -103,9 +103,9 @@ public class ViewersTests
     {
         var sim = Make();
         Run(sim, 4, 3);
-        Assert.Equal(0, sim.State.Viewing[3].ZoneChanges); // первая зона — не смена
+        Assert.Equal(0, sim.State.Runners[3].Viewing.ZoneChanges); // первая зона — не смена
         Run(sim, 12, 1);
-        ref var v = ref sim.State.Viewing[3];
+        ref var v = ref sim.State.Runners[3].Viewing;
         Assert.Equal(1, v.ZoneChanges);
         Assert.Equal(ViewerZone.Hot, v.PrevZone);
         Assert.Equal(ViewerZone.Warm, v.Zone);

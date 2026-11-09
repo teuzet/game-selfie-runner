@@ -95,8 +95,8 @@ public class PhasesTests
         Assert.True(finishTick - soonTick <= FinishTicks, $"закрылся через {finishTick - soonTick} тиков");
         Assert.Equal(RacePhase.Over, sim.State.Phase);
         for (int i = 0; i < 4; i++) Assert.True(Phases.IsFinished(sim.State, i));
-        Assert.Equal(soonTick, sim.State.Viewing[0].FinishTick);
-        Assert.Equal(finishTick, sim.State.Viewing[1].FinishTick);
+        Assert.Equal(soonTick, sim.State.Runners[0].Viewing.FinishTick);
+        Assert.Equal(finishTick, sim.State.Runners[1].Viewing.FinishTick);
     }
 
     [Fact]
@@ -105,23 +105,23 @@ public class PhasesTests
         var sim = NearArena(12);
         while (Find(sim, RaceEventType.FinishSoon) < 0) sim.Step(TickInputs.Empty.With(0, new PlayerInput(0, 0, false)));
         Assert.Equal(RacePhase.Finishing, sim.State.Phase);
-        long v0 = sim.State.Viewing[0].Viewers, d0 = sim.State.Viewing[0].Donations;
-        long v1 = sim.State.Viewing[1].Viewers;
+        long v0 = sim.State.Runners[0].Viewing.Viewers, d0 = sim.State.Runners[0].Viewing.Donations;
+        long v1 = sim.State.Runners[1].Viewing.Viewers;
         long s1 = sim.State.Runners[1].S;
         sim.Step(TickInputs.Empty);
         while (sim.State.Phase == RacePhase.Finishing)
         {
             sim.Step(TickInputs.Empty);
-            Assert.Equal(v0, sim.State.Viewing[0].Viewers);
-            Assert.Equal(d0, sim.State.Viewing[0].Donations);
+            Assert.Equal(v0, sim.State.Runners[0].Viewing.Viewers);
+            Assert.Equal(d0, sim.State.Runners[0].Viewing.Donations);
         }
         Assert.Equal(RacePhase.Over, sim.State.Phase);
-        Assert.NotEqual(v1, sim.State.Viewing[1].Viewers); // не добежавший копил до конца таймера
+        Assert.NotEqual(v1, sim.State.Runners[1].Viewing.Viewers); // не добежавший копил до конца таймера
         // после закрытия состояние неподвижно
         ulong h = sim.StateHash();
-        long viewers = sim.State.Viewing[1].Viewers, s = sim.State.Runners[1].S;
+        long viewers = sim.State.Runners[1].Viewing.Viewers, s = sim.State.Runners[1].S;
         for (int t = 0; t < 30; t++) sim.Step(TickInputs.Empty.With(1, new PlayerInput(0, 1, false)));
-        Assert.Equal(viewers, sim.State.Viewing[1].Viewers);
+        Assert.Equal(viewers, sim.State.Runners[1].Viewing.Viewers);
         Assert.Equal(s, sim.State.Runners[1].S);
         Assert.True(s >= s1);
         Assert.Equal(0, sim.Events.Count);
@@ -149,14 +149,14 @@ public class PhasesTests
         long[] vw = { 900, 200, 500, 300 };
         for (int i = 0; i < 4; i++)
         {
-            st.Viewing[i].Donations = Fixed.FromInt((int)don[i]).Raw;
-            st.Viewing[i].Viewers = Fixed.FromInt((int)vw[i]).Raw;
+            st.Runners[i].Viewing.Donations = Fixed.FromInt((int)don[i]).Raw;
+            st.Runners[i].Viewing.Viewers = Fixed.FromInt((int)vw[i]).Raw;
         }
         Results.Standings(st, order);
         Assert.Equal(new[] { 2, 1, 3, 0 }, order); // равные донаты 3000: больше зрителей у места 2
         Assert.Equal(2, Results.Winner(st));
         // полное равенство — меньшее место выше
-        st.Viewing[1].Viewers = st.Viewing[2].Viewers;
+        st.Runners[1].Viewing.Viewers = st.Runners[2].Viewing.Viewers;
         Results.Standings(st, order);
         Assert.Equal(new[] { 1, 2, 3, 0 }, order);
         Assert.Equal(1, Results.Winner(st));
@@ -177,9 +177,9 @@ public class PhasesTests
                 var v = new long[4]; var h = new bool[4]; var n = new bool[4]; var f = new bool[4];
                 for (int i = 0; i < 4; i++)
                 {
-                    v[i] = sim.State.Viewing[i].Viewers;
-                    h[i] = sim.State.Viewing[i].Zone == ViewerZone.Hot;
-                    n[i] = sim.State.Tosses[i].NoSignalTicks > 0;
+                    v[i] = sim.State.Runners[i].Viewing.Viewers;
+                    h[i] = sim.State.Runners[i].Viewing.Zone == ViewerZone.Hot;
+                    n[i] = sim.State.Runners[i].Toss.NoSignalTicks > 0;
                     f[i] = Phases.IsFinished(sim.State, i);
                 }
                 viewers.Add(v); hot.Add(h); noSig.Add(n); fin.Add(f);

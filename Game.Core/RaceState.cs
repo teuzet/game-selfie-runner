@@ -7,20 +7,11 @@ namespace Game.Core
     {
         public int Tick;
         public DetRandom Rng;
+        /// <summary>Всё состояние места в одной структуре (F-063): движение, столкновения, устойчивость, толчки, подброс, зрители.</summary>
         public readonly RunnerState[] Runners = new RunnerState[RaceConfig.SeatCount];
         public BullState Bull;
-        /// <summary>Факты и эффекты столкновений по местам (F-013); события F-019 читают Count/LastKind/LastS/LastX/LastTick.</summary>
-        public readonly Game.Core.Runners.CollisionState[] Collisions = new Game.Core.Runners.CollisionState[RaceConfig.SeatCount];
-        /// <summary>Устойчивость по местам (Fixed raw), из персонажа места (CharacterId), F-014.</summary>
-        public readonly long[] Stability = new long[RaceConfig.SeatCount];
-        /// <summary>Перезарядки и факты толчка/подножки по местам (F-015); события F-019 читают Shoved/Tripped/GotShoved/GotTripped и Last*.</summary>
-        public readonly Game.Core.Runners.ActionState[] Actions = new Game.Core.Runners.ActionState[RaceConfig.SeatCount];
         /// <summary>Рывки быка (F-017): таймеры, цель, счётчики.</summary>
         public Game.Core.Bull.BullChargeState Charge;
-        /// <summary>Подброс по местам (F-017): «нет сигнала», неуязвимость, факты «подброшен»/«встал» для F-019.</summary>
-        public readonly Game.Core.Bull.TossState[] Tosses = new Game.Core.Bull.TossState[RaceConfig.SeatCount];
-        /// <summary>Зрители и донаты по местам (F-018); зона дистанции до быка — факт для F-019.</summary>
-        public readonly Game.Core.Economy.ViewerState[] Viewing = new Game.Core.Economy.ViewerState[RaceConfig.SeatCount];
         /// <summary>Что сканер событий уже видел по местам (F-019).</summary>
         public readonly Game.Core.Events.EventState[] Ev = new Game.Core.Events.EventState[RaceConfig.SeatCount];
         /// <summary>«Влез в кадр» по местам-ворам (F-019).</summary>
@@ -42,14 +33,19 @@ namespace Game.Core
             Dyn = new Game.Core.Street.ObstacleDyn[street.Obstacles.Length];
             Hit = new byte[RaceConfig.SeatCount * Game.Core.Runners.Collisions.HitStride(street)];
             Game.Core.Street.MovingObstacles.Init(street, Dyn);
-            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Game.Core.Runners.Actions.InitState(ref Actions[i]); Stability[i] = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw; }
+            for (int i = 0; i < Runners.Length; i++)
+            {
+                Game.Core.Runners.Collisions.InitState(ref Runners[i].Collision);
+                Game.Core.Runners.Actions.InitState(ref Runners[i].Action);
+                Runners[i].Stability = characters.Get(config.GetSeat(i).CharacterId).Stability.Raw;
+                Game.Core.Bull.BullCharge.InitToss(ref Runners[i].Toss);
+                Game.Core.Economy.Viewers.InitState(economy, ref Runners[i].Viewing);
+            }
             Rng = new DetRandom(seed);
             Phase = Game.Core.Race.RacePhase.Countdown;
             PhaseTicks = Game.Core.Race.Phases.CountdownTicks(bullData);
             Best = Game.Core.Race.Highlights.Empty;
             Game.Core.Bull.BullCharge.InitState(seed, ref Charge);
-            for (int i = 0; i < Tosses.Length; i++) Game.Core.Bull.BullCharge.InitToss(ref Tosses[i]);
-            for (int i = 0; i < Viewing.Length; i++) Game.Core.Economy.Viewers.InitState(economy, ref Viewing[i]);
             for (int i = 0; i < Frame.Length; i++) Game.Core.Economy.FrameSteal.InitState(ref Frame[i]);
             Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
@@ -82,14 +78,9 @@ namespace Game.Core
             PhaseTicks = o.PhaseTicks;
             Best = o.Best;
             System.Array.Copy(o.Trackers, Trackers, Trackers.Length);
-            System.Array.Copy(o.Viewing, Viewing, Viewing.Length);
             System.Array.Copy(o.Ev, Ev, Ev.Length);
             System.Array.Copy(o.Frame, Frame, Frame.Length);
-            System.Array.Copy(o.Tosses, Tosses, Tosses.Length);
             System.Array.Copy(o.Runners, Runners, Runners.Length);
-            System.Array.Copy(o.Collisions, Collisions, Collisions.Length);
-            System.Array.Copy(o.Stability, Stability, Stability.Length);
-            System.Array.Copy(o.Actions, Actions, Actions.Length);
             System.Array.Copy(o.Dyn, Dyn, Dyn.Length);
             System.Array.Copy(o.Hit, Hit, Hit.Length);
         }
@@ -110,33 +101,35 @@ namespace Game.Core
                 h = Mix(h, (ulong)Runners[i].Exhausted);
                 h = Mix(h, (ulong)Runners[i].StunTicks);
             }
-            for (int i = 0; i < Collisions.Length; i++)
+            for (int i = 0; i < Runners.Length; i++)
             {
-                h = Mix(h, (ulong)Collisions[i].Count);
-                h = Mix(h, (ulong)Collisions[i].WaterCount);
-                h = Mix(h, (ulong)Collisions[i].LastKind);
-                h = Mix(h, (ulong)Collisions[i].LastS);
-                h = Mix(h, (ulong)Collisions[i].LastX);
-                h = Mix(h, (ulong)Collisions[i].LastTick);
-                h = Mix(h, (ulong)Collisions[i].SlowTicks);
-                h = Mix(h, (ulong)Collisions[i].SlowCap);
-                h = Mix(h, (ulong)Collisions[i].WaterPending);
-                h = Mix(h, (ulong)Collisions[i].ZoneActive);
-                h = Mix(h, (ulong)Collisions[i].ZoneRaw);
-                h = Mix(h, (ulong)Stability[i]);
+                ref Game.Core.Runners.CollisionState c = ref Runners[i].Collision;
+                h = Mix(h, (ulong)c.Count);
+                h = Mix(h, (ulong)c.WaterCount);
+                h = Mix(h, (ulong)c.LastKind);
+                h = Mix(h, (ulong)c.LastS);
+                h = Mix(h, (ulong)c.LastX);
+                h = Mix(h, (ulong)c.LastTick);
+                h = Mix(h, (ulong)c.SlowTicks);
+                h = Mix(h, (ulong)c.SlowCap);
+                h = Mix(h, (ulong)c.WaterPending);
+                h = Mix(h, (ulong)c.ZoneActive);
+                h = Mix(h, (ulong)c.ZoneRaw);
+                h = Mix(h, (ulong)Runners[i].Stability);
             }
-            for (int i = 0; i < Actions.Length; i++)
+            for (int i = 0; i < Runners.Length; i++)
             {
-                h = Mix(h, (ulong)(uint)Actions[i].ShoveCd);
-                h = Mix(h, (ulong)(uint)Actions[i].TripCd);
-                h = Mix(h, (ulong)(uint)Actions[i].Shoved);
-                h = Mix(h, (ulong)(uint)Actions[i].Tripped);
-                h = Mix(h, (ulong)(uint)Actions[i].GotShoved);
-                h = Mix(h, (ulong)(uint)Actions[i].GotTripped);
-                h = Mix(h, (ulong)(uint)Actions[i].LastShoveTick);
-                h = Mix(h, (ulong)(uint)Actions[i].LastTripTick);
-                h = Mix(h, (ulong)(uint)Actions[i].LastGotShovedTick);
-                h = Mix(h, (ulong)(uint)Actions[i].LastGotTrippedTick);
+                ref Game.Core.Runners.ActionState a = ref Runners[i].Action;
+                h = Mix(h, (ulong)(uint)a.ShoveCd);
+                h = Mix(h, (ulong)(uint)a.TripCd);
+                h = Mix(h, (ulong)(uint)a.Shoved);
+                h = Mix(h, (ulong)(uint)a.Tripped);
+                h = Mix(h, (ulong)(uint)a.GotShoved);
+                h = Mix(h, (ulong)(uint)a.GotTripped);
+                h = Mix(h, (ulong)(uint)a.LastShoveTick);
+                h = Mix(h, (ulong)(uint)a.LastTripTick);
+                h = Mix(h, (ulong)(uint)a.LastGotShovedTick);
+                h = Mix(h, (ulong)(uint)a.LastGotTrippedTick);
             }
             for (int i = 0; i < Dyn.Length; i++)
             {
@@ -154,24 +147,26 @@ namespace Game.Core
             h = Mix(h, (ulong)(uint)Charge.Tosses);
             h = Mix(h, (ulong)(uint)Charge.LastChargeTick);
             h = Mix(h, (ulong)(uint)Charge.LastChargeTarget);
-            for (int i = 0; i < Tosses.Length; i++)
+            for (int i = 0; i < Runners.Length; i++)
             {
-                h = Mix(h, (ulong)(uint)Tosses[i].NoSignalTicks);
-                h = Mix(h, (ulong)(uint)Tosses[i].InvulnTicks);
-                h = Mix(h, (ulong)(uint)Tosses[i].Tossed);
-                h = Mix(h, (ulong)(uint)Tosses[i].Rose);
-                h = Mix(h, (ulong)(uint)Tosses[i].LastTossTick);
-                h = Mix(h, (ulong)(uint)Tosses[i].LastRoseTick);
-                h = Mix(h, (ulong)Tosses[i].LastTossFromS);
+                ref Game.Core.Bull.TossState t = ref Runners[i].Toss;
+                h = Mix(h, (ulong)(uint)t.NoSignalTicks);
+                h = Mix(h, (ulong)(uint)t.InvulnTicks);
+                h = Mix(h, (ulong)(uint)t.Tossed);
+                h = Mix(h, (ulong)(uint)t.Rose);
+                h = Mix(h, (ulong)(uint)t.LastTossTick);
+                h = Mix(h, (ulong)(uint)t.LastRoseTick);
+                h = Mix(h, (ulong)t.LastTossFromS);
             }
-            for (int i = 0; i < Viewing.Length; i++)
+            for (int i = 0; i < Runners.Length; i++)
             {
-                h = Mix(h, (ulong)Viewing[i].Viewers);
-                h = Mix(h, (ulong)Viewing[i].Donations);
-                h = Mix(h, (ulong)(uint)Viewing[i].Zone);
-                h = Mix(h, (ulong)(uint)Viewing[i].PrevZone);
-                h = Mix(h, (ulong)(uint)Viewing[i].ZoneChanges);
-                h = Mix(h, (ulong)(uint)Viewing[i].LastZoneTick);
+                ref Game.Core.Economy.ViewerState v = ref Runners[i].Viewing;
+                h = Mix(h, (ulong)v.Viewers);
+                h = Mix(h, (ulong)v.Donations);
+                h = Mix(h, (ulong)(uint)v.Zone);
+                h = Mix(h, (ulong)(uint)v.PrevZone);
+                h = Mix(h, (ulong)(uint)v.ZoneChanges);
+                h = Mix(h, (ulong)(uint)v.LastZoneTick);
             }
             for (int i = 0; i < Ev.Length; i++)
             {
@@ -201,7 +196,7 @@ namespace Game.Core
                 h = Mix(h, (ulong)(uint)Trackers[i].FailActive);
                 h = Mix(h, (ulong)(uint)Trackers[i].FailTick);
                 h = Mix(h, (ulong)Trackers[i].FailViewers);
-                h = Mix(h, (ulong)(uint)Viewing[i].FinishTick);
+                h = Mix(h, (ulong)(uint)Runners[i].Viewing.FinishTick);
             }
             h = Mix(h, (ulong)Bull.S);
             h = Mix(h, (ulong)Bull.X);
