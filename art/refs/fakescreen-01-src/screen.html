@@ -8,6 +8,7 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .vig{position:absolute;inset:0;background:
  linear-gradient(90deg,rgba(0,0,0,0) 66%,rgba(20,10,30,.5) 100%),
  linear-gradient(180deg,rgba(0,0,0,.4) 0,rgba(0,0,0,0) 15%,rgba(0,0,0,0) 82%,rgba(0,0,0,.4) 100%)}
+.heat{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 180px 40px rgba(255,80,0,.35),inset 0 -120px 160px -60px rgba(255,120,0,.35)}
 .glass{background:rgba(15,12,25,.6);backdrop-filter:blur(8px);border-radius:16px}
 .white{background:rgba(255,255,255,.94);color:#1b1a2e;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .t{font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.7}
@@ -29,30 +30,35 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .feed .pos{color:#7CF2B3}.feed .neg{color:#ff8a8a}.feed .eur{color:#ffd54a}
 .feed .old{opacity:.55}
 /* ---------- quest ---------- */
-.quest{position:absolute;left:36px;top:300px;width:430px;padding:16px 18px}
-.quest h4{color:#9c27b0;margin-bottom:6px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
-.quest p{font-size:24px;font-weight:800;line-height:1.15}
-.quest .from{font-size:16px;color:#555;margin-top:4px}
-.quest .pb{height:12px;background:#e8e6f0;border-radius:6px;margin-top:12px;overflow:hidden;position:relative}
+.quest{position:absolute;left:36px;top:250px;width:430px;padding:12px 16px}
+.quest h4{color:#ce93d8;margin-bottom:6px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+.quest p{font-size:22px;font-weight:800;line-height:1.15}
+.quest .from{font-size:16px;opacity:.7;margin-top:4px}
+.quest .pb{height:12px;background:rgba(255,255,255,.15);border-radius:6px;margin-top:12px;overflow:hidden;position:relative}
 .quest .pb i{display:block;height:100%;width:64%;background:linear-gradient(90deg,#9c27b0,#ff2d55)}
-.quest .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:16px;font-weight:700;color:#555}
+.quest .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:16px;font-weight:700;opacity:.9}
 .quest .rw{background:#ffd54a;color:#4a2d00;border-radius:8px;padding:3px 8px;font-weight:900}
 /* ---------- top center: street progress ---------- */
-.track{position:absolute;left:50%;top:30px;transform:translateX(-50%);width:620px}
-.track .bar{height:14px;border-radius:7px;background:rgba(0,0,0,.5);position:relative;border:2px solid rgba(255,255,255,.55)}
-.track .m{position:absolute;top:-16px;width:40px;height:40px;font-size:18px;transform:translateX(-50%)}
-.track .me{width:48px;height:48px;top:-20px;border-color:#ffd54a;box-shadow:0 0 0 4px rgba(255,213,74,.55);font-size:21px}
-.track .bull{top:-22px;width:52px;height:52px;border-color:#ff2d55;background:#7a1020;font-size:30px}
-.track .lbl{display:flex;justify-content:space-between;font-size:17px;font-weight:700;margin-top:30px;text-shadow:0 2px 6px rgba(0,0,0,.8)}
-.eyes{position:absolute;left:50%;top:112px;transform:translateX(-50%);padding:8px 16px;font-size:18px;font-weight:700;display:flex;gap:10px;align-items:center;white-space:nowrap}
+.track{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:640px;padding:30px 24px 12px}
+.track .bar{height:12px;border-radius:6px;background:rgba(255,255,255,.18);position:relative}
+.track .fill{position:absolute;left:0;top:0;bottom:0;width:38%;border-radius:6px;background:linear-gradient(90deg,#ffb020,#ff6a00)}
+.track .gaze{position:absolute;top:3px;height:6px;background:linear-gradient(90deg,rgba(255,45,85,.9),rgba(255,45,85,0));border-radius:3px}
+.track .m{position:absolute;top:50%;width:36px;height:36px;font-size:17px;transform:translate(-50%,-50%)}
+.track .me{width:46px;height:46px;font-size:20px;border-color:#ffd54a;box-shadow:0 0 0 4px rgba(255,213,74,.55)}
+.track .bull{width:48px;height:48px;font-size:26px;border-color:#ff2d55;background:#7a1020}
+.track .poi{position:absolute;top:-30px;transform:translateX(-50%);font-size:20px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.track .lbl{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-top:16px;opacity:.95}
+.track .eyesline{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15);font-size:17px;font-weight:700;text-align:center}
+.track .eyesline b{color:#ffd54a}
+.eyes{position:absolute;left:50%;top:128px;transform:translateX(-50%);padding:8px 16px;font-size:18px;font-weight:700;display:flex;gap:10px;align-items:center;white-space:nowrap}
 .eyes b{color:#ffd54a}
 /* ---------- top right: score ---------- */
 .score{position:absolute;right:36px;top:30px;width:400px;padding:14px 18px}
 .score .big{display:flex;justify-content:space-between;align-items:baseline}
-.score .eur{font-size:40px;font-weight:900;color:#ffd54a}
+.score .eur{font-size:36px;font-weight:900;color:#ffd54a}
 .score .rate{font-size:18px;font-weight:800;color:#7CF2B3}
 .lb{margin-top:10px;display:flex;flex-direction:column;gap:5px}
-.lb div{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;padding:5px 8px;border-radius:10px}
+.lb div{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;padding:5px 8px;border-radius:10px}
 .lb .av{width:30px;height:30px;font-size:14px;border-width:2px}
 .lb .nm{flex:1}
 .lb .e{font-weight:900;width:84px;text-align:right}
@@ -69,6 +75,7 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .msg.mod{background:rgba(25,179,107,.8)}
 .msg.warn{background:#ffdd33;color:#2b1a00;font-weight:900;font-size:22px;border:3px solid #fff;box-shadow:0 6px 20px rgba(255,200,0,.5)}
 .msg.warn small{display:block;font-size:14px;font-weight:800;opacity:.75;letter-spacing:.06em}
+.msg.spam{background:rgba(255,255,255,.12);font-weight:800;letter-spacing:.02em}.msg.spam small{opacity:.6;font-size:14px;margin-left:6px}
 .c1{color:#ffb74d}.c2{color:#4dd0e1}.c3{color:#f06292}.c4{color:#aed581}.c5{color:#ce93d8}.c6{color:#ffd54a}
 .badge{display:inline-block;background:#19b36b;color:#fff;font-size:13px;padding:2px 6px;border-radius:6px;margin-right:6px;vertical-align:middle;font-weight:900}
 .chatlbl{position:absolute;right:36px;top:312px;width:400px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.7;text-shadow:0 2px 6px rgba(0,0,0,.8);display:flex;justify-content:space-between}
@@ -79,9 +86,9 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .callout .why{margin-top:10px;font-size:17px;font-weight:700;text-shadow:0 2px 6px rgba(0,0,0,.9)}
 .callout .why b{color:#ffd54a}
 /* ---------- bottom left: bull gauge ---------- */
-.bull{position:absolute;left:36px;bottom:40px;width:430px;padding:14px 18px}
+.bull{position:absolute;left:36px;bottom:40px;width:430px;padding:14px 18px 12px}
 .bull .hd{display:flex;justify-content:space-between;align-items:baseline}
-.bull .dist{font-size:38px;font-weight:900}
+.bull .dist{font-size:34px;font-weight:900}
 .bull .state{font-size:18px;font-weight:800;color:#ffb020}
 .zones{height:18px;border-radius:9px;background:linear-gradient(90deg,#6b7fd6 0 36%,#19b36b 36% 50%,#ffd54a 50% 72%,#ff6a00 72% 86%,#ff2d55 86%);position:relative;margin-top:10px}
 .zones i{position:absolute;top:-7px;left:76%;width:10px;height:32px;background:#fff;border-radius:5px;box-shadow:0 0 10px #000;transform:translateX(-50%)}
@@ -91,6 +98,15 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .eff .h{color:#ffd54a}.eff .g{color:#7CF2B3}
 .target{margin-top:10px;font-size:16px;font-weight:700;opacity:.9;padding-top:10px;border-top:1px solid rgba(255,255,255,.15)}
 .target b{color:#ff8a8a}
+
+.tp{display:flex;gap:6px}
+.tp span{flex:1;text-align:center;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 0;border-radius:8px;background:rgba(255,255,255,.1);opacity:.6}
+.tp span.on{background:#ffd54a;color:#4a2d00;opacity:1}
+.st{height:10px;border-radius:5px;background:rgba(255,255,255,.15);margin-top:8px;overflow:hidden}
+.st i{display:block;height:100%;background:linear-gradient(90deg,#7CF2B3,#19b36b)}
+.stl{display:flex;justify-content:space-between;font-size:14px;font-weight:700;opacity:.85;margin-top:6px}
+.stl kbd{background:rgba(255,255,255,.9);color:#1b1a2e;border-radius:5px;padding:1px 7px;font-family:Inter;font-weight:800;margin-right:3px;font-size:12px}
+.tempow{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);width:540px;padding:10px 14px 10px}
 /* ---------- keys ---------- */
 .keys{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);display:flex;gap:22px;font-size:16px;font-weight:600;opacity:.85;text-shadow:0 2px 6px rgba(0,0,0,.8);white-space:nowrap}
 .keys kbd{background:rgba(255,255,255,.9);color:#1b1a2e;border-radius:6px;padding:2px 9px;font-family:Inter;font-weight:800;margin-right:4px;font-size:14px}
@@ -101,41 +117,44 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 .corner.bl{left:20px;bottom:20px;border-right:0;border-top:0;border-radius:0 0 0 18px}
 .corner.br{right:20px;bottom:20px;border-left:0;border-top:0;border-radius:0 0 18px 0}
 </style></head><body>
-<div class="bg"></div><div class="vig"></div>
+<div class="bg"></div><div class="vig"></div><div class="heat"></div>
 
 <div class="tl">
   <div class="row">
     <span class="pill live"><i></i> LIVE</span>
     <span class="pill viewers">👁 <span class="n">12 480</span><span class="d">▲ 312</span></span>
   </div>
-  <div class="nick">MARINA_RUNS <span>· Сан-Торо · ты бежишь 2-й</span></div>
+  <div class="nick">MARINA_RUNS <span>· Сан-Торо · 2-я в толпе</span></div>
   <div class="feed">
     <div class="pos">+310 👁 бык вошёл в кадр</div>
     <div class="pos">+120 👁 Пако упал у тебя в кадре</div>
-    <div class="eur">+€50 донат от Pablo_88</div>
-    <div class="neg old">−40 👁 скучно: 3 с без событий</div>
+    <div class="eur old">+€50 донат от Pablo_88</div>
   </div>
 </div>
 
-<div class="quest white">
+<div class="quest glass">
   <h4>Квест от зрителей</h4>
   <p>Продержись 5 секунд рядом с быком</p>
-  <div class="from">заказал Pablo_88 вместе с донатом</div>
-  <div class="pb"><i></i></div>
-  <div class="meta"><span>3,2 / 5,0 с</span><span class="rw">+€200 · +500 👁</span></div>
+    <div class="pb"><i></i></div>
+  <div class="meta"><span>3,2 / 5,0 с · заказал Pablo_88 · ⏱ 11 с</span><span class="rw">+€150</span></div>
 </div>
 
-<div class="track">
+<div class="track glass">
   <div class="bar">
+    <div class="fill"></div>
+    <div class="gaze" style="left:33%;width:12%"></div>
     <div class="m av bull" style="left:33%">🐂</div>
-    <div class="m av aF" style="left:28%;opacity:.6">Ф</div>
+    <div class="m av aF" style="left:27%;opacity:.6">Ф</div>
     <div class="m av aM me" style="left:38%">М</div>
     <div class="m av aD" style="left:45%">Д</div>
     <div class="m av aR" style="left:54%">Р</div>
+    <div class="poi" style="left:48%">🏪</div>
+    <div class="poi" style="left:66%">⛲</div>
+    <div class="poi" style="left:100%">🏟</div>
   </div>
-  <div class="lbl"><span>Старт</span><span>1:52 · до арены 1 240 м</span><span>Арена 🏟</span></div>
+  <div class="lbl"><span>1:52 · до арены 1 240 м</span><span>⬇ спуск · рынок через 180 м</span></div>
+  <div class="eyesline">👀 Дорогу перед тобой видят зрители <b>Диего</b> · он на 14 м впереди</div>
 </div>
-<div class="eyes glass">👀 Дорогу перед тобой видят зрители <b>Диего</b> · он на 14 м впереди</div>
 
 <div class="score glass">
   <div class="t">Донаты · победа по деньгам</div>
@@ -150,14 +169,14 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 
 <div class="chatlbl"><span>Чат стрима</span><span>1 204 пишут</span></div>
 <div class="chat">
-  <div class="msg"><b class="c1">tomas_k:</b> роза опять впереди всех 😂</div>
-  <div class="msg"><b class="c3">anna.b:</b> МАРИНА НЕ ОБОРАЧИВАЙСЯ 💀</div>
+  <div class="msg" style="opacity:.45"><b class="c1">tomas_k:</b> роза опять впереди всех 😂</div>
+  <div class="msg" style="opacity:.6"><b class="c3">anna.b:</b> МАРИНА НЕ ОБОРАЧИВАЙСЯ 💀</div>
   <div class="msg donate"><span class="sum">💸 € 50 · Pablo_88</span>продержись у быка 5 сек, слабо?</div>
   <div class="msg sys">🎯 Квест принят. 5 секунд пошли</div>
   <div class="msg"><b class="c4">x_pavel:</b> ушёл со стрима диего, тут веселее</div>
   <div class="msg"><b class="c2">leo_leo:</b> федю затоптали ахахах 📵</div>
   <div class="msg mod"><b class="c6"><span class="badge">MOD</span>ira_mod:</b> у Диего в кадре ваша улица: впереди бочка слева</div>
-  <div class="msg"><b class="c5">kotik_99:</b> 🐂🐂🐂 он прям за тобой</div>
+  <div class="msg spam">🐂 ×23 &nbsp; 💀 ×11 &nbsp; 🔥 ×9 <small>за 2 с</small></div>
   <div class="msg warn">⚠️ СТОЛБ! ПРАВЕЕ!!!<small>× 7 человек за секунду</small></div>
   <div class="msg"><b class="c2">leo_leo:</b> ПРАВЕЕЕЕЕ</div>
 </div>
@@ -169,10 +188,10 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 </div>
 
 <div class="bull glass">
-  <div class="hd"><span class="t">Бык за спиной</span><span class="state">горячо · зрители любят</span></div>
-  <div class="hd"><span class="dist">4,1 м</span><span class="state" style="color:#ff8a8a">ещё 1,5 м и затопчет</span></div>
+  <div class="hd"><span class="t">Бык за спиной</span><span class="state" style="color:#ff8a8a">ещё 1,5 м и затопчет</span></div>
+  <div class="hd"><span class="dist">4,1 м</span><span class="state">горячо · зрители любят</span></div>
   <div class="zones"><i></i></div>
-  <div class="zl"><span>далеко · зрители уходят</span><span>хайп</span><span>затопчут</span></div>
+  <div class="zl"><span>далеко · уходят</span><span>хайп</span><span>затопчут</span></div>
   <div class="eff"><span class="h">хайп × 2,4</span><span class="g">+85 👁 / с</span></div>
   <div class="target">🎯 Бык выбрал цель: <b>Диего</b> (красная майка) · ты в его поле зрения</div>
 </div>
@@ -182,6 +201,10 @@ body{font-family:Inter,"Noto Color Emoji",sans-serif;color:#fff;position:relativ
 <div class="re" style="left:1392px;bottom:255px;font-size:28px;opacity:.8">💀</div>
 <div class="re" style="left:1415px;bottom:320px;font-size:24px;opacity:.6">😂</div>
 
-<div class="keys"><span><kbd>A</kbd><kbd>D</kbd>увернуться</span><span><kbd>Shift</kbd>ускориться</span><span><kbd>Space</kbd>толкнуть</span><span><kbd>E</kbd>влезть в чужой кадр</span></div>
+<div class="tempow glass">
+  <div class="tp"><span>трусца</span><span class="on">бег</span><span>спринт</span></div>
+  <div class="st"><i style="width:62%"></i></div>
+  <div class="stl"><span>выносливость 62</span><span><kbd>W</kbd><kbd>S</kbd> темп · <kbd>A</kbd><kbd>D</kbd> руль · <kbd>Space</kbd> толчок</span></div>
+</div>
 <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
 </body></html>
