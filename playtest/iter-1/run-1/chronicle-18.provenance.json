@@ -1,0 +1,13 @@
+{
+  "tool": "race-sim",
+  "provider": "local",
+  "model": "race-sim",
+  "request": {
+    "seeds": "40",
+    "first_seed": 1,
+    "timeout_s": 0
+  },
+  "request_hash": "92c3e257debdb04b",
+  "created_at": "2026-11-09T17:09:21Z",
+  "usd": 0.0
+}

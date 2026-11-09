@@ -1,0 +1,4190 @@
+{
+  "note": "Времена — секунды (десятые), доли — проценты. Смены лидера: leaderChanges — по донатам после 30-й секунды забега, leaderChangesTotal — за весь забег. longestQuietSec — самая долгая пауза между событиями ядра, кроме подсказок и смены зоны. donationGapPct — разрыв донатов 1-го и 2-го в % от донатов 2-го (null, если у 2-го ноль). zoneSec — секунды у быка по зонам до финиша места.",
+  "runCount": 40,
+  "runs": [
+    {
+      "seed": 1,
+      "finished": true,
+      "durationSec": 287.4,
+      "winner": {
+        "seat": 3,
+        "character": "grandma",
+        "temperament": "troll"
+      },
+      "leaderChanges": 1,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 16.5,
+      "donationGap": {
+        "first": 3498,
+        "second": 2979,
+        "pct": 17.4
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 1720,
+          "viewers": 1040,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 2,
+          "trips": 1,
+          "gotShoved": 3,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 3.8,
+            "warm": 204.1,
+            "cool": 79.4,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 2979,
+          "viewers": 1750,
+          "tosses": 2,
+          "collisions": 13,
+          "shoves": 8,
+          "trips": 0,
+          "gotShoved": 3,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 66.8,
+            "warm": 189.0,
+            "cool": 29.3,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 20,
+          "viewers": 15,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 2.5,
+            "cool": 57.8,
+            "cold": 213.7
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 3498,
+          "viewers": 2000,
+          "tosses": 1,
+          "collisions": 13,
+          "shoves": 3,
+          "trips": 3,
+          "gotShoved": 7,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 26.8,
+            "warm": 254.2,
+            "cool": 6.0,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "finished": true,
+      "durationSec": 266.3,
+      "winner": {
+        "seat": 0,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 13.8,
+      "donationGap": {
+        "first": 1840,
+        "second": 198,
+        "pct": 829.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1840,
+          "viewers": 316,
+          "tosses": 28,
+          "collisions": 3,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 256.5,
+            "warm": 3.9,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 53,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 12.3,
+            "cool": 24.5,
+            "cold": 214.4
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 198,
+          "viewers": 4,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.1,
+            "warm": 41.3,
+            "cool": 15.4,
+            "cold": 209.4
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 87,
+          "viewers": 35,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 14.4,
+            "cool": 35.3,
+            "cold": 216.5
+          }
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "finished": true,
+      "durationSec": 242.9,
+      "winner": {
+        "seat": 0,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 8.4,
+      "donationGap": {
+        "first": 2572,
+        "second": 36,
+        "pct": 7044.4
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2572,
+          "viewers": 559,
+          "tosses": 39,
+          "collisions": 4,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 231.1,
+            "warm": 5.6,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 24,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.7,
+            "cool": 18.0,
+            "cold": 220.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 36,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 4,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.8,
+            "cool": 14.5,
+            "cold": 223.5
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 17,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.1,
+            "cool": 14.6,
+            "cold": 213.1
+          }
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "finished": true,
+      "durationSec": 265.7,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 1895,
+        "second": 33,
+        "pct": 5642.4
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 21,
+          "viewers": 40,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.9,
+            "cool": 13.7,
+            "cold": 248.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 33,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.5,
+            "cool": 13.6,
+            "cold": 236.5
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1895,
+          "viewers": 310,
+          "tosses": 32,
+          "collisions": 2,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 255.8,
+            "warm": 4.1,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 17,
+          "viewers": 8,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 14.0,
+            "cold": 251.6
+          }
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "finished": true,
+      "durationSec": 264.7,
+      "winner": {
+        "seat": 0,
+        "character": "grandma",
+        "temperament": "coward"
+      },
+      "leaderChanges": 4,
+      "leaderChangesTotal": 5,
+      "longestQuietSec": 13.9,
+      "donationGap": {
+        "first": 1634,
+        "second": 813,
+        "pct": 100.9
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 1,
+          "donations": 1634,
+          "viewers": 353,
+          "tosses": 24,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 5,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 202.7,
+            "warm": 54.2,
+            "cool": 7.7,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 813,
+          "viewers": 39,
+          "tosses": 1,
+          "collisions": 12,
+          "shoves": 3,
+          "trips": 2,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 7.2,
+            "warm": 58.8,
+            "cool": 21.9,
+            "cold": 176.6
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 383,
+          "viewers": 7,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 7.6,
+            "warm": 37.8,
+            "cool": 26.2,
+            "cold": 193.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 26,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 48.2,
+            "cold": 201.5
+          }
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "finished": true,
+      "durationSec": 273.0,
+      "winner": {
+        "seat": 1,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 9.0,
+      "donationGap": {
+        "first": 2911,
+        "second": 38,
+        "pct": 7560.5
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 38,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 17,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 6,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 2.0,
+            "cool": 16.4,
+            "cold": 239.5
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2911,
+          "viewers": 570,
+          "tosses": 44,
+          "collisions": 3,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 260.3,
+            "warm": 6.5,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 25,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 16,
+          "shoves": 6,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.9,
+            "cool": 13.3,
+            "cold": 258.8
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 22,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.2,
+            "cool": 16.1,
+            "cold": 251.6
+          }
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "finished": true,
+      "durationSec": 295.5,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 2136,
+        "second": 37,
+        "pct": 5672.9
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 37,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.7,
+            "cool": 17.7,
+            "cold": 259.1
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 27,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.6,
+            "cool": 15.5,
+            "cold": 275.2
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2136,
+          "viewers": 366,
+          "tosses": 36,
+          "collisions": 4,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 285.0,
+            "warm": 4.6,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 14,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.0,
+            "cool": 11.7,
+            "cold": 271.7
+          }
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "finished": true,
+      "durationSec": 243.1,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 13.1,
+      "donationGap": {
+        "first": 3265,
+        "second": 1627,
+        "pct": 100.6
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 595,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 90.7,
+            "cool": 28.2,
+            "cold": 124.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 16,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 19.4,
+            "cold": 208.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3265,
+          "viewers": 1006,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 81.7,
+            "warm": 28.6,
+            "cool": 16.8,
+            "cold": 115.9
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 1627,
+          "viewers": 305,
+          "tosses": 17,
+          "collisions": 5,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 4,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 166.0,
+            "warm": 71.3,
+            "cool": 5.7,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 9,
+      "finished": true,
+      "durationSec": 238.1,
+      "winner": {
+        "seat": 3,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 12.0,
+      "donationGap": {
+        "first": 2241,
+        "second": 508,
+        "pct": 341.1
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 508,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 24.4,
+            "warm": 11.9,
+            "cool": 48.0,
+            "cold": 153.7
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 20,
+          "viewers": 28,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 17.2,
+            "cold": 205.9
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 65,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 16.9,
+            "cool": 26.3,
+            "cold": 194.8
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2241,
+          "viewers": 594,
+          "tosses": 32,
+          "collisions": 7,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 213.5,
+            "warm": 17.9,
+            "cool": 6.6,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 10,
+      "finished": true,
+      "durationSec": 244.7,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 16.4,
+      "donationGap": {
+        "first": 1681,
+        "second": 137,
+        "pct": 1127.0
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 137,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 3,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 8.0,
+            "warm": 10.0,
+            "cool": 13.3,
+            "cold": 213.3
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 49,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 2,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 14.8,
+            "cool": 15.6,
+            "cold": 214.2
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1681,
+          "viewers": 327,
+          "tosses": 28,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 235.2,
+            "warm": 3.6,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 14,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 14.2,
+            "cold": 215.5
+          }
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "finished": true,
+      "durationSec": 281.0,
+      "winner": {
+        "seat": 0,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 13.6,
+      "donationGap": {
+        "first": 2886,
+        "second": 367,
+        "pct": 686.3
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2886,
+          "viewers": 557,
+          "tosses": 41,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 268.3,
+            "warm": 6.5,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 367,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 12.0,
+            "warm": 24.6,
+            "cool": 23.9,
+            "cold": 220.3
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 93,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 15,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 8.6,
+            "cool": 34.5,
+            "cold": 237.8
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 26,
+          "viewers": 21,
+          "tosses": 0,
+          "collisions": 17,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 35.6,
+            "cold": 230.4
+          }
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "finished": true,
+      "durationSec": 290.3,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 2067,
+        "second": 63,
+        "pct": 3180.9
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 40,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 15,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.0,
+            "cool": 16.4,
+            "cold": 254.9
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 63,
+          "viewers": 29,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.8,
+            "cool": 16.1,
+            "cold": 269.4
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2067,
+          "viewers": 327,
+          "tosses": 35,
+          "collisions": 4,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 280.0,
+            "warm": 4.5,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 30,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.7,
+            "cool": 13.3,
+            "cold": 264.7
+          }
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "finished": true,
+      "durationSec": 307.7,
+      "winner": {
+        "seat": 0,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 2203,
+        "second": 108,
+        "pct": 1939.8
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2203,
+          "viewers": 358,
+          "tosses": 37,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 297.2,
+            "warm": 4.6,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 42,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 28,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 10,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.7,
+            "cool": 17.9,
+            "cold": 271.1
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 82,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 24,
+          "shoves": 8,
+          "trips": 5,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.2,
+            "cool": 11.9,
+            "cold": 290.8
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 108,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 30,
+          "shoves": 6,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.9,
+            "cool": 9.9,
+            "cold": 288.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 14,
+      "finished": true,
+      "durationSec": 267.9,
+      "winner": {
+        "seat": 3,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 1896,
+        "second": 34,
+        "pct": 5476.4
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 18,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 13.8,
+            "cold": 239.1
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 19,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 5,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.5,
+            "cool": 11.1,
+            "cold": 252.1
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 34,
+          "viewers": 27,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.1,
+            "cool": 12.6,
+            "cold": 250.1
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1896,
+          "viewers": 312,
+          "tosses": 32,
+          "collisions": 2,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 257.6,
+            "warm": 4.3,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 15,
+      "finished": true,
+      "durationSec": 297.2,
+      "winner": {
+        "seat": 0,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 0,
+      "longestQuietSec": 9.6,
+      "donationGap": {
+        "first": 3199,
+        "second": 47,
+        "pct": 6706.3
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3199,
+          "viewers": 597,
+          "tosses": 48,
+          "collisions": 7,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 283.9,
+            "warm": 7.2,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 24,
+          "viewers": 36,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.8,
+            "cool": 17.0,
+            "cold": 269.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 47,
+          "viewers": 24,
+          "tosses": 0,
+          "collisions": 17,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 5,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.1,
+            "cool": 18.5,
+            "cold": 258.9
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 26,
+          "viewers": 24,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.8,
+            "cool": 15.1,
+            "cold": 263.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 16,
+      "finished": true,
+      "durationSec": 271.7,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 5.4,
+      "donationGap": {
+        "first": 2850,
+        "second": 844,
+        "pct": 237.6
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 82,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 7,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 6.4,
+            "warm": 17.4,
+            "cool": 28.4,
+            "cold": 204.4
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 27,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 2.3,
+            "cool": 47.8,
+            "cold": 220.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2850,
+          "viewers": 670,
+          "tosses": 36,
+          "collisions": 6,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 249.8,
+            "warm": 15.7,
+            "cool": 6.0,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 844,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 3,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 24.5,
+            "warm": 32.4,
+            "cool": 26.1,
+            "cold": 188.5
+          }
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "finished": true,
+      "durationSec": 292.1,
+      "winner": {
+        "seat": 3,
+        "character": "glamour",
+        "temperament": "troll"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 3.2,
+      "donationGap": {
+        "first": 3085,
+        "second": 84,
+        "pct": 3572.6
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 32,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 11.5,
+            "cool": 13.1,
+            "cold": 252.5
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 74,
+          "viewers": 42,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 2.4,
+            "warm": 14.0,
+            "cool": 19.4,
+            "cold": 256.3
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 84,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 11.0,
+            "cool": 13.4,
+            "cold": 259.1
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 3085,
+          "viewers": 598,
+          "tosses": 46,
+          "collisions": 5,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 277.4,
+            "warm": 8.0,
+            "cool": 6.6,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 18,
+      "finished": true,
+      "durationSec": 273.2,
+      "winner": {
+        "seat": 3,
+        "character": "glamour",
+        "temperament": "troll"
+      },
+      "leaderChanges": 6,
+      "leaderChangesTotal": 6,
+      "longestQuietSec": 9.9,
+      "donationGap": {
+        "first": 2463,
+        "second": 1967,
+        "pct": 25.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 1074,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 6,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 4,
+          "zoneSec": {
+            "hot": 11.1,
+            "warm": 69.0,
+            "cool": 35.5,
+            "cold": 157.5
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 21,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 30.5,
+            "cold": 227.6
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 1967,
+          "viewers": 98,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 2,
+          "trips": 5,
+          "gotShoved": 6,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 6.7,
+            "warm": 100.4,
+            "cool": 30.7,
+            "cold": 135.2
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 2463,
+          "viewers": 576,
+          "tosses": 28,
+          "collisions": 8,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 184.3,
+            "warm": 77.8,
+            "cool": 11.0,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 19,
+      "finished": true,
+      "durationSec": 245.1,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 13.8,
+      "donationGap": {
+        "first": 2036,
+        "second": 1630,
+        "pct": 24.9
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 1298,
+          "viewers": 45,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 5,
+          "trips": 1,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 4.4,
+            "warm": 96.7,
+            "cool": 20.7,
+            "cold": 123.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 25,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 16.5,
+            "cold": 213.6
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2036,
+          "viewers": 301,
+          "tosses": 17,
+          "collisions": 9,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 205.4,
+            "warm": 33.9,
+            "cool": 5.7,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 1630,
+          "viewers": 271,
+          "tosses": 1,
+          "collisions": 12,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 6,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 56.3,
+            "warm": 56.8,
+            "cool": 14.9,
+            "cold": 117.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 20,
+      "finished": true,
+      "durationSec": 301.9,
+      "winner": {
+        "seat": 3,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 13.4,
+      "donationGap": {
+        "first": 2850,
+        "second": 688,
+        "pct": 314.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 688,
+          "viewers": 21,
+          "tosses": 0,
+          "collisions": 16,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 5.7,
+            "warm": 56.3,
+            "cool": 36.1,
+            "cold": 203.8
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 70,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 17,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 19.4,
+            "cool": 40.2,
+            "cold": 231.8
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 276,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 44.0,
+            "cool": 33.0,
+            "cold": 209.9
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2850,
+          "viewers": 487,
+          "tosses": 38,
+          "collisions": 6,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 267.9,
+            "warm": 27.4,
+            "cool": 6.6,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 21,
+      "finished": true,
+      "durationSec": 249.3,
+      "winner": {
+        "seat": 1,
+        "character": "glamour",
+        "temperament": "troll"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 5.9,
+      "donationGap": {
+        "first": 2624,
+        "second": 221,
+        "pct": 1087.3
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 34,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 2.1,
+            "warm": 10.2,
+            "cool": 14.1,
+            "cold": 222.8
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 2624,
+          "viewers": 632,
+          "tosses": 39,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 233.2,
+            "warm": 9.1,
+            "cool": 6.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 15,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 15.0,
+            "cold": 219.2
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 221,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 3,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 12.3,
+            "warm": 6.8,
+            "cool": 28.2,
+            "cold": 201.9
+          }
+        }
+      ]
+    },
+    {
+      "seed": 22,
+      "finished": true,
+      "durationSec": 269.2,
+      "winner": {
+        "seat": 1,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 13.9,
+      "donationGap": {
+        "first": 2781,
+        "second": 76,
+        "pct": 3559.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 51,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 17.0,
+            "cool": 13.9,
+            "cold": 238.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2781,
+          "viewers": 575,
+          "tosses": 41,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 257.0,
+            "warm": 6.1,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 20,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 21.7,
+            "cold": 232.4
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 76,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 20.1,
+            "cool": 31.3,
+            "cold": 217.7
+          }
+        }
+      ]
+    },
+    {
+      "seed": 23,
+      "finished": true,
+      "durationSec": 296.3,
+      "winner": {
+        "seat": 2,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 12.2,
+      "donationGap": {
+        "first": 2842,
+        "second": 431,
+        "pct": 559.3
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 172,
+          "viewers": 25,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 34.7,
+            "cool": 18.1,
+            "cold": 228.7
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 431,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 9.5,
+            "warm": 30.1,
+            "cool": 20.4,
+            "cold": 236.1
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2842,
+          "viewers": 530,
+          "tosses": 40,
+          "collisions": 10,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 267.1,
+            "warm": 22.2,
+            "cool": 6.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 61,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 24.9,
+            "cool": 19.1,
+            "cold": 237.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 24,
+      "finished": true,
+      "durationSec": 306.2,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 12.3,
+      "donationGap": {
+        "first": 3079,
+        "second": 464,
+        "pct": 563.5
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 353,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 58.4,
+            "cool": 15.5,
+            "cold": 217.3
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 90,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 18,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 13.0,
+            "cool": 57.2,
+            "cold": 226.5
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3079,
+          "viewers": 565,
+          "tosses": 40,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 280.1,
+            "warm": 19.9,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 464,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 16,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 58.4,
+            "cool": 17.2,
+            "cold": 230.4
+          }
+        }
+      ]
+    },
+    {
+      "seed": 25,
+      "finished": true,
+      "durationSec": 274.3,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "troll"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 7.7,
+      "donationGap": {
+        "first": 1903,
+        "second": 240,
+        "pct": 692.9
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 240,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 17.8,
+            "warm": 6.2,
+            "cool": 13.0,
+            "cold": 237.1
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 18,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 28.4,
+            "cold": 230.8
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 1903,
+          "viewers": 301,
+          "tosses": 31,
+          "collisions": 6,
+          "shoves": 2,
+          "trips": 1,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 262.5,
+            "warm": 5.5,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 39,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 6.2,
+            "cool": 24.0,
+            "cold": 244.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 26,
+      "finished": true,
+      "durationSec": 300.0,
+      "winner": {
+        "seat": 1,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 5.0,
+      "donationGap": {
+        "first": 2190,
+        "second": 47,
+        "pct": 4559.5
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 47,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 15,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.0,
+            "cool": 12.1,
+            "cold": 279.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2190,
+          "viewers": 448,
+          "tosses": 37,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 289.5,
+            "warm": 4.7,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 19,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 14,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 3.8,
+            "cool": 11.5,
+            "cold": 284.6
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 28,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 15,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.5,
+            "warm": 4.3,
+            "cool": 13.6,
+            "cold": 266.6
+          }
+        }
+      ]
+    },
+    {
+      "seed": 27,
+      "finished": true,
+      "durationSec": 242.0,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 1,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 13.2,
+      "donationGap": {
+        "first": 3637,
+        "second": 3268,
+        "pct": 11.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 20,
+          "viewers": 16,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 14.0,
+            "cold": 213.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 1688,
+          "viewers": 1677,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 19.5,
+            "warm": 186.5,
+            "cool": 35.9,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3637,
+          "viewers": 2000,
+          "tosses": 1,
+          "collisions": 7,
+          "shoves": 9,
+          "trips": 0,
+          "gotShoved": 7,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 174.3,
+            "warm": 61.6,
+            "cool": 6.0,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 3268,
+          "viewers": 2000,
+          "tosses": 2,
+          "collisions": 9,
+          "shoves": 8,
+          "trips": 0,
+          "gotShoved": 7,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 143.2,
+            "warm": 92.1,
+            "cool": 6.6,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 28,
+      "finished": true,
+      "durationSec": 297.5,
+      "winner": {
+        "seat": 0,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 0,
+      "longestQuietSec": 5.4,
+      "donationGap": {
+        "first": 3181,
+        "second": 61,
+        "pct": 5114.7
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3181,
+          "viewers": 527,
+          "tosses": 48,
+          "collisions": 2,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 284.4,
+            "warm": 6.9,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 61,
+          "viewers": 4,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.5,
+            "cool": 20.2,
+            "cold": 256.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 39,
+          "viewers": 25,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 1,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.2,
+            "cool": 24.5,
+            "cold": 268.7
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 57,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 0,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.2,
+            "cool": 21.4,
+            "cold": 259.6
+          }
+        }
+      ]
+    },
+    {
+      "seed": 29,
+      "finished": true,
+      "durationSec": 244.7,
+      "winner": {
+        "seat": 3,
+        "character": "glamour",
+        "temperament": "troll"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 8.9,
+      "donationGap": {
+        "first": 2534,
+        "second": 126,
+        "pct": 1911.1
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 45,
+          "viewers": 11,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 13.8,
+            "cool": 15.6,
+            "cold": 215.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 126,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 11.3,
+            "warm": 8.0,
+            "cool": 17.3,
+            "cold": 207.9
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 18,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 15.7,
+            "cold": 214.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 1,
+          "donations": 2534,
+          "viewers": 691,
+          "tosses": 38,
+          "collisions": 4,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 229.7,
+            "warm": 7.9,
+            "cool": 7.0,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 30,
+      "finished": true,
+      "durationSec": 246.5,
+      "winner": {
+        "seat": 3,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 4.2,
+      "donationGap": {
+        "first": 2491,
+        "second": 388,
+        "pct": 542.0
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 22,
+          "viewers": 13,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 1.9,
+            "cool": 21.1,
+            "cold": 208.4
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 388,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 16.6,
+            "warm": 19.0,
+            "cool": 24.3,
+            "cold": 186.4
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 82,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 22.6,
+            "cool": 22.7,
+            "cold": 201.1
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2491,
+          "viewers": 646,
+          "tosses": 35,
+          "collisions": 6,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 231.7,
+            "warm": 8.7,
+            "cool": 6.0,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 31,
+      "finished": true,
+      "durationSec": 308.7,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "coward"
+      },
+      "leaderChanges": 3,
+      "leaderChangesTotal": 4,
+      "longestQuietSec": 4.5,
+      "donationGap": {
+        "first": 3179,
+        "second": 489,
+        "pct": 550.1
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 4,
+          "donations": 66,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 23.4,
+            "cool": 15.3,
+            "cold": 269.8
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 130,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 15.3,
+            "cool": 22.8,
+            "cold": 255.5
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 1,
+          "donations": 3179,
+          "viewers": 678,
+          "tosses": 47,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 3,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 284.4,
+            "warm": 18.4,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 489,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 1,
+          "trips": 3,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 6.5,
+            "warm": 24.2,
+            "cool": 23.6,
+            "cold": 254.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 32,
+      "finished": true,
+      "durationSec": 250.8,
+      "winner": {
+        "seat": 2,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 9.3,
+      "donationGap": {
+        "first": 1753,
+        "second": 314,
+        "pct": 458.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 107,
+          "viewers": 13,
+          "tosses": 0,
+          "collisions": 11,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 24.8,
+            "cool": 16.1,
+            "cold": 209.8
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 30,
+          "viewers": 9,
+          "tosses": 0,
+          "collisions": 19,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 13.0,
+            "cold": 222.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1753,
+          "viewers": 430,
+          "tosses": 28,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 236.9,
+            "warm": 8.0,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 314,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 14.2,
+            "warm": 15.4,
+            "cool": 17.3,
+            "cold": 203.7
+          }
+        }
+      ]
+    },
+    {
+      "seed": 33,
+      "finished": true,
+      "durationSec": 247.9,
+      "winner": {
+        "seat": 0,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 9,
+      "leaderChangesTotal": 12,
+      "longestQuietSec": 7.5,
+      "donationGap": {
+        "first": 1685,
+        "second": 490,
+        "pct": 243.8
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 1685,
+          "viewers": 323,
+          "tosses": 27,
+          "collisions": 1,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 237.9,
+            "warm": 4.1,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 11,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 13.5,
+            "cold": 219.3
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 30,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 4,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 15.7,
+            "cool": 16.9,
+            "cold": 215.2
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 490,
+          "viewers": 0,
+          "tosses": 1,
+          "collisions": 1,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 24.5,
+            "warm": 9.4,
+            "cool": 14.7,
+            "cold": 199.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 34,
+      "finished": true,
+      "durationSec": 240.8,
+      "winner": {
+        "seat": 2,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 1,
+      "longestQuietSec": 14.2,
+      "donationGap": {
+        "first": 2546,
+        "second": 534,
+        "pct": 376.7
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 2,
+          "donations": 534,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 62.5,
+            "cool": 40.1,
+            "cold": 138.2
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 22,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 19.1,
+            "cold": 206.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2546,
+          "viewers": 661,
+          "tosses": 26,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 216.1,
+            "warm": 18.6,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 115,
+          "viewers": 8,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 3,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 28.6,
+            "cool": 72.2,
+            "cold": 139.9
+          }
+        }
+      ]
+    },
+    {
+      "seed": 35,
+      "finished": true,
+      "durationSec": 246.2,
+      "winner": {
+        "seat": 2,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 1,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 16.2,
+      "donationGap": {
+        "first": 3038,
+        "second": 2906,
+        "pct": 4.5
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 17,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 19.3,
+            "cold": 211.9
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 2906,
+          "viewers": 2000,
+          "tosses": 0,
+          "collisions": 3,
+          "shoves": 6,
+          "trips": 6,
+          "gotShoved": 6,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 57.9,
+            "warm": 171.1,
+            "cool": 17.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3038,
+          "viewers": 2000,
+          "tosses": 2,
+          "collisions": 4,
+          "shoves": 6,
+          "trips": 0,
+          "gotShoved": 6,
+          "gotTripped": 4,
+          "zoneSec": {
+            "hot": 132.0,
+            "warm": 96.7,
+            "cool": 17.4,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 2558,
+          "viewers": 2000,
+          "tosses": 1,
+          "collisions": 9,
+          "shoves": 3,
+          "trips": 3,
+          "gotShoved": 3,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 26.5,
+            "warm": 186.4,
+            "cool": 33.1,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 36,
+      "finished": true,
+      "durationSec": 294.7,
+      "winner": {
+        "seat": 0,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 3,
+      "leaderChangesTotal": 5,
+      "longestQuietSec": 6.8,
+      "donationGap": {
+        "first": 2822,
+        "second": 842,
+        "pct": 235.1
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2822,
+          "viewers": 535,
+          "tosses": 40,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 270.5,
+            "warm": 17.3,
+            "cool": 6.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 3,
+          "donations": 259,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 4.4,
+            "warm": 29.2,
+            "cool": 24.5,
+            "cold": 232.3
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 69,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 13.0,
+            "cool": 31.0,
+            "cold": 235.6
+          }
+        },
+        {
+          "seat": 3,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 842,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 2,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 23.3,
+            "warm": 27.1,
+            "cool": 34.3,
+            "cold": 209.9
+          }
+        }
+      ]
+    },
+    {
+      "seed": 37,
+      "finished": true,
+      "durationSec": 255.2,
+      "winner": {
+        "seat": 0,
+        "character": "grandma",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 9,
+      "leaderChangesTotal": 10,
+      "longestQuietSec": 13.9,
+      "donationGap": {
+        "first": 2148,
+        "second": 2143,
+        "pct": 0.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2148,
+          "viewers": 280,
+          "tosses": 18,
+          "collisions": 5,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 234.1,
+            "warm": 15.2,
+            "cool": 5.8,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 298,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 1,
+          "gotShoved": 0,
+          "gotTripped": 2,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 62.6,
+            "cool": 58.4,
+            "cold": 134.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 31,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 20,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 13.3,
+            "cold": 226.8
+          }
+        },
+        {
+          "seat": 3,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 2143,
+          "viewers": 442,
+          "tosses": 1,
+          "collisions": 16,
+          "shoves": 0,
+          "trips": 2,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 23.8,
+            "warm": 84.0,
+            "cool": 15.1,
+            "cold": 132.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 38,
+      "finished": true,
+      "durationSec": 244.3,
+      "winner": {
+        "seat": 3,
+        "character": "nerd",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 19.1,
+      "donationGap": {
+        "first": 2682,
+        "second": 2492,
+        "pct": 7.6
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "athlete",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 17,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 0.0,
+            "cool": 18.3,
+            "cold": 211.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 2209,
+          "viewers": 977,
+          "tosses": 0,
+          "collisions": 7,
+          "shoves": 0,
+          "trips": 4,
+          "gotShoved": 4,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 13.7,
+            "warm": 134.5,
+            "cool": 63.4,
+            "cold": 32.7
+          }
+        },
+        {
+          "seat": 2,
+          "character": "glamour",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 2492,
+          "viewers": 866,
+          "tosses": 0,
+          "collisions": 6,
+          "shoves": 1,
+          "trips": 4,
+          "gotShoved": 1,
+          "gotTripped": 3,
+          "zoneSec": {
+            "hot": 8.6,
+            "warm": 127.4,
+            "cool": 27.7,
+            "cold": 80.5
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2682,
+          "viewers": 508,
+          "tosses": 16,
+          "collisions": 7,
+          "shoves": 4,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 177.1,
+            "warm": 60.8,
+            "cool": 6.4,
+            "cold": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "seed": 39,
+      "finished": true,
+      "durationSec": 300.5,
+      "winner": {
+        "seat": 1,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 2,
+      "longestQuietSec": 11.4,
+      "donationGap": {
+        "first": 3285,
+        "second": 1069,
+        "pct": 207.2
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 164,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 12,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 1,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 33.9,
+            "cool": 69.3,
+            "cold": 183.4
+          }
+        },
+        {
+          "seat": 1,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 3285,
+          "viewers": 531,
+          "tosses": 34,
+          "collisions": 2,
+          "shoves": 2,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 274.8,
+            "warm": 19.3,
+            "cool": 6.3,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 2,
+          "character": "athlete",
+          "temperament": "adrenaline",
+          "place": 2,
+          "donations": 1069,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 5,
+          "shoves": 3,
+          "trips": 0,
+          "gotShoved": 2,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 4.0,
+            "warm": 87.2,
+            "cool": 16.1,
+            "cold": 178.0
+          }
+        },
+        {
+          "seat": 3,
+          "character": "nerd",
+          "temperament": "troll",
+          "place": 3,
+          "donations": 351,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 8,
+          "shoves": 1,
+          "trips": 1,
+          "gotShoved": 3,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 93.3,
+            "cool": 18.8,
+            "cold": 188.2
+          }
+        }
+      ]
+    },
+    {
+      "seed": 40,
+      "finished": true,
+      "durationSec": 265.0,
+      "winner": {
+        "seat": 0,
+        "character": "glamour",
+        "temperament": "adrenaline"
+      },
+      "leaderChanges": 0,
+      "leaderChangesTotal": 3,
+      "longestQuietSec": 7.1,
+      "donationGap": {
+        "first": 2844,
+        "second": 49,
+        "pct": 5704.0
+      },
+      "seats": [
+        {
+          "seat": 0,
+          "character": "glamour",
+          "temperament": "adrenaline",
+          "place": 1,
+          "donations": 2844,
+          "viewers": 653,
+          "tosses": 43,
+          "collisions": 3,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 252.4,
+            "warm": 6.4,
+            "cool": 6.1,
+            "cold": 0.0
+          }
+        },
+        {
+          "seat": 1,
+          "character": "grandma",
+          "temperament": "coward",
+          "place": 3,
+          "donations": 29,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 9,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 1,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 5.3,
+            "cool": 19.0,
+            "cold": 240.5
+          }
+        },
+        {
+          "seat": 2,
+          "character": "nerd",
+          "temperament": "coward",
+          "place": 4,
+          "donations": 27,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 13,
+          "shoves": 0,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 2.2,
+            "cool": 16.7,
+            "cold": 231.1
+          }
+        },
+        {
+          "seat": 3,
+          "character": "athlete",
+          "temperament": "troll",
+          "place": 2,
+          "donations": 49,
+          "viewers": 0,
+          "tosses": 0,
+          "collisions": 10,
+          "shoves": 1,
+          "trips": 0,
+          "gotShoved": 0,
+          "gotTripped": 0,
+          "zoneSec": {
+            "hot": 0.0,
+            "warm": 4.7,
+            "cool": 18.3,
+            "cold": 242.0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "unfinished": 0,
+    "durationSec": {
+      "median": 268.5,
+      "min": 238.1,
+      "max": 308.7
+    },
+    "longestQuietSec": {
+      "median": 9.4,
+      "p90": 14.2,
+      "max": 19.1
+    },
+    "leaderChanges": {
+      "median": 0,
+      "min": 0,
+      "max": 9
+    },
+    "leaderChangesTotal": {
+      "median": 2,
+      "min": 0,
+      "max": 12
+    },
+    "donationGapPct": {
+      "median": 561.4,
+      "p90": 5672.9
+    },
+    "byCharacter": [
+      {
+        "id": "athlete",
+        "appearances": 40,
+        "wins": 0,
+        "winSharePct": 0.0,
+        "donationsTotal": 7399,
+        "viewersTotal": 1917,
+        "tossesTotal": 2,
+        "collisionsTotal": 446,
+        "shovesTotal": 52,
+        "tripsTotal": 4,
+        "tossesMedian": 0,
+        "donationsMedian": 30,
+        "shovesTripsMedian": 1,
+        "zoneSecTotal": {
+          "hot": 111.9,
+          "warm": 585.4,
+          "cool": 815.8,
+          "cold": 8960.5
+        }
+      },
+      {
+        "id": "glamour",
+        "appearances": 40,
+        "wins": 19,
+        "winSharePct": 47.5,
+        "donationsTotal": 67266,
+        "viewersTotal": 16764,
+        "tossesTotal": 678,
+        "collisionsTotal": 325,
+        "shovesTotal": 45,
+        "tripsTotal": 20,
+        "tossesMedian": 1,
+        "donationsMedian": 2477,
+        "shovesTripsMedian": 1,
+        "zoneSecTotal": {
+          "hot": 4681.0,
+          "warm": 1123.3,
+          "cool": 601.7,
+          "cold": 4335.3
+        },
+        "winnerLongestZonePctMedian": 93.8
+      },
+      {
+        "id": "grandma",
+        "appearances": 40,
+        "wins": 15,
+        "winSharePct": 37.5,
+        "donationsTotal": 46456,
+        "viewersTotal": 11873,
+        "tossesTotal": 428,
+        "collisionsTotal": 321,
+        "shovesTotal": 29,
+        "tripsTotal": 32,
+        "tossesMedian": 0,
+        "donationsMedian": 1235,
+        "shovesTripsMedian": 0,
+        "zoneSecTotal": {
+          "hot": 3947.5,
+          "warm": 1525.0,
+          "cool": 779.4,
+          "cold": 4474.2
+        },
+        "winnerLongestZonePctMedian": 96.1
+      },
+      {
+        "id": "nerd",
+        "appearances": 40,
+        "wins": 6,
+        "winSharePct": 15.0,
+        "donationsTotal": 26224,
+        "viewersTotal": 8139,
+        "tossesTotal": 171,
+        "collisionsTotal": 413,
+        "shovesTotal": 50,
+        "tripsTotal": 17,
+        "tossesMedian": 0,
+        "donationsMedian": 78,
+        "shovesTripsMedian": 1,
+        "zoneSecTotal": {
+          "hot": 1561.9,
+          "warm": 1123.3,
+          "cool": 871.6,
+          "cold": 7100.6
+        },
+        "winnerLongestZonePctMedian": 89.1
+      }
+    ],
+    "byTemperament": [
+      {
+        "id": "adrenaline",
+        "appearances": 52,
+        "wins": 32,
+        "winSharePct": 61.5,
+        "donationsTotal": 94029,
+        "viewersTotal": 22966,
+        "tossesTotal": 1005,
+        "collisionsTotal": 376,
+        "shovesTotal": 104,
+        "tripsTotal": 0,
+        "tossesMedian": 22,
+        "donationsMedian": 2101,
+        "shovesTripsMedian": 1,
+        "zoneSecTotal": {
+          "hot": 8116.2,
+          "warm": 1239.3,
+          "cool": 595.6,
+          "cold": 4117.8
+        },
+        "winnerLongestZonePctMedian": 94.7
+      },
+      {
+        "id": "coward",
+        "appearances": 50,
+        "wins": 2,
+        "winSharePct": 4.0,
+        "donationsTotal": 7624,
+        "viewersTotal": 1237,
+        "tossesTotal": 71,
+        "collisionsTotal": 566,
+        "shovesTotal": 0,
+        "tripsTotal": 0,
+        "tossesMedian": 0,
+        "donationsMedian": 28,
+        "shovesTripsMedian": 0,
+        "zoneSecTotal": {
+          "hot": 496.2,
+          "warm": 462.8,
+          "cool": 1066.1,
+          "cold": 10782.6
+        },
+        "winnerLongestZonePctMedian": 84.3
+      },
+      {
+        "id": "troll",
+        "appearances": 58,
+        "wins": 6,
+        "winSharePct": 10.3,
+        "donationsTotal": 45692,
+        "viewersTotal": 14490,
+        "tossesTotal": 203,
+        "collisionsTotal": 563,
+        "shovesTotal": 72,
+        "tripsTotal": 73,
+        "tossesMedian": 0,
+        "donationsMedian": 306,
+        "shovesTripsMedian": 2,
+        "zoneSecTotal": {
+          "hot": 1689.9,
+          "warm": 2654.9,
+          "cool": 1406.8,
+          "cold": 9970.2
+        },
+        "winnerLongestZonePctMedian": 93.6
+      }
+    ]
+  }
+}

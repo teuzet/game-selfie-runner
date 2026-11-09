@@ -180,6 +180,8 @@ namespace Game.Core.Tests
         public void ZoneChangeGivesOneEvent()
         {
             var sim = Quiet(Cfg(0, 1, 2, 3));
+            // Соседи дальше «эфира пустого» (coolRange) и до, и после сдвига быка: смену зоны видит только место 0.
+            for (int i = 1; i < 4; i++) Place(sim, i, BaseS(sim) + 100 * i, 0);
             sim.Step(TickInputs.Empty);
             Assert.Equal(0, sim.Events.CountOf(RaceEventType.ZoneChanged)); // первая зона — не смена
             sim.State.Bull.S = sim.State.Runners[0].S - Fx(3).Raw;
