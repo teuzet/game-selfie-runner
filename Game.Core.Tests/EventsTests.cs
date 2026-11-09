@@ -49,15 +49,15 @@ namespace Game.Core.Tests
             return (sim, ctl);
         }
 
-        static long DV(Simulation a, Simulation b, int seat) => a.State.Viewing[seat].Viewers - b.State.Viewing[seat].Viewers;
-        static long DD(Simulation a, Simulation b, int seat) => a.State.Viewing[seat].Donations - b.State.Viewing[seat].Donations;
+        static long DV(Simulation a, Simulation b, int seat) => a.State.Runners[seat].Viewing.Viewers - b.State.Runners[seat].Viewing.Viewers;
+        static long DD(Simulation a, Simulation b, int seat) => a.State.Runners[seat].Viewing.Donations - b.State.Runners[seat].Viewing.Donations;
 
         [Fact]
         public void CollisionGivesOneEventAndPlus40()
         {
             var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s =>
             {
-                s.Collisions[1].Count++; s.Collisions[1].LastKind = (int)CollisionKind.Barrels;
+                s.Runners[1].Collision.Count++; s.Runners[1].Collision.LastKind = (int)CollisionKind.Barrels;
             });
             Assert.Equal(1, sim.Events.Count);
             var e = sim.Events[0];
@@ -75,7 +75,7 @@ namespace Game.Core.Tests
         {
             var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s =>
             {
-                s.Collisions[2].Count++; s.Collisions[2].WaterCount++; s.Collisions[2].LastKind = (int)CollisionKind.Water;
+                s.Runners[2].Collision.Count++; s.Runners[2].Collision.WaterCount++; s.Runners[2].Collision.LastKind = (int)CollisionKind.Water;
             });
             Assert.Equal(1, sim.Events.Count);
             Assert.Equal((int)CollisionKind.Water, sim.Events[0].Param1);
@@ -86,7 +86,7 @@ namespace Game.Core.Tests
         [Fact]
         public void TossGivesOneEventPlus120ViewersAnd50Donations()
         {
-            var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s => s.Tosses[3].Tossed++);
+            var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s => s.Runners[3].Toss.Tossed++);
             Assert.Equal(1, sim.Events.Count);
             Assert.Equal(RaceEventType.Tossed, sim.Events[0].Type);
             Assert.Equal(3, sim.Events[0].Seat);
@@ -97,7 +97,7 @@ namespace Game.Core.Tests
         [Fact]
         public void RoseGivesOneEventNoJump()
         {
-            var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s => s.Tosses[0].Rose++);
+            var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s => s.Runners[0].Toss.Rose++);
             Assert.Equal(1, sim.Events.Count);
             Assert.Equal(RaceEventType.Rose, sim.Events[0].Type);
             Assert.Equal(0, DV(sim, ctl, 0));
@@ -147,12 +147,12 @@ namespace Game.Core.Tests
         {
             var sim = Quiet(Cfg(Nerd, Nerd, Nerd, Nerd));
             // толчок 0 → 1 в тике 0, столкновение цели через 5 тиков, затем второе — «уложил» только один раз
-            sim.State.Actions[1].GotShoved++; sim.State.Actions[1].LastGotShovedTick = 0; sim.State.Actions[1].LastShovedBy = 0;
+            sim.State.Runners[1].Action.GotShoved++; sim.State.Runners[1].Action.LastGotShovedTick = 0; sim.State.Runners[1].Action.LastShovedBy = 0;
             sim.Step(TickInputs.Empty);
             int laid = 0;
             for (int t = 1; t <= 12; t++)
             {
-                if (t == 5 || t == 9) { sim.State.Collisions[1].Count++; sim.State.Collisions[1].LastKind = (int)CollisionKind.Pole; }
+                if (t == 5 || t == 9) { sim.State.Runners[1].Collision.Count++; sim.State.Runners[1].Collision.LastKind = (int)CollisionKind.Pole; }
                 sim.Step(TickInputs.Empty);
                 laid += sim.Events.CountOf(RaceEventType.LaidOut);
                 if (t == 5) { Assert.Equal(1, sim.Events.CountOf(RaceEventType.LaidOut)); Assert.Equal(0, sim.Events[sim.Events.Count - 1].Seat); }
@@ -164,8 +164,8 @@ namespace Game.Core.Tests
         public void ThresholdEveryTwoHundredFiftyOnce()
         {
             var sim = Quiet(Cfg(0, 1, 2, 3));
-            sim.State.Viewing[1].Viewers = V(200); // +120 от подброса → 320 (порог 250)
-            sim.State.Tosses[1].Tossed++;
+            sim.State.Runners[1].Viewing.Viewers = V(200); // +120 от подброса → 320 (порог 250)
+            sim.State.Runners[1].Toss.Tossed++;
             sim.Step(TickInputs.Empty);
             Assert.Equal(1, sim.Events.CountOf(RaceEventType.ViewerThreshold));
             var e = sim.Events[sim.Events.Count - 1];
@@ -191,7 +191,7 @@ namespace Game.Core.Tests
                 {
                     Assert.Equal(0, sim.Events[i].Seat);
                     Assert.Equal(ViewerZone.Hot, sim.Events[i].Param2);
-                    Assert.Equal(sim.State.Viewing[0].PrevZone, sim.Events[i].Param1);
+                    Assert.Equal(sim.State.Runners[0].Viewing.PrevZone, sim.Events[i].Param1);
                 }
         }
 
@@ -286,8 +286,8 @@ namespace Game.Core.Tests
             long before = GC.GetAllocatedBytesForCurrentThread();
             for (int i = 0; i < 300; i++)
             {
-                sim.State.Collisions[i & 3].Count++;
-                sim.State.Tosses[i & 3].Tossed++;
+                sim.State.Runners[i & 3].Collision.Count++;
+                sim.State.Runners[i & 3].Toss.Tossed++;
                 sim.Step(TickInputs.Empty);
             }
             Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);

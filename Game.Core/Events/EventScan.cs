@@ -19,10 +19,10 @@ namespace Game.Core.Events
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref EventState e = ref st.Ev[i];
-                ref ViewerState v = ref st.Viewing[i];
-                ref CollisionState c = ref st.Collisions[i];
-                ref ActionState a = ref st.Actions[i];
-                ref var t = ref st.Tosses[i];
+                ref ViewerState v = ref st.Runners[i].Viewing;
+                ref CollisionState c = ref st.Runners[i].Collision;
+                ref ActionState a = ref st.Runners[i].Action;
+                ref var t = ref st.Runners[i].Toss;
 
                 int water = c.WaterCount - e.SeenWater;
                 int other = (c.Count - e.SeenCollisions) - water;
@@ -84,7 +84,7 @@ namespace Game.Core.Events
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref EventState e = ref st.Ev[i];
-                int level = (int)(st.Viewing[i].Viewers >> Fixed.FractionBits) / EventBonuses.ThresholdStep;
+                int level = (int)(st.Runners[i].Viewing.Viewers >> Fixed.FractionBits) / EventBonuses.ThresholdStep;
                 while (e.Level < level)
                 {
                     e.Level++;

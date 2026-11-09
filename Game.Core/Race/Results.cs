@@ -47,9 +47,9 @@ namespace Game.Core.Race
 
         static bool Better(RaceState st, int a, int b)
         {
-            long da = st.Viewing[a].Donations, db = st.Viewing[b].Donations;
+            long da = st.Runners[a].Viewing.Donations, db = st.Runners[b].Viewing.Donations;
             if (da != db) return da > db;
-            return st.Viewing[a].Viewers > st.Viewing[b].Viewers; // полное равенство — меньшее место выше (сортировка устойчива)
+            return st.Runners[a].Viewing.Viewers > st.Runners[b].Viewing.Viewers; // полное равенство — меньшее место выше (сортировка устойчива)
         }
     }
 }

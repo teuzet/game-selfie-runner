@@ -96,13 +96,13 @@ namespace Game.Core
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 // «Нет сигнала» (F-017): вход игнорируется и для движения, и для действий.
-                if (st.Tosses[i].NoSignalTicks > 0) inputs = inputs.With(i, default);
+                if (st.Runners[i].Toss.NoSignalTicks > 0) inputs = inputs.With(i, default);
             }
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 // Внешний вход бота игнорируется (место ведёт сам Simulation; мозги ботов — позже).
                 var inp = Config.GetSeat(i).Kind == SeatKind.Bot ? default : inputs.Get(i);
-                RunnerMovement.StepRunner(_seatData[i], Street, ref st.Runners[i], inp, st.Tosses[i].NoSignalTicks > 0);
+                RunnerMovement.StepRunner(_seatData[i], Street, ref st.Runners[i], inp, st.Runners[i].Toss.NoSignalTicks > 0);
             }
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
             MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);

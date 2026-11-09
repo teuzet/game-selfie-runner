@@ -113,7 +113,7 @@ namespace Game.Core.Tests
             for (int i = 0; i < 4; i++) if (i != 1) { sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw; }
             long sBefore = r1.S;
             sim.Step(TickInputs.Empty);
-            ref var t1 = ref sim.State.Tosses[1];
+            ref var t1 = ref sim.State.Runners[1].Toss;
             Assert.Equal(1, t1.Tossed);
             Assert.Equal(sim.State.Tick - 1, t1.LastTossTick);
             Assert.InRange(Dbl(t1.LastTossFromS), Dbl(sBefore) - 0.01, Dbl(sBefore) + 0.5); // бегун успел шагнуть в этом тике
@@ -130,10 +130,10 @@ namespace Game.Core.Tests
             Assert.Equal(0, t1.Rose);
 
             // «встал» через 3 с и ещё 3 с неуязвим
-            while (sim.State.Tosses[1].NoSignalTicks > 0) sim.Step(TickInputs.Empty);
-            Assert.Equal(1, sim.State.Tosses[1].Rose);
-            Assert.Equal(sim.State.Tick - 1, sim.State.Tosses[1].LastRoseTick);
-            Assert.True(sim.State.Tosses[1].InvulnTicks > 0);
+            while (sim.State.Runners[1].Toss.NoSignalTicks > 0) sim.Step(TickInputs.Empty);
+            Assert.Equal(1, sim.State.Runners[1].Toss.Rose);
+            Assert.Equal(sim.State.Tick - 1, sim.State.Runners[1].Toss.LastRoseTick);
+            Assert.True(sim.State.Runners[1].Toss.InvulnTicks > 0);
         }
 
         [Fact]
@@ -146,27 +146,27 @@ namespace Game.Core.Tests
             r1.S = Fx(bs + 0.5).Raw; r1.X = sim.State.Bull.X; r1.Speed = Fx(5).Raw;
             for (int i = 0; i < 4; i++) if (i != 1) sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw;
             sim.Step(TickInputs.Empty);
-            Assert.Equal(1, sim.State.Tosses[1].Tossed);
+            Assert.Equal(1, sim.State.Runners[1].Toss.Tossed);
 
             // «нет сигнала»: s не растёт, даже при входе «вперёд, спринт»
             long s0 = sim.State.Runners[1].S;
             var sprint = TickInputs.Empty.With(1, new PlayerInput(0, 1, false));
-            int noSignal = sim.State.Tosses[1].NoSignalTicks;
+            int noSignal = sim.State.Runners[1].Toss.NoSignalTicks;
             for (int i = 0; i < noSignal; i++)
             {
                 sim.Step(sprint);
                 Assert.Equal(s0, sim.State.Runners[1].S);
                 Assert.Equal(0, sim.State.Runners[1].Speed);
             }
-            Assert.Equal(0, sim.State.Tosses[1].NoSignalTicks);
+            Assert.Equal(0, sim.State.Runners[1].Toss.NoSignalTicks);
 
             // неуязвимость: разгон до бега, подбросить нельзя
-            int invuln = sim.State.Tosses[1].InvulnTicks;
+            int invuln = sim.State.Runners[1].Toss.InvulnTicks;
             Assert.True(invuln > 0);
             for (int i = 0; i < invuln; i++)
             {
                 sim.Step(TickInputs.Empty);
-                Assert.Equal(1, sim.State.Tosses[1].Tossed);
+                Assert.Equal(1, sim.State.Runners[1].Toss.Tossed);
             }
             var rd = sim.SeatData(1);
             Fixed runTarget = rd.RunSpeed * sim.Street.SlopeAt(Fixed.FromRaw(sim.State.Runners[1].S));
@@ -185,8 +185,8 @@ namespace Game.Core.Tests
                 sim.State.Runners[2].S = Fx(bs + 0.5).Raw; sim.State.Runners[2].X = sim.State.Bull.X;
                 for (int i = 0; i < 4; i++) if (i != 2) sim.State.Runners[i].S = Fx(bs + 200 + i * 10).Raw;
                 sim.Step(TickInputs.Empty);
-                Assert.Equal((int)(sec * 30), sim.State.Tosses[2].NoSignalTicks);
-                Assert.True(sim.State.Tosses[2].NoSignalTicks + sim.State.Tosses[2].InvulnTicks >= 180);
+                Assert.Equal((int)(sec * 30), sim.State.Runners[2].Toss.NoSignalTicks);
+                Assert.True(sim.State.Runners[2].Toss.NoSignalTicks + sim.State.Runners[2].Toss.InvulnTicks >= 180);
             }
         }
 
@@ -196,7 +196,7 @@ namespace Game.Core.Tests
             var sim = new Simulation(Cfg(4, SeatKind.Human), Data);
             RunTo(sim, Release + 20);
             double bs = Dbl(sim.State.Bull.S);
-            ref var t = ref sim.State.Tosses[0];
+            ref var t = ref sim.State.Runners[0].Toss;
             t.InvulnTicks = 200;
             sim.State.Runners[0].S = Fx(bs + 0.3).Raw; sim.State.Runners[0].X = sim.State.Bull.X; sim.State.Runners[0].Speed = 0;
             for (int i = 1; i < 4; i++) sim.State.Runners[i].S = Fx(bs + 400 + i * 10).Raw;
@@ -204,7 +204,7 @@ namespace Game.Core.Tests
             {
                 sim.State.Runners[0].S = Fx(bs + 0.3).Raw; // стоит
                 sim.Step(TickInputs.Empty);
-                Assert.Equal(0, sim.State.Tosses[0].Tossed);
+                Assert.Equal(0, sim.State.Runners[0].Toss.Tossed);
                 Assert.True(sim.State.Runners[0].S >= sim.State.Bull.S);
             }
         }
@@ -336,11 +336,11 @@ namespace Game.Core.Tests
                     {
                         if (sim.State.Runners[i].S < sim.State.Bull.S)
                             Assert.Fail($"seed {seed} tick {sim.Tick}: бегун {i} позади быка: {Dbl(sim.State.Runners[i].S)} < {Dbl(sim.State.Bull.S)}");
-                        if (sim.State.Tosses[i].Tossed != lastCount[i])
+                        if (sim.State.Runners[i].Toss.Tossed != lastCount[i])
                         {
                             int gap = sim.Tick - lastToss[i];
                             if (gap < 180) Assert.Fail($"seed {seed}: бегун {i} подброшен дважды за {gap} тиков");
-                            lastToss[i] = sim.Tick; lastCount[i] = sim.State.Tosses[i].Tossed; totalTosses++;
+                            lastToss[i] = sim.Tick; lastCount[i] = sim.State.Runners[i].Toss.Tossed; totalTosses++;
                         }
                     }
                 }

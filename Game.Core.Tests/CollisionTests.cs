@@ -49,7 +49,7 @@ namespace Game.Core.Tests
             for (int t = 0; t < max; t++)
             {
                 sim.Step(default);
-                if (sim.State.Collisions[0].Count > 0) return t;
+                if (sim.State.Runners[0].Collision.Count > 0) return t;
             }
             return -1;
         }
@@ -66,7 +66,7 @@ namespace Game.Core.Tests
             ref var r = ref sim.State.Runners[0];
             Assert.Equal(18, r.StunTicks); // 0.6 с × 30
             Assert.Equal(0, r.Speed);
-            Assert.Equal((int)CollisionKind.Pole, sim.State.Collisions[0].LastKind);
+            Assert.Equal((int)CollisionKind.Pole, sim.State.Runners[0].Collision.LastKind);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Game.Core.Tests
         {
             var (sim, i) = Find("pole");
             var o = sim.Street.Obstacles[i];
-            sim.State.Stability[0] = Fixed.FromFraction(8, 5).Raw; // 1.6
+            sim.State.Runners[0].Stability = Fixed.FromFraction(8, 5).Raw; // 1.6
             Place(sim, Dbl(o.S) - 1.0, o.X);
             Assert.True(RunUntilHit(sim) >= 0);
             int ticks = sim.State.Runners[0].StunTicks;
@@ -106,7 +106,7 @@ namespace Game.Core.Tests
             // пройти сквозь столб после стана
             for (int t = 0; t < 60; t++) sim.Step(default);
             Assert.True(sim.State.Runners[0].S > o.S.Raw + Fixed.OneRaw / 2);
-            Assert.Equal(1, sim.State.Collisions[0].Count);
+            Assert.Equal(1, sim.State.Runners[0].Collision.Count);
         }
 
         [Fact]
@@ -131,12 +131,12 @@ namespace Game.Core.Tests
             {
                 prev = Dbl(Fixed.FromRaw(sim.State.Runners[0].Speed));
                 sim.Step(default);
-                hit = sim.State.Collisions[0].Count > 0;
+                hit = sim.State.Runners[0].Collision.Count > 0;
             }
             Assert.True(hit);
             ref var r = ref sim.State.Runners[0];
             Assert.Equal(0, r.StunTicks);
-            Assert.Equal((int)CollisionKind.Laundry, sim.State.Collisions[0].LastKind);
+            Assert.Equal((int)CollisionKind.Laundry, sim.State.Runners[0].Collision.LastKind);
             // ×0.6 от скорости в момент столкновения (в тик разгон/торможение ≤ 0.2 м/с)
             double v = Dbl(Fixed.FromRaw(r.Speed));
             Assert.InRange(v, 0.6 * (prev - 0.21), 0.6 * (prev + 0.21));
@@ -145,7 +145,7 @@ namespace Game.Core.Tests
             Assert.True(Dbl(Fixed.FromRaw(sim.State.Runners[0].Speed)) <= v + 0.01);
             for (int t = 0; t < 40; t++) sim.Step(default);
             Assert.True(Dbl(Fixed.FromRaw(sim.State.Runners[0].Speed)) > v + 0.5);
-            Assert.Equal(1, sim.State.Collisions[0].Count);
+            Assert.Equal(1, sim.State.Runners[0].Collision.Count);
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Game.Core.Tests
             Place(sim, Dbl(o.S) - 1.0, Fixed.FromRaw(sim.State.Dyn[i].X));
             long x0 = sim.State.Dyn[i].X;
             Assert.True(RunUntilHit(sim) >= 0);
-            Assert.Equal((int)CollisionKind.Gawker, sim.State.Collisions[0].LastKind);
+            Assert.Equal((int)CollisionKind.Gawker, sim.State.Runners[0].Collision.LastKind);
             Assert.Equal(18, sim.State.Runners[0].StunTicks);
             sim.Step(default);
             Assert.NotEqual(x0, sim.State.Dyn[i].X);
@@ -231,10 +231,10 @@ namespace Game.Core.Tests
                 // бегун 0 удерживаем на месте
                 sim.State.Runners[0].S = o.S.Raw; sim.State.Runners[0].X = wallX.Raw; sim.State.Runners[0].Speed = 0;
                 sim.Step(default);
-                if (sim.State.Collisions[0].Count > 0) hitTick = t;
+                if (sim.State.Runners[0].Collision.Count > 0) hitTick = t;
             }
             Assert.True(hitTick >= 0);
-            Assert.Equal((int)CollisionKind.Door, sim.State.Collisions[0].LastKind);
+            Assert.Equal((int)CollisionKind.Door, sim.State.Runners[0].Collision.LastKind);
             Assert.InRange(hitTick, 1, 45);
         }
 
@@ -255,10 +255,10 @@ namespace Game.Core.Tests
             Fixed s = pb.Start + Fixed.FromInt(50);
             Fixed w = street.WidthAt(s);
             Fixed x = Fixed.FromInt(pb.WaterSide) * (w / Fixed.FromInt(2) - Fixed.One); // посреди полосы воды
-            sim.State.Stability[0] = Fixed.FromInt(2).Raw; // не должна уменьшать стан воды
+            sim.State.Runners[0].Stability = Fixed.FromInt(2).Raw; // не должна уменьшать стан воды
             sim.State.Runners[0].S = s.Raw; sim.State.Runners[0].X = x.Raw; sim.State.Runners[0].Speed = 0;
             sim.Step(default);
-            ref var c = ref sim.State.Collisions[0];
+            ref var c = ref sim.State.Runners[0].Collision;
             Assert.Equal(1, c.Count);
             Assert.Equal(1, c.WaterCount);
             Assert.Equal((int)CollisionKind.Water, c.LastKind);
@@ -322,7 +322,7 @@ namespace Game.Core.Tests
             var sim = Neutral(Cfg(seed), street);
             Place(sim, Dbl(street!.Blocks[bi].Start) + 40 - 3.5, Fixed.Zero);
             Assert.True(RunUntilHit(sim) >= 0);
-            Assert.Equal((int)CollisionKind.Fountain, sim.State.Collisions[0].LastKind);
+            Assert.Equal((int)CollisionKind.Fountain, sim.State.Runners[0].Collision.LastKind);
             Assert.Equal(18, sim.State.Runners[0].StunTicks);
         }
 
@@ -342,7 +342,7 @@ namespace Game.Core.Tests
             for (int t = 700 + 1; t < 1500; t++) c!.Step(new TickInputs());
             Assert.Equal(a.StateHash(), c!.StateHash());
             int total = 0;
-            for (int i = 0; i < 4; i++) total += a.State.Collisions[i].Count;
+            for (int i = 0; i < 4; i++) total += a.State.Runners[i].Collision.Count;
             Assert.True(total > 0, "за 50 с бегуны вслепую должны во что-то врезаться");
         }
     }

@@ -68,11 +68,11 @@ namespace Game.Core.Tests
             ref RunnerState t = ref sim.State.Runners[1];
             Assert.Equal(x0 + 2.0 / 0.9, Dbl(Fixed.FromRaw(t.X)), 1);
             Assert.Equal(7 * 0.75, Dbl(Fixed.FromRaw(t.Speed)), 1);
-            Assert.Equal(1, sim.State.Actions[0].Shoved);
-            Assert.Equal(1, sim.State.Actions[1].GotShoved);
-            Assert.Equal(1, sim.State.Actions[0].LastShoveTarget);
-            Assert.Equal(0, sim.State.Actions[1].LastShovedBy);
-            Assert.Equal(0, sim.State.Actions[0].LastShoveTick);
+            Assert.Equal(1, sim.State.Runners[0].Action.Shoved);
+            Assert.Equal(1, sim.State.Runners[1].Action.GotShoved);
+            Assert.Equal(1, sim.State.Runners[0].Action.LastShoveTarget);
+            Assert.Equal(0, sim.State.Runners[1].Action.LastShovedBy);
+            Assert.Equal(0, sim.State.Runners[0].Action.LastShoveTick);
         }
 
         [Fact]
@@ -80,10 +80,10 @@ namespace Game.Core.Tests
         {
             var sim = Setup(Nerd, Nerd, 1.2);
             sim.Step(TickInputs.Empty);
-            Assert.Equal(0, sim.State.Actions[0].Shoved);
+            Assert.Equal(0, sim.State.Runners[0].Action.Shoved);
             sim = Setup(Nerd, Nerd, 1.6);
             sim.Step(Push);
-            Assert.Equal(0, sim.State.Actions[0].Shoved);
+            Assert.Equal(0, sim.State.Runners[0].Action.Shoved);
         }
 
         [Fact]
@@ -96,11 +96,11 @@ namespace Game.Core.Tests
                 Place(sim, 1, Dbl(Fixed.FromRaw(sim.State.Runners[0].S)), -1.2);
                 sim.Step(Push);
             }
-            Assert.Equal(1, sim.State.Actions[0].Shoved); // 2 с = 60 тиков: второй толчок ещё не разрешён
+            Assert.Equal(1, sim.State.Runners[0].Action.Shoved); // 2 с = 60 тиков: второй толчок ещё не разрешён
             Place(sim, 0, Dbl(Fixed.FromRaw(sim.State.Runners[0].S)), -2.4);
             Place(sim, 1, Dbl(Fixed.FromRaw(sim.State.Runners[0].S)), -1.2);
             sim.Step(Push);
-            Assert.Equal(2, sim.State.Actions[0].Shoved);
+            Assert.Equal(2, sim.State.Runners[0].Action.Shoved);
         }
 
         [Fact]
@@ -112,10 +112,10 @@ namespace Game.Core.Tests
             Assert.True(t.StunTicks > 0);
             Assert.Equal(Collisions.StunTicks(Data.ActionData.TripStun, Fx(0.9)), t.StunTicks);
             Assert.Equal(0, t.Speed);
-            Assert.Equal(1, sim.State.Actions[0].Tripped);
-            Assert.Equal(1, sim.State.Actions[1].GotTripped);
-            Assert.Equal(0, sim.State.Actions[1].LastTrippedBy);
-            Assert.Equal(1, sim.State.Actions[0].LastTripTarget);
+            Assert.Equal(1, sim.State.Runners[0].Action.Tripped);
+            Assert.Equal(1, sim.State.Runners[1].Action.GotTripped);
+            Assert.Equal(0, sim.State.Runners[1].Action.LastTrippedBy);
+            Assert.Equal(1, sim.State.Runners[0].Action.LastTripTarget);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Game.Core.Tests
         {
             var sim = Setup(Nerd, Nerd, 0, ds: 1.3, pushX: 0);
             sim.Step(Push);
-            Assert.Equal(0, sim.State.Actions[0].Tripped);
+            Assert.Equal(0, sim.State.Runners[0].Action.Tripped);
             Assert.Equal(0, sim.State.Runners[1].StunTicks);
         }
 
@@ -134,18 +134,18 @@ namespace Game.Core.Tests
             double s = Dbl(Fixed.FromRaw(sim.State.Runners[0].S));
             Place(sim, 2, s, 1.2); // сосед сбоку
             sim.Step(Push);
-            Assert.Equal(1, sim.State.Actions[0].Tripped);
-            Assert.Equal(0, sim.State.Actions[0].Shoved);
-            Assert.Equal(0, sim.State.Actions[2].GotShoved);
+            Assert.Equal(1, sim.State.Runners[0].Action.Tripped);
+            Assert.Equal(0, sim.State.Runners[0].Action.Shoved);
+            Assert.Equal(0, sim.State.Runners[2].Action.GotShoved);
             // Подножка на перезарядке (120 тиков) — тот же вход толкает соседа сбоку.
             Place(sim, 1, s + 1.1, 0);
             sim.Step(Push);
-            Assert.Equal(1, sim.State.Actions[0].Tripped);
-            Assert.Equal(1, sim.State.Actions[0].Shoved);
+            Assert.Equal(1, sim.State.Runners[0].Action.Tripped);
+            Assert.Equal(1, sim.State.Runners[0].Action.Shoved);
             for (int i = 0; i < 118; i++) sim.Step(TickInputs.Empty);
             Place(sim, 0, s, 0); Place(sim, 1, s + 1.1, 0); Park(sim, s, 2);
             sim.Step(Push);
-            Assert.Equal(2, sim.State.Actions[0].Tripped);
+            Assert.Equal(2, sim.State.Runners[0].Action.Tripped);
         }
 
         [Fact]
@@ -153,12 +153,12 @@ namespace Game.Core.Tests
         {
             var normal = Setup(Nerd, Nerd, 2.0);
             normal.Step(Push);
-            Assert.Equal(0, normal.State.Actions[0].Shoved);
+            Assert.Equal(0, normal.State.Runners[0].Action.Shoved);
 
             var gran = Setup(Grandma, Nerd, 2.0);
             double x0 = Dbl(Fixed.FromRaw(gran.State.Runners[1].X));
             gran.Step(Push);
-            Assert.Equal(1, gran.State.Actions[0].Shoved);
+            Assert.Equal(1, gran.State.Runners[0].Action.Shoved);
             Assert.Equal(x0 + 2.0 / 0.9, Dbl(Fixed.FromRaw(gran.State.Runners[1].X)), 1);
 
             var ref1 = Setup(Nerd, Nerd, 1.2);
@@ -169,7 +169,7 @@ namespace Game.Core.Tests
 
             var far = Setup(Grandma, Nerd, 2.7);
             far.Step(Push);
-            Assert.Equal(0, far.State.Actions[0].Shoved);
+            Assert.Equal(0, far.State.Runners[0].Action.Shoved);
         }
 
         [Fact]
@@ -192,7 +192,7 @@ namespace Game.Core.Tests
                 Park(sim, s, 2, 3);
                 double before = Dbl(Fixed.FromRaw(sim.State.Runners[1].S));
                 sim.Step(Push);
-                Assert.Equal(1, sim.State.Actions[0].Shoved + sim.State.Actions[0].Tripped);
+                Assert.Equal(1, sim.State.Runners[0].Action.Shoved + sim.State.Runners[0].Action.Tripped);
                 double after = Dbl(Fixed.FromRaw(sim.State.Runners[1].S));
                 Assert.True(after < before - 0.3, $"trip={trip} before={before} after={after}");
             }
@@ -216,7 +216,7 @@ namespace Game.Core.Tests
                 a.Step(ti); b.Step(ti);
                 Assert.Equal(a.StateHash(), b.StateHash());
             }
-            for (int i = 0; i < 4; i++) acts += a.State.Actions[i].Shoved + a.State.Actions[i].Tripped;
+            for (int i = 0; i < 4; i++) acts += a.State.Runners[i].Action.Shoved + a.State.Runners[i].Action.Tripped;
             Assert.True(acts >= 0);
             var c = a.Clone();
             Assert.Equal(a.StateHash(), c.StateHash());

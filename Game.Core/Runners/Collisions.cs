@@ -44,7 +44,7 @@ namespace Game.Core.Runners
         public static void BeforeMove(RaceState st)
         {
             for (int i = 0; i < st.Runners.Length; i++)
-                if (st.Collisions[i].ZoneActive != 0) st.Runners[i].Speed = st.Collisions[i].ZoneRaw;
+                if (st.Runners[i].Collision.ZoneActive != 0) st.Runners[i].Speed = st.Runners[i].Collision.ZoneRaw;
         }
 
         /// <summary>После движения и расталкивания: столкновения, замедления, зона, вынос из воды.</summary>
@@ -58,7 +58,7 @@ namespace Game.Core.Runners
         static void StepSeat(RunnerData d, StreetMap street, RaceState st, int seat, int stride)
         {
             ref RunnerState r = ref st.Runners[seat];
-            ref CollisionState c = ref st.Collisions[seat];
+            ref CollisionState c = ref r.Collision;
             Fixed s = Fixed.FromRaw(r.S);
             int bi = street.BlockIndexAt(s);
             ref readonly PlacedBlock pb = ref street.Blocks[bi];
@@ -216,7 +216,7 @@ namespace Game.Core.Runners
         {
             Record(st, ref r, ref c, kind);
             r.Speed = 0;
-            r.StunTicks = StunTicks(stunSec, Fixed.FromRaw(st.Stability[seat]));
+            r.StunTicks = StunTicks(stunSec, Fixed.FromRaw(st.Runners[seat].Stability));
         }
 
         /// <summary>Тики стана: стан / устойчивость, округление к ближайшему, минимум 1 (0.6 с при 1.0 → 18; при 1.6 → 11).</summary>

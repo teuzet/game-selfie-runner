@@ -57,9 +57,9 @@ namespace Game.Core.Bull
             ref BullState b = ref st.Bull;
             ref BullChargeState c = ref st.Charge;
 
-            for (int i = 0; i < st.Tosses.Length; i++)
+            for (int i = 0; i < st.Runners.Length; i++)
             {
-                ref TossState t = ref st.Tosses[i];
+                ref TossState t = ref st.Runners[i].Toss;
                 if (t.NoSignalTicks > 0)
                 {
                     if (--t.NoSignalTicks == 0) { t.Rose++; t.LastRoseTick = st.Tick; }
@@ -76,7 +76,7 @@ namespace Game.Core.Bull
 
             if (c.ChargeLeft > 0)
             {
-                if (c.Target < 0 || Protected(st.Tosses[c.Target])) { c.ChargeLeft = 0; c.Target = -1; }
+                if (c.Target < 0 || Protected(st.Runners[c.Target].Toss)) { c.ChargeLeft = 0; c.Target = -1; }
                 else MoveCharging(sim, street, ref b, ref c, prevBullS);
             }
 
@@ -114,7 +114,7 @@ namespace Game.Core.Bull
         /// <summary>Вес цели: вкусность / (1 + d/10); 0 — не цель (позади, дальше 30 м, неуязвим).</summary>
         static Fixed Weight(Simulation sim, RaceState st, int seat, Fixed bs, Fixed bx)
         {
-            if (Protected(st.Tosses[seat])) return Fixed.Zero;
+            if (Protected(st.Runners[seat].Toss)) return Fixed.Zero;
             Fixed ds = Fixed.FromRaw(st.Runners[seat].S) - bs;
             if (ds < Fixed.Zero || ds > sim.BullData.ChargeTargetRange) return Fixed.Zero;
             Fixed dx = Fixed.FromRaw(st.Runners[seat].X) - bx;
@@ -159,7 +159,7 @@ namespace Game.Core.Bull
             {
                 ref RunnerState r = ref st.Runners[i];
                 long dsRaw = r.S - b.S;
-                if (Protected(st.Tosses[i]))
+                if (Protected(r.Toss))
                 {
                     if (dsRaw < 0) { b.S = r.S; if (b.Speed > 0) b.Speed = 0; } // неуязвимого не обгоняем и не подбрасываем
                     continue;
@@ -179,7 +179,7 @@ namespace Game.Core.Bull
             var st = sim.State;
             var bd = sim.BullData;
             ref RunnerState r = ref st.Runners[seat];
-            ref TossState t = ref st.Tosses[seat];
+            ref TossState t = ref r.Toss;
             t.LastTossFromS = r.S;
             long baseS = r.S > b.S ? r.S : b.S;
             long ns = baseS + bd.ChargeTossDistance.Raw;

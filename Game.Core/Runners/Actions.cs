@@ -61,8 +61,8 @@ namespace Game.Core.Runners
             int n = st.Runners.Length;
             for (int i = 0; i < n; i++)
             {
-                if (st.Actions[i].ShoveCd > 0) st.Actions[i].ShoveCd--;
-                if (st.Actions[i].TripCd > 0) st.Actions[i].TripCd--;
+                if (st.Runners[i].Action.ShoveCd > 0) st.Runners[i].Action.ShoveCd--;
+                if (st.Runners[i].Action.TripCd > 0) st.Runners[i].Action.TripCd--;
             }
             for (int me = 0; me < n; me++)
             {
@@ -93,8 +93,8 @@ namespace Game.Core.Runners
                 }
                 else if (d2 <= shoveSq && (shove < 0 || d2 < shoveBest)) { shove = t; shoveBest = d2; }
             }
-            if (trip >= 0 && st.Actions[me].TripCd == 0) { Trip(ad, street, st, me, trip); return; }
-            if (shove >= 0 && st.Actions[me].ShoveCd == 0) Shove(ad, cd, seatData, street, st, me, shove, pusher);
+            if (trip >= 0 && mr.Action.TripCd == 0) { Trip(ad, street, st, me, trip); return; }
+            if (shove >= 0 && mr.Action.ShoveCd == 0) Shove(ad, cd, seatData, street, st, me, shove, pusher);
         }
 
         static void Shove(ActionData ad, CharacterData cd, RunnerData[] seatData, StreetMap street, RaceState st, int me, int target, CharacterDef pusher)
@@ -102,28 +102,30 @@ namespace Game.Core.Runners
             ref RunnerState tr = ref st.Runners[target];
             int dir = tr.X >= st.Runners[me].X ? 1 : -1;
             Characters.ApplyShove(cd, seatData[target], street, st, pusher, target, dir);
-            ref CollisionState c = ref st.Collisions[target];
+            ref CollisionState c = ref tr.Collision;
             if (c.ZoneActive != 0) c.ZoneRaw = (Fixed.FromRaw(c.ZoneRaw) * (Fixed.One - cd.ShoveSpeedLoss)).Raw;
             PushBackOnStairs(ad, street, ref tr);
-            st.Actions[me].ShoveCd = (ad.ShoveCooldown * TicksFx).ToInt();
-            st.Actions[me].Shoved++;
-            st.Actions[me].LastShoveTick = st.Tick; st.Actions[me].LastShoveTarget = target;
-            st.Actions[target].GotShoved++;
-            st.Actions[target].LastGotShovedTick = st.Tick; st.Actions[target].LastShovedBy = me;
+            ref ActionState ma = ref st.Runners[me].Action;
+            ma.ShoveCd = (ad.ShoveCooldown * TicksFx).ToInt();
+            ma.Shoved++;
+            ma.LastShoveTick = st.Tick; ma.LastShoveTarget = target;
+            tr.Action.GotShoved++;
+            tr.Action.LastGotShovedTick = st.Tick; tr.Action.LastShovedBy = me;
         }
 
         static void Trip(ActionData ad, StreetMap street, RaceState st, int me, int target)
         {
             ref RunnerState tr = ref st.Runners[target];
             tr.Speed = 0;
-            st.Collisions[target].ZoneRaw = 0;
-            tr.StunTicks = Collisions.StunTicks(ad.TripStun, Fixed.FromRaw(st.Stability[target]));
+            tr.Collision.ZoneRaw = 0;
+            tr.StunTicks = Collisions.StunTicks(ad.TripStun, Fixed.FromRaw(tr.Stability));
             PushBackOnStairs(ad, street, ref tr);
-            st.Actions[me].TripCd = (ad.TripCooldown * TicksFx).ToInt();
-            st.Actions[me].Tripped++;
-            st.Actions[me].LastTripTick = st.Tick; st.Actions[me].LastTripTarget = target;
-            st.Actions[target].GotTripped++;
-            st.Actions[target].LastGotTrippedTick = st.Tick; st.Actions[target].LastTrippedBy = me;
+            ref ActionState ma = ref st.Runners[me].Action;
+            ma.TripCd = (ad.TripCooldown * TicksFx).ToInt();
+            ma.Tripped++;
+            ma.LastTripTick = st.Tick; ma.LastTripTarget = target;
+            tr.Action.GotTripped++;
+            tr.Action.LastGotTrippedTick = st.Tick; tr.Action.LastTrippedBy = me;
         }
 
         static void PushBackOnStairs(ActionData ad, StreetMap street, ref RunnerState r)

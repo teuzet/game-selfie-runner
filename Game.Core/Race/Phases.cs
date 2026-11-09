@@ -24,7 +24,7 @@ namespace Game.Core.Race
         public static int CountdownTicks(BullData d) => (d.CountdownSec * Fixed.FromInt(Tps)).ToInt();
         public static int FinishTicks(BullData d) => (d.FinishSec * Fixed.FromInt(Tps)).ToInt();
 
-        public static bool IsFinished(RaceState st, int seat) => st.Viewing[seat].FinishTick >= 0;
+        public static bool IsFinished(RaceState st, int seat) => st.Runners[seat].Viewing.FinishTick >= 0;
 
         /// <summary>Начало блока финиш-арены (вход в него = финиш); нет арены — конец улицы.</summary>
         public static Fixed ArenaStart(Game.Core.Street.Street street)
@@ -82,7 +82,7 @@ namespace Game.Core.Race
         static void Finish(RaceState st, int seat, int tick)
         {
             Record(st, seat, tick, true);
-            st.Viewing[seat].FinishTick = tick;
+            st.Runners[seat].Viewing.FinishTick = tick;
         }
 
         /// <summary>Обновляет лучшие моменты места за тик; final — закрыть открытые отрезки.</summary>
@@ -90,7 +90,7 @@ namespace Game.Core.Race
         {
             ref var b = ref st.Best;
             ref var tr = ref st.Trackers[seat];
-            ref var v = ref st.Viewing[seat];
+            ref var v = ref st.Runners[seat].Viewing;
             if (v.Viewers > b.MaxViewers.Value) b.MaxViewers = new Moment { Seat = seat, Tick = tick, Value = v.Viewers };
 
             bool hot = !final && v.Zone == ViewerZone.Hot;
@@ -102,7 +102,7 @@ namespace Game.Core.Race
             }
             else tr.HotRun = 0;
 
-            bool noSignal = !final && st.Tosses[seat].NoSignalTicks > 0;
+            bool noSignal = !final && st.Runners[seat].Toss.NoSignalTicks > 0;
             if (noSignal && tr.FailActive == 0) { tr.FailActive = 1; tr.FailTick = tick; tr.FailViewers = v.Viewers; }
             if (tr.FailActive != 0)
             {
