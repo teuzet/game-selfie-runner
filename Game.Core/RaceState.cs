@@ -21,6 +21,8 @@ namespace Game.Core
         public int PhaseTicks;
         /// <summary>Лучшие моменты (F-020) и их промежуточные счётчики по местам.</summary>
         public Game.Core.Race.Highlights Best;
+        /// <summary>Память мозгов ботов по местам (F-023): задержки, планы уворота, соседи. Для мест-людей не используется.</summary>
+        public readonly Game.Core.Bots.BotMemory[] Bots = new Game.Core.Bots.BotMemory[RaceConfig.SeatCount];
         public readonly Game.Core.Race.HighlightTracker[] Trackers = new Game.Core.Race.HighlightTracker[RaceConfig.SeatCount];
         /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
         public readonly Game.Core.Street.ObstacleDyn[] Dyn;
@@ -42,6 +44,7 @@ namespace Game.Core
                 Game.Core.Economy.Viewers.InitState(economy, ref Runners[i].Viewing);
             }
             Rng = new DetRandom(seed);
+            for (int i = 0; i < Bots.Length; i++) Game.Core.Bots.BotMemory.Init(ref Bots[i], seed, i);
             Phase = Game.Core.Race.RacePhase.Countdown;
             PhaseTicks = Game.Core.Race.Phases.CountdownTicks(bullData);
             Best = Game.Core.Race.Highlights.Empty;
@@ -77,6 +80,7 @@ namespace Game.Core
             Phase = o.Phase;
             PhaseTicks = o.PhaseTicks;
             Best = o.Best;
+            System.Array.Copy(o.Bots, Bots, Bots.Length);
             System.Array.Copy(o.Trackers, Trackers, Trackers.Length);
             System.Array.Copy(o.Ev, Ev, Ev.Length);
             System.Array.Copy(o.Frame, Frame, Frame.Length);
@@ -202,6 +206,7 @@ namespace Game.Core
                 h = Mix(h, (ulong)Trackers[i].FailViewers);
                 h = Mix(h, (ulong)(uint)Runners[i].Viewing.FinishTick);
             }
+            for (int i = 0; i < Bots.Length; i++) h = Bots[i].Hash(h);
             h = Mix(h, (ulong)Bull.S);
             h = Mix(h, (ulong)Bull.X);
             h = Mix(h, (ulong)Bull.Speed);
@@ -219,7 +224,7 @@ namespace Game.Core
             return Mix(h, (ulong)m.Value);
         }
 
-        private static ulong Mix(ulong h, ulong v)
+        internal static ulong Mix(ulong h, ulong v)
         {
             unchecked
             {
