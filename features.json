@@ -225,7 +225,7 @@
         "Факт столкновения (тип, место, тик) записывается в RunnerState для событий F-019; повторное столкновение с тем же препятствием во время стана не считается.",
         "Тесты: столб даёт стан 0.6 с при устойчивости 1.0 и 0.375 с при 1.6; бельё не станит; зевака движется детерминированно; детерминизм."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -596,7 +596,7 @@
         "Simulation(RaceConfig config, GameData data, Street? street = null) — основной конструктор, диск не читает, статические кэши _defaultData/_defaultRunnerData/_defaultBullData удалены; прежний Simulation(config, street) остаётся обёрткой над одним статическим кэшем GameData.Load() для тестов; RunnerData.Load/BullData.Load/StreetData.Load не меняются. Причина: Unity-хост (F-049) читает JSON из пакета сам, AppContext.BaseDirectory в редакторе и билде на Game.Core/Data не указывает.",
         "Тесты (Game.Core.Tests/GameDataTests.cs): Simulation из GameData.Parse(тексты трёх файлов, прочитанные тестом) и из GameData.Load() дают равные хэши на 3000 тиках со случайными входами; Step по-прежнему не аллоцирует; все прежние тесты ядра зелёные."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
