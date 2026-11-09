@@ -9,9 +9,22 @@ namespace Game.Core
         public DetRandom Rng;
         public readonly RunnerState[] Runners = new RunnerState[RaceConfig.SeatCount];
         public BullState Bull;
+        /// <summary>Факты и эффекты столкновений по местам (F-013); события F-019 читают Count/LastKind/LastS/LastX/LastTick.</summary>
+        public readonly Game.Core.Runners.CollisionState[] Collisions = new Game.Core.Runners.CollisionState[RaceConfig.SeatCount];
+        /// <summary>Устойчивость по местам (Fixed raw), по умолчанию 1.0; персонажи (позже) задают своё.</summary>
+        public readonly long[] Stability = new long[RaceConfig.SeatCount];
+        /// <summary>Динамика подвижных препятствий, индекс = индекс в Street.Obstacles.</summary>
+        public readonly Game.Core.Street.ObstacleDyn[] Dyn;
+        /// <summary>«Препятствие уже действовало на бегуна»: seat * stride + индекс (препятствия, затем фонтан/вода по блокам).</summary>
+        public readonly byte[] Hit;
 
-        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData, Fixed lineS)
+        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData, Game.Core.Bull.BullData bullData, Fixed lineS,
+            Game.Core.Street.Street street)
         {
+            Dyn = new Game.Core.Street.ObstacleDyn[street.Obstacles.Length];
+            Hit = new byte[RaceConfig.SeatCount * Game.Core.Runners.Collisions.HitStride(street)];
+            Game.Core.Street.MovingObstacles.Init(street, Dyn);
+            for (int i = 0; i < Collisions.Length; i++) { Game.Core.Runners.Collisions.InitState(ref Collisions[i]); Stability[i] = Fixed.One.Raw; }
             Rng = new DetRandom(seed);
             Game.Core.Bull.BullMovement.Init(bullData, lineS, ref Bull);
             for (int i = 0; i < Runners.Length; i++)
@@ -21,11 +34,15 @@ namespace Game.Core
             }
         }
 
-        private RaceState() { }
+        private RaceState(int dynLen, int hitLen)
+        {
+            Dyn = new Game.Core.Street.ObstacleDyn[dynLen];
+            Hit = new byte[hitLen];
+        }
 
         public RaceState Clone()
         {
-            var c = new RaceState();
+            var c = new RaceState(Dyn.Length, Hit.Length);
             c.CopyFrom(this);
             return c;
         }
@@ -36,6 +53,10 @@ namespace Game.Core
             Rng = o.Rng;
             Bull = o.Bull;
             System.Array.Copy(o.Runners, Runners, Runners.Length);
+            System.Array.Copy(o.Collisions, Collisions, Collisions.Length);
+            System.Array.Copy(o.Stability, Stability, Stability.Length);
+            System.Array.Copy(o.Dyn, Dyn, Dyn.Length);
+            System.Array.Copy(o.Hit, Hit, Hit.Length);
         }
 
         /// <summary>FNV-1a (64 бита) по всем полям.</summary>
@@ -54,6 +75,28 @@ namespace Game.Core
                 h = Mix(h, (ulong)Runners[i].Exhausted);
                 h = Mix(h, (ulong)Runners[i].StunTicks);
             }
+            for (int i = 0; i < Collisions.Length; i++)
+            {
+                h = Mix(h, (ulong)Collisions[i].Count);
+                h = Mix(h, (ulong)Collisions[i].WaterCount);
+                h = Mix(h, (ulong)Collisions[i].LastKind);
+                h = Mix(h, (ulong)Collisions[i].LastS);
+                h = Mix(h, (ulong)Collisions[i].LastX);
+                h = Mix(h, (ulong)Collisions[i].LastTick);
+                h = Mix(h, (ulong)Collisions[i].SlowTicks);
+                h = Mix(h, (ulong)Collisions[i].SlowCap);
+                h = Mix(h, (ulong)Collisions[i].WaterPending);
+                h = Mix(h, (ulong)Collisions[i].ZoneActive);
+                h = Mix(h, (ulong)Collisions[i].ZoneRaw);
+                h = Mix(h, (ulong)Stability[i]);
+            }
+            for (int i = 0; i < Dyn.Length; i++)
+            {
+                h = Mix(h, (ulong)Dyn[i].X);
+                h = Mix(h, (ulong)(uint)Dyn[i].Dir);
+                h = Mix(h, (ulong)(uint)Dyn[i].OpenTick);
+            }
+            for (int i = 0; i < Hit.Length; i++) h = Mix(h, Hit[i]);
             h = Mix(h, (ulong)Bull.S);
             h = Mix(h, (ulong)Bull.X);
             h = Mix(h, (ulong)Bull.Speed);
