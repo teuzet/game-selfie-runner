@@ -1,0 +1,47 @@
+# occasion: zone_cold — бык дальше 20 м (повтор при >40 м)
+[ru]
+s|может, чуть притормозить?
+s|бык там, сзади, если что
+s|давай поближе к движу
+s|скучаем по быку
+g|вот и зрители уходят
+g|минус десять, минус двадцать…
+g|так и счётчик в ноль уйдёт
+g|кто-то сейчас останется без доната
+t2|где бык??
+t2|скууучно
+t|это стрим про бег или про быка?
+t|я пришёл смотреть на быка, а не на улицу
+t|включите быка обратно
+t|бык — точка, ты — точка, все точки
+t|спринт от контента
+t|ты от быка бежишь или от нас?
+t|переключаюсь на другой стрим
+t|пейзаж красивый, но где драма
+t|бык подал заявку на розыск стримера
+t|мне такое видео и бабушка снимет
+t|ну давай, рискни уже
+t|сплю
+[en]
+s|maybe slow down a bit?
+s|the bull's back there, fyi
+s|get closer to the action
+s|we miss the bull
+g|and there go the viewers
+g|minus ten, minus twenty...
+g|counter heading to zero
+g|someone's not getting donations today
+t2|where's the bull??
+t2|boooring
+t|is this a running stream or a bull stream?
+t|i came for the bull, not the street
+t|turn the bull back on
+t|bull's a dot, you're a dot, everything's a dot
+t|sprinting away from content
+t|are you running from the bull or from us?
+t|switching to another stream
+t|nice scenery, where's the drama
+t|bull filed a missing streamer report
+t|my grandma films more exciting stuff
+t|come on, take a risk already
+t|zzz

@@ -1,0 +1,49 @@
+# occasion: collision — бегун врезался в препятствие (или упал в пруд)
+# формат: mood[вес]|текст; s=support g=gloat t=troll; вес по умолчанию 1
+# ru без рода стримера и препятствия: настоящее время, повелительное, безличное
+[ru]
+s2|ты как?? всё нормально?
+s|вставай вставай вставай
+s|ничего, бывает, беги дальше
+s|{obstacle} вообще из ниоткуда
+s|держись, бык ещё не тут
+s|я бы тоже не заметил, честно
+s|отряхивайся и погнали
+g2|{obstacle}: 1, стример: 0
+g2|АХАХАХАХ
+g|я это пересмотрю раз двадцать
+g|клип, срочно клип
+g|звук был сочный
+g|вот за это я и смотрю
+g|прямо лицом, красота
+g|эпичнейший фейл
+t|как можно не заметить {obstacle:acc}
+t|глаза на затылке не помогают
+t|можно ещё раз, я моргнул
+t|новый рекорд: самое быстрое знакомство с препятствием
+t|а мы кричали
+t|чат предупреждал (нет)
+t|{obstacle} теперь твой лучший друг
+[en]
+s2|you ok?? that looked painful
+s|get up get up get up
+s|shake it off, keep going
+s|the {obstacle} came out of nowhere
+s|bull's not here yet, you got this
+s|honestly i'd have hit it too
+s|walk it off champ
+g2|{obstacle} 1, streamer 0
+g2|LMAOOOO
+g|clip it. CLIP IT
+g|i'm rewatching that twenty times
+g|the SOUND it made
+g|this is why i'm subscribed
+g|face first, beautiful
+g|fail of the year right there
+t|how did you not see the {obstacle}
+t|eyes in the back of your head don't help huh
+t|can you do that again, i blinked
+t|speedrun: meet the {obstacle}
+t|and we were yelling
+t|chat warned you (we didn't)
+t|{obstacle}: your new best friend

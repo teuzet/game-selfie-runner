@@ -1,0 +1,43 @@
+# occasion: zone_hot — бык ближе 8 м
+[ru]
+s2|БЕГИ БЕГИ БЕГИ
+s|он прямо за тобой!!
+s|не оглядывайся, просто беги
+s|держись, ещё чуть-чуть
+s|какой кадр, бык во весь рост
+s|это безумие, обожаю
+s|зрители валят толпой, держи
+g|сейчас будет полёт
+g|ставлю на рога
+g|бык уже облизывается
+g|ну всё, прощай стример
+t|ближе! ещё ближе!
+t|потрогай его, слабо?
+t|селфи с быком, давай
+t|бык хочет в коллаб
+t|только не тормози… или тормози, нам смешно
+t|поздоровайся с быком
+t|у тебя тут фанат с рогами
+t|скорость — это для трусов
+t|хвост бычий в кадре, или это уже нос?
+[en]
+s2|RUN RUN RUN
+s|it's RIGHT behind you!!
+s|don't look back, just run
+s|hold on, a little longer
+s|what a shot, full-size bull
+s|you're insane, love it
+s|viewers are pouring in, hold it
+g|liftoff incoming
+g|betting on the horns
+g|the bull is licking its lips
+g|well, it was nice knowing you
+t|closer! closer!
+t|touch it, i dare you
+t|selfie with the bull, go
+t|bull wants a collab
+t|just don't slow down... or do, it's funny
+t|say hi to the bull
+t|you've got a horned fan
+t|speed is for cowards
+t|is that the bull's tail in frame or its nose?

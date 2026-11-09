@@ -1,0 +1,43 @@
+# occasion: finish_soon — первый бегун вбежал на арену, 15 с до конца стрима
+[ru]
+s2|15 секунд! жми к арене!
+s|финиш близко, давай
+s|последний рывок
+s|ещё успеваешь
+s|выжимай всё, что осталось
+s|арена ждёт тебя
+s|мы досмотрим до конца
+g|кто-то уже на арене, а ты?
+g|ахах, опаздываешь
+g|не успеет, спорим
+g|кто-то сейчас останется на улице
+t2|стрим скоро кончится!!
+t|последние донаты, торопись
+t|ну хоть в конце сделай что-нибудь
+t|не успеешь — финиш прямо на улице, классика
+t|давай красиво, чтобы было что в нарезку
+t|последний шанс на фейл
+t|15 секунд славы
+t|а бык уже всё
+t|пора врезаться во что-нибудь на прощание
+[en]
+s2|15 seconds! push to the arena!
+s|finish is close, go
+s|last sprint
+s|you can still make it
+s|give it everything left
+s|the arena is waiting
+s|we're watching till the end
+g|someone's already in the arena, and you?
+g|lol running late
+g|won't make it, bet
+g|someone's getting left on the street
+t2|stream ending soon!!
+t|last donations, hurry
+t|at least do something at the end
+t|late? you finish where you stand, classic
+t|make it pretty, we need highlights
+t|last chance for a fail
+t|15 seconds of fame
+t|and the bull is done
+t|time to crash into something as a goodbye

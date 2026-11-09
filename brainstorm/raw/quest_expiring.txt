@@ -1,0 +1,49 @@
+# occasion: quest_expiring — до конца квеста 5 с
+[ru quest=*]
+s2|5 секунд! успеваешь!
+s|давай, давай, почти
+s|ещё можно, жми
+s|не сдавайся, донат рядом
+s|последний шанс, мы ждём
+s|верю до последней секунды
+g|не успеет
+g|прощай, донат
+g|тик-так, тик-так
+t2|ТИК-ТАК
+t|время, время!
+t|ну и чего ждём?
+t|мы тут вообще-то заплатить хотим
+t|5… 4… 3…
+t|опять ничего не сделает, спорим
+t|медленно, как бык на лестнице
+[ru quest=overtake]
+s|{name} совсем рядом, жми!
+t|{name} уходит, догоняй
+[ru quest=hold_bull]
+t|к быку, быстро, время!
+[ru quest=crash]
+t|{obstacle} сам себя не протаранит
+[en quest=*]
+s2|5 seconds! you can make it!
+s|go go go, almost
+s|still possible, push
+s|don't quit, donation is right there
+s|last chance, we're waiting
+s|believing till the last second
+g|not gonna make it
+g|bye bye donation
+g|tick tock, tick tock
+t2|TICK TOCK
+t|time, TIME!
+t|so what are we waiting for?
+t|we literally want to pay you
+t|5... 4... 3...
+t|bet nothing happens again
+t|slow like a bull on stairs
+[en quest=overtake]
+s|{name} is right there, push!
+t|{name} is getting away, catch up
+[en quest=hold_bull]
+t|to the bull, quick, time!
+[en quest=crash]
+t|go hit the {obstacle}, clock's ticking

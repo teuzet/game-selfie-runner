@@ -1,0 +1,302 @@
+# occasion: hint — подсказка о препятствии впереди. side — где препятствие от лица бегуна: left, right, center, full (вся ширина), zone (лестница)
+# obstacle=* — общие шаблоны с {obstacle}; side=* — фраза без стороны, годится к любой
+[ru obstacle=* side=*]
+h3|{OBSTACLE}!!!
+h2|{OBSTACLE} ВПЕРЕДИ
+h|осторожно, {obstacle}!
+h|там {obstacle}, смотри!!
+h|ВНИМАНИЕ: {obstacle}
+h|{obstacle} через пару метров!!
+[ru obstacle=* side=left]
+h3|{OBSTACLE} СЛЕВА!!
+h2|ПРАВЕЕ!!
+h|вправо, вправо, вправо!
+h|слева {obstacle}, уходи вправо
+h|{obstacle} слева!!
+h|правее, там {obstacle}
+h|ВПРАВО!! {OBSTACLE}!!
+h|держи правую сторону
+h|➡️➡️➡️
+h|не лево!! право!!
+[ru obstacle=* side=right]
+h3|{OBSTACLE} СПРАВА!!
+h2|ЛЕВЕЕ!!
+h|влево, влево, влево!
+h|справа {obstacle}, уходи влево
+h|{obstacle} справа!!
+h|левее, там {obstacle}
+h|ВЛЕВО!! {OBSTACLE}!!
+h|держи левую сторону
+h|⬅️⬅️⬅️
+h|не право!! лево!!
+[ru obstacle=* side=center]
+h3|{OBSTACLE} ПО ЦЕНТРУ!!
+h2|В СТОРОНУ!!
+h|прямо перед тобой {obstacle}!
+h|{obstacle} прямо по курсу
+h|уходи вбок, хоть куда!
+h|не по центру!!
+h|{OBSTACLE} ПРЯМО НА ТЕБЯ
+h|лево или право, но не прямо!
+h|⬅️ или ➡️, быстро!
+h|центр занят: {obstacle}
+[ru obstacle=pole side=left]
+h|столб слева, не поцелуй!
+h|левый столб!! правее
+h|слева фонарь, жми вправо
+h|столб у левой стены
+[ru obstacle=pole side=right]
+h|столб справа, не поцелуй!
+h|правый столб!! левее
+h|справа фонарь, жми влево
+h|столб у правой стены
+[ru obstacle=pole side=center]
+h|столб посреди улицы!!
+h|СТОЛБ ПРЯМО!! обходи
+h|фонарь прямо по центру
+h|столб в лоб, уходи вбок
+[ru obstacle=stall side=left]
+h|арбузы слева!!
+h|лоток слева, правее!
+h|слева рынок, не влети в арбузы
+h|арбузный лоток по левой стороне
+[ru obstacle=stall side=right]
+h|арбузы справа!!
+h|лоток справа, левее!
+h|справа рынок, не влети в арбузы
+h|арбузный лоток по правой стороне
+[ru obstacle=barrels side=left]
+h|бочки слева!!
+h|слева бочки, держи правее
+h|левые бочки, не сшиби
+h|бочки у левой стены
+[ru obstacle=barrels side=right]
+h|бочки справа!!
+h|справа бочки, держи левее
+h|правые бочки, не сшиби
+h|бочки у правой стены
+[ru obstacle=barrels side=center]
+h|бочки посередине!!
+h|БОЧКИ ПРЯМО, обходи
+h|бочки по центру, в сторону!
+h|бочки в лоб, уходи
+[ru obstacle=door side=left]
+h|дверь слева открывается!!
+h|слева дверь, правее!
+h|левая дверь, сейчас хлопнет
+h|ставень слева!!
+[ru obstacle=door side=right]
+h|дверь справа открывается!!
+h|справа дверь, левее!
+h|правая дверь, сейчас хлопнет
+h|ставень справа!!
+[ru obstacle=pots side=left]
+h|горшки слева!!
+h|слева цветы, правее
+h|левые горшки, не растопчи
+h|горшки у левой стены
+[ru obstacle=pots side=right]
+h|горшки справа!!
+h|справа цветы, левее
+h|правые горшки, не растопчи
+h|горшки у правой стены
+[ru obstacle=pots side=center]
+h|горшки посередине!!
+h|ГОРШКИ ПРЯМО
+h|цветы по центру, обходи
+h|горшки в лоб, в сторону!
+[ru obstacle=gawker side=left]
+h|зевака слева!!
+h|слева кто-то с телефоном, правее
+h|левый зевака снимает, обходи справа
+h|человек с телефоном слева!!
+[ru obstacle=gawker side=right]
+h|зевака справа!!
+h|справа кто-то с телефоном, левее
+h|правый зевака снимает, обходи слева
+h|человек с телефоном справа!!
+[ru obstacle=gawker side=center]
+h|зевака посреди дороги!!
+h|ЗЕВАКА ПРЯМО, он идёт поперёк
+h|человек с телефоном по центру!!
+h|зевака в лоб, смотри куда идёт
+[ru obstacle=laundry side=full]
+h3|БЕЛЬЁ!!
+h2|верёвка с бельём поперёк!
+h|бельё на всю улицу, не обойти
+h|сейчас будут носки в лицо
+h|простыни впереди!!
+h|пригнись! бельё!
+h|верёвка с бельём, сбавит скорость
+h|бельё во всю ширину!!
+h|осторожно, сушится бельё
+h|впереди стирка, держись
+h|рубашки на верёвке, щас запутаешься
+h|бельё! не обойти, просто прорвись
+h|занавес из простыней впереди
+h|БЕЛЬЁ ПОПЕРЁК
+[ru obstacle=stairs_zone side=zone]
+h3|ЛЕСТНИЦА!!
+h2|ступеньки впереди!
+h|лестница, сейчас будет медленно
+h|осторожно, ступени!
+h|впереди лестница, держись на ногах
+h|ступеньки!! не толкайся там
+h|лестница: все медленнее, бык тоже
+h|сейчас вниз по ступенькам
+h|ЛЕСТНИЦА ВПЕРЕДИ
+h|ступени, смотри под ноги (да, мы знаем)
+h|лестница! там легко упасть
+h|на лестнице не подставляйся
+h|ступеньки, держи равновесие
+h|лестница, тормози заранее
+[en obstacle=* side=*]
+h3|{OBSTACLE}!!!
+h2|{OBSTACLE} AHEAD
+h|careful, {obstacle}!
+h|{obstacle} incoming, look out!!
+h|WARNING: {obstacle}
+h|{obstacle} in a couple meters!!
+[en obstacle=* side=left]
+h3|{OBSTACLE} ON YOUR LEFT!!
+h2|GO RIGHT!!
+h|right, right, right!
+h|{obstacle} on the left, move right
+h|{obstacle} left!!
+h|go right, {obstacle} there
+h|RIGHT!! {OBSTACLE}!!
+h|stay on the right side
+h|➡️➡️➡️
+h|not left!! RIGHT!!
+[en obstacle=* side=right]
+h3|{OBSTACLE} ON YOUR RIGHT!!
+h2|GO LEFT!!
+h|left, left, left!
+h|{obstacle} on the right, move left
+h|{obstacle} right!!
+h|go left, {obstacle} there
+h|LEFT!! {OBSTACLE}!!
+h|stay on the left side
+h|⬅️⬅️⬅️
+h|not right!! LEFT!!
+[en obstacle=* side=center]
+h3|{OBSTACLE} DEAD AHEAD!!
+h2|MOVE ASIDE!!
+h|{obstacle} right in front of you!
+h|{obstacle} straight ahead
+h|dodge, any side!
+h|not the middle!!
+h|{OBSTACLE} STRAIGHT AT YOU
+h|left or right, just not straight!
+h|⬅️ or ➡️, quick!
+h|middle's taken: {obstacle}
+[en obstacle=pole side=left]
+h|pole on the left, don't kiss it!
+h|left pole!! go right
+h|lamp post left, push right
+h|pole by the left wall
+[en obstacle=pole side=right]
+h|pole on the right, don't kiss it!
+h|right pole!! go left
+h|lamp post right, push left
+h|pole by the right wall
+[en obstacle=pole side=center]
+h|pole in the middle of the street!!
+h|POLE STRAIGHT AHEAD!! go around
+h|lamp post dead center
+h|pole to the face, dodge
+[en obstacle=stall side=left]
+h|melons on the left!!
+h|stall on the left, go right!
+h|market left, don't hit the melons
+h|melon stall on the left side
+[en obstacle=stall side=right]
+h|melons on the right!!
+h|stall on the right, go left!
+h|market right, don't hit the melons
+h|melon stall on the right side
+[en obstacle=barrels side=left]
+h|barrels left!!
+h|barrels on the left, keep right
+h|left barrels, don't knock them
+h|barrels by the left wall
+[en obstacle=barrels side=right]
+h|barrels right!!
+h|barrels on the right, keep left
+h|right barrels, don't knock them
+h|barrels by the right wall
+[en obstacle=barrels side=center]
+h|barrels in the middle!!
+h|BARRELS AHEAD, go around
+h|barrels dead center, move!
+h|barrels to the face, dodge
+[en obstacle=door side=left]
+h|door opening on the left!!
+h|door left, go right!
+h|left door, about to swing
+h|shutter on the left!!
+[en obstacle=door side=right]
+h|door opening on the right!!
+h|door right, go left!
+h|right door, about to swing
+h|shutter on the right!!
+[en obstacle=pots side=left]
+h|pots on the left!!
+h|flowers left, go right
+h|left pots, don't stomp them
+h|pots by the left wall
+[en obstacle=pots side=right]
+h|pots on the right!!
+h|flowers right, go left
+h|right pots, don't stomp them
+h|pots by the right wall
+[en obstacle=pots side=center]
+h|pots in the middle!!
+h|POTS AHEAD
+h|flowers dead center, go around
+h|pots to the face, move aside!
+[en obstacle=gawker side=left]
+h|gawker on the left!!
+h|someone filming on the left, go right
+h|left guy's filming, pass on the right
+h|person with a phone on the left!!
+[en obstacle=gawker side=right]
+h|gawker on the right!!
+h|someone filming on the right, go left
+h|right guy's filming, pass on the left
+h|person with a phone on the right!!
+[en obstacle=gawker side=center]
+h|gawker in the middle of the road!!
+h|GAWKER AHEAD, walking across
+h|person with a phone dead center!!
+h|gawker to the face, watch where they go
+[en obstacle=laundry side=full]
+h3|LAUNDRY!!
+h2|laundry line across the street!
+h|laundry wall to wall, no way around
+h|socks to the face incoming
+h|bedsheets ahead!!
+h|duck! laundry!
+h|laundry line, you'll slow down
+h|laundry across the whole street!!
+h|careful, laundry drying
+h|wash day ahead, brace
+h|shirts on a line, you'll get tangled
+h|laundry! can't dodge, just push through
+h|curtain of bedsheets ahead
+h|LAUNDRY ACROSS
+[en obstacle=stairs_zone side=zone]
+h3|STAIRS!!
+h2|steps ahead!
+h|stairs, it's about to get slow
+h|careful, steps!
+h|stairs ahead, stay on your feet
+h|steps!! no shoving there
+h|stairs: everyone's slower, bull too
+h|going down the steps now
+h|STAIRS AHEAD
+h|steps, watch your feet (you know what we mean)
+h|stairs! easy to fall there
+h|don't get caught on the stairs
+h|steps, keep your balance
+h|stairs, slow down early

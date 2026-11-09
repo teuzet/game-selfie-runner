@@ -1,0 +1,69 @@
+# occasion: quest_given — зрители выдали квест. quest: hold_bull, crash ({obstacle} — заказанный тип), down_neighbor, overtake ({name} — кого обогнать), clean_run; * — любой
+[ru quest=*]
+s|о, задание! ты справишься
+s|давай, донат ждёт
+s|мы в тебя верим
+s|лёгкие деньги, давай
+t2|ЗАДАНИЕ!! делай делай делай
+t|слабо?
+t|кто не выполнит — тот скучный
+t|чат требует зрелищ
+[ru quest=hold_bull]
+s|5 секунд у быка, ты сможешь
+t2|к быку! 5 секунд!
+t|подойди к быку, он не кусается (кусается)
+t|постой с быком, поболтайте
+[ru quest=crash]
+s|в {obstacle:acc}, но аккуратно
+t2|ВРЕЖЬСЯ В {OBSTACLE:acc}!!
+t|хотим {obstacle:acc} лицом
+t|тебя там ждут: {obstacle}
+[ru quest=down_neighbor]
+s|уложи кого-нибудь, им не привыкать
+t2|роняй соседа!
+t|толкни кого-нибудь в лоток, мы заплатим
+t|подножка = донат
+[ru quest=overtake]
+s|обгони {name}, ты быстрее
+t2|ОБГОНИ {name}!!
+t|{name} слишком задаётся, обгони
+t|покажи {name} спину
+[ru quest=clean_run]
+s|20 секунд без косяков, давай
+t2|чистый пробег! ни одного фейла!
+t|без фейлов? ну попробуй
+t|20 секунд без столбов, спорим, нет
+[en quest=*]
+s|ooh a quest! you got this
+s|go, a donation is waiting
+s|we believe in you
+s|easy money, go
+t2|QUEST!! do it do it do it
+t|bet you won't
+t|skip it and you're boring
+t|chat demands a show
+[en quest=hold_bull]
+s|5 seconds near the bull, you can do it
+t2|to the bull! 5 seconds!
+t|go hug the bull, it doesn't bite (it does)
+t|hang out with the bull, have a chat
+[en quest=crash]
+s|into the {obstacle}, but carefully
+t2|CRASH INTO THE {OBSTACLE}!!
+t|we want {obstacle}, face first
+t|the {obstacle}: waiting for you
+[en quest=down_neighbor]
+s|knock someone down, they'll survive
+t2|drop a neighbor!
+t|shove someone into a stall, we'll pay
+t|trip = donation
+[en quest=overtake]
+s|pass {name}, you're faster
+t2|OVERTAKE {name}!!
+t|{name} is too smug, pass them
+t|show {name} your back
+[en quest=clean_run]
+s|20 seconds, no mistakes, go
+t2|clean run! zero fails!
+t|no fails? sure, try
+t|20 seconds with no poles, bet you can't

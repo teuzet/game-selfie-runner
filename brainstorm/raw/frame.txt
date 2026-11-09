@@ -1,0 +1,87 @@
+# occasion: frame — «влез в кадр». victim: {name} влез в кадр бегуна и тянет зрителей; actor: бегун влез в кадр к {name}
+[ru role=victim]
+s2|эй, {name} у тебя в кадре!
+s|{name}, это не твой стрим
+s|убегай от {name}, у тебя зрителей воруют
+s|оторвись, не давай себя снимать
+s|наши зрители — наши, {name}
+s|толкни {name}, честно заслужено
+s|не ведись, беги своё
+g|{name} красуется, а ты просто бежишь
+g|ахах {name} уже машет твоим зрителям
+g|я, пожалуй, схожу посмотрю {name}
+g|у {name} причёска лучше, извини
+t|{name}, сколько стоит реклама?
+t|у тебя тут фотобомба
+t|кто это за спиной? а, {name}
+t|у нас теперь совместный стрим?
+t|{name} в кадре смотрится лучше тебя
+t|{name} передаёт привет твоим зрителям
+t|селфи с {name}, мило
+t|кадр общий, донаты раздельные
+t|не хочешь поделиться с {name} ещё и донатами?
+t|{name} — лучший гость этого эфира
+[ru role=actor]
+s2|ВЛЕЗАЙ ВЛЕЗАЙ
+s|забираем зрителей, всё честно
+s|улыбайся в чужую камеру
+s|держись рядом, пусть смотрят нас
+g3|привет зрителям {name}!
+g2|{name} даже не замечает ахах
+g|помаши им ручкой
+g|{name} теряет зрителей, мы растём
+g|фотобомба мирового уровня
+g|лучшее рекламное место на улице
+g|их чат в шоке
+t|{name}, мы просто мимо проходили
+t|соседний стрим теперь наш
+t|{name}, подвинься, нам плохо видно
+t|бесплатная реклама, спасибо {name}
+t|дальше держись, а то {name} обидится
+t|влезть в кадр — это искусство
+t|у нас коллаб, {name} просто не знает
+t|{name}, твои зрители переходят к нам
+t|скажи им адрес нашего стрима
+[en role=victim]
+s2|hey, {name} is in your frame!
+s|{name}, this is not your stream
+s|run from {name}, they're stealing viewers
+s|break away, don't let them photobomb
+s|our viewers are ours, {name}
+s|shove {name}, they deserve it
+s|ignore it, run your race
+g|{name} is posing and you're just running
+g|lmao {name} already waving at your chat
+g|think i'll go check out {name}'s stream
+g|{name} has better hair, sorry
+t|{name}, how much for the ad slot?
+t|photobomb alert
+t|who's that behind you? oh, {name}
+t|so this is a collab now?
+t|{name} looks better in your frame than you
+t|{name} says hi to your viewers
+t|selfie with {name}, cute
+t|shared frame, separate donations
+t|want to share your donations with {name} too?
+t|{name}, best guest of this stream
+[en role=actor]
+s2|GET IN THERE
+s|stealing viewers, fair and square
+s|smile into someone else's camera
+s|stay close, let them watch us
+g3|hi {name}'s viewers!
+g2|{name} hasn't even noticed lmao
+g|wave at them
+g|{name} losing viewers, we're growing
+g|world-class photobomb
+g|best ad spot on the street
+g|their chat is shook
+t|{name}, we were just passing by
+t|the neighbor stream is ours now
+t|{name}, move over, we can't see
+t|free promo, thanks {name}
+t|keep it up, or {name} will get sad
+t|photobombing is an art
+t|we're doing a collab, {name} just doesn't know
+t|{name}, your viewers are coming over
+t|tell them our channel name

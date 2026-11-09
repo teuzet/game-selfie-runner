@@ -1,0 +1,85 @@
+# occasion: trip — подножка. victim: бегун споткнулся о подножку {name}; actor: {name} упал от подножки бегуна
+[ru role=victim]
+s2|ПОДНОЖКА?! серьёзно?!
+s|вставай, это нечестно
+s|{name}, ну ты и жук
+s|мы запомнили, {name}
+s|давай, догоняй и мсти
+s|бедные коленки
+s|не сдавайся, бык ещё далеко
+s|репорт на {name}, шучу, но обидно
+g2|ахахах шлёп
+g|вот это кувырок
+g|{name} мастер подножек
+g|я пересмотрю это в замедлении
+g|красивое падение, на 9 из 10
+g|ноги в разные стороны
+t|под ноги смотреть не учили?
+t|{name}: «упс»
+t|старое доброе «ой, я случайно»
+t|кто последний — тот и подножка
+t|лежишь красиво, но бык не ждёт
+t|это была твоя очередь падать
+[ru role=actor]
+s2|ГЕНИАЛЬНО
+s|честно? заслужено
+s|тактика, уважаю
+s|это не грязно, это стратегия
+g3|{name} на асфальте ахаха
+g2|ШЛЁП
+g|{name} кувыркается, обожаю
+g|вот это подножка, учебник
+g|{name} целует брусчатку
+g|клип года
+g|ахах {name} даже не понимает
+g|минус {name}, плюс мы
+g|звук был идеальный
+t|ой, а мы случайно
+t|{name}, шнурки завязаны?
+t|извинись хотя бы… ладно, не надо
+t|{name} теперь твой фанат, наверное
+t|можно было и помочь подняться (нет)
+t|подножка с любовью
+t|в следующий раз {name} будет смотреть под ноги
+[en role=victim]
+s2|A TRIP?! seriously?!
+s|get up, that's dirty
+s|{name}, you sneaky little
+s|we'll remember this, {name}
+s|go catch up and get revenge
+s|poor knees
+s|don't give up, the bull's still far
+s|reporting {name}, jk, but rude
+g2|hahaha SPLAT
+g|what a tumble
+g|{name} is the trip master
+g|watching this in slow-mo later
+g|beautiful fall, 9/10
+g|legs everywhere
+t|nobody taught you to watch your feet?
+t|{name}: "oops"
+t|classic "oh sorry, accident"
+t|last one in line gets tripped
+t|nice lying down, but the bull won't wait
+t|it was your turn to fall
+[en role=actor]
+s2|GENIUS
+s|honestly? deserved
+s|tactics, respect
+s|it's not dirty, it's strategy
+g3|{name} eating pavement hahaha
+g2|SPLAT
+g|{name} tumbling, i love it
+g|textbook trip
+g|{name} kissing the cobblestones
+g|clip of the year
+g|lmao {name} has no clue
+g|minus {name}, plus us
+g|the sound was perfect
+t|oops, total accident
+t|{name}, shoelaces tied?
+t|at least say sorry... nah
+t|{name} is your biggest fan now probably
+t|could help them up (we won't)
+t|a trip with love
+t|next time {name} will watch their feet

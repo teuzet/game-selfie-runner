@@ -1,0 +1,47 @@
+# occasion: quest_failed — время квеста вышло
+[ru quest=*]
+s|ничего, следующее будет
+s|почти же, ну
+s|не страшно, бык важнее
+s|в другой раз точно
+s|мы всё равно с тобой
+s|задание было злое, честно
+g2|ПРОВАЛ
+g|ахах, не вышло
+g|минус донат, минус зрители
+g|я так и знал
+g|и деньги остались у нас
+g|вот это разочарование
+g|зрители уходят молча
+t|мы же просили
+t|скучно, переключаюсь
+t|даже бык разочарован
+t|задание было для детсада
+t|время вышло, а ты нет
+t|ну хоть бежишь красиво
+t|в следующий раз попросим что-то попроще: просто бежать
+[ru quest=overtake]
+t|{name} даже не в курсе, что это была гонка
+[en quest=*]
+s|it's ok, next one
+s|so close though
+s|no worries, the bull matters more
+s|next time for sure
+s|we're still with you
+s|that quest was evil, honestly
+g2|FAILED
+g|lmao couldn't do it
+g|minus donation, minus viewers
+g|knew it
+g|and we keep our money
+g|what a disappointment
+g|viewers leaving quietly
+t|we literally asked
+t|boring, switching streams
+t|even the bull is disappointed
+t|that quest was for toddlers
+t|time's up, and so are you
+t|well, at least you run nicely
+t|next time we'll ask for something easier: just run
+[en quest=overtake]
+t|{name} didn't even know it was a race

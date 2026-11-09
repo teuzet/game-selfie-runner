@@ -1,0 +1,89 @@
+# тексты донатов по причине: quest — квест выполнен, tossed — подброшен («на лечение»), pond — упал в пруд, any — любая
+[ru reason=quest]
+за задание, честно заработано
+держи, заслужено
+вот это контент, на
+за смелость
+на кроссовки получше
+за лучшие 5 секунд эфира
+плачу за зрелище
+ещё одно такое — и ещё донат
+за то, что без страха
+на мороженое после забега
+за риск и красоту
+сделай так ещё раз
+лови, легенда
+от всего чата
+за «я смогу» — и ведь получилось
+[ru reason=tossed]
+держи на лечение
+на пластырь
+на новую селфи-палку
+это за полёт
+на подушку для приземления
+лечись, возвращайся
+за самый красивый подброс
+на страховку от быков
+на мазь от ушибов
+крылья бы тебе
+[ru reason=pond]
+на полотенце
+на сухие носки
+за освежающий заплыв
+на уточку для пруда
+утка одобряет
+за брызги в камеру
+лови, водоплавающий стример
+на фен
+[ru reason=any]
+просто так, ты классный
+на кофе
+привет из чата
+мини-донат, мега-любовь
+за атмосферу
+на удачу
+сохрани этот стрим навсегда
+[en reason=quest]
+for the quest, fair and square
+here, you earned it
+now that's content, take it
+for the bravery
+for better sneakers
+for the best 5 seconds of the stream
+paying for the show
+do it again and get more
+catch, legend
+from the whole chat
+for "i can do it" and you did
+ice cream after the run
+for the risk and the style
+one more like that please
+for not chickening out
+[en reason=tossed]
+here's for the doctor
+for band-aids
+for a new selfie stick
+that's for the flight
+for a landing pillow
+heal up, come back
+for the prettiest toss
+for bull insurance
+for bruise cream
+you need wings
+[en reason=pond]
+for a towel
+for dry socks
+for the refreshing swim
+for a pond duck
+the duck approves
+for splashing the camera
+catch, water streamer
+for a hair dryer
+[en reason=any]
+just because you're cool
+for coffee
+hi from chat
+mini donation, mega love
+for the vibes
+for good luck
+keeping this stream forever

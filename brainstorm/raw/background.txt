@@ -1,0 +1,53 @@
+# occasion: background — фоновая болтовня, идёт всегда, частота от числа зрителей
+[ru]
+s|всем привет из чата
+s|лучший стрим на этой улице
+s|я за тебя болею
+s|давай, ты можешь
+s|какой красивый городок
+s|погода для бега идеальная
+s|только зашёл, что я пропустил?
+s|сохраняю на потом
+s|мама, я в чате
+s|кто смотрит с работы?
+g|жду первый фейл
+g|кто-нибудь уже падал?
+g|ставлю на столб
+g|в соседнем стриме уже был фейл, ахах
+t|а бык настоящий?
+t|чат, кто тут самый быстрый?
+t|бег на селфи-палке — новый спорт
+t|у тебя камера трясётся
+t|бык сегодня в форме
+t|а где мой донат-привет?
+t|зачем я это смотрю… не могу оторваться
+t|стрим ради быка, остальное фон
+t|кто-нибудь знает, сколько бежать?
+t|если упадёшь — не обижусь
+t|придумываю квест…
+[en]
+s|hi from chat
+s|best stream on this street
+s|rooting for you
+s|come on, you got this
+s|what a pretty town
+s|perfect weather for running
+s|just joined, what did i miss?
+s|saving this for later
+s|hi mom, i'm in chat
+s|who's watching from work?
+g|waiting for the first fail
+g|has anyone fallen yet?
+g|my money's on the pole
+g|the neighbor streamer already ate dirt lol
+t|is the bull real?
+t|chat, who's the fastest here?
+t|selfie-stick running is a new sport
+t|your camera is shaking
+t|bull's in great shape today
+t|where's my shoutout?
+t|why am i watching this... can't stop
+t|here for the bull, rest is background
+t|anyone know how far it is?
+t|if you fall i won't be mad
+t|thinking of a quest...
