@@ -410,7 +410,7 @@ namespace Game.Core.Tests
         }
 
         [Fact]
-        public void ChargeSpeedIsAbout11AndLasts3Seconds()
+        public void ChargeSpeedIsAbout11AndLasts2Seconds()
         {
             var sim = new Simulation(Cfg(21, SeatKind.Human), Data);
             RunTo(sim, Release);
@@ -426,7 +426,7 @@ namespace Game.Core.Tests
                 ticks++;
             }
             _out.WriteLine($"ticks={ticks} maxSpeed={Dbl(maxSpeed)}");
-            Assert.InRange(ticks, 85, 91);
+            Assert.InRange(ticks, Data.BullData.ChargeSec * 30 - 5, Data.BullData.ChargeSec * 30 + 1);
             Assert.InRange(Dbl(maxSpeed), 9.5, 11.01);
         }
 
@@ -509,14 +509,132 @@ namespace Game.Core.Tests
             Assert.True(totalTosses > 100, "подбросов подозрительно мало: " + totalTosses);
         }
 
+        // F-072, design/F-100.md → «Рывок, от которого можно уйти» (3.2):
+        // «Начало рывка — событие ядра «бык рвётся на X» (цель X…). Боты по-прежнему видят «рывок на меня» из состояния.»
+        // «Рывок — 2 с на 11 м/с (было 3 с). Поперёк бык доворачивает за целью не быстрее 1 м/с (было 6): шаг вбок 1.2 м при руле 3 м/с
+        //  выводит из-под рогов (≤ 1 м между центрами) за 0.5 с.»
+        // «Промах. Бык в рывке поравнялся по s с любым бегуном, который дальше 1 м поперёк, — рывок кончается: бык не обгоняет (встаёт вровень),
+        //  2 с идёт на 30% медленнее и 1 с не доворачивает.»
+        // «Достал (≤ 1 м) — подброс с причиной «рывок»; кончился рывок, никого не достав, — бык возвращается к резинке.»
+        // «вбок + спринт — уходит при d ≥ 2.5 м»; «Кто не ответил — подброшен.»
+
+        /// <summary>Манекен в 6 м впереди быка (остальные далеко) в тик начала рывка; reaction — тиков до ответа, side — шаг вбок.</summary>
+        static (Simulation sim, int tossedTick, int cause, int events) RunDodge(ulong seed, bool stand, bool sidestep, bool sprint, int reaction)
+        {
+            var sim = Prepared(seed);
+            sim.State.Charge.Cooldown = 1;
+            double bs = Dbl(sim.State.Bull.S);
+            long s0 = Fx(bs + 6).Raw, x0 = sim.State.Bull.X;
+            long runSpeed = Fx(6.5).Raw;
+            int started = -1, tossed = -1, events = 0;
+            for (int t = 0; t < 120 && tossed < 0; t++)
+            {
+                for (int i = 1; i < 4; i++) sim.State.Runners[i].S = sim.State.Bull.S + Fx(500 + i * 10).Raw;
+                if (started < 0)
+                {
+                    sim.State.Runners[0].S = s0; sim.State.Runners[0].X = x0; sim.State.Runners[0].Speed = stand ? 0 : runSpeed;
+                    sim.State.Charge.Cooldown = 1;
+                }
+                else if (stand) { sim.State.Runners[0].S = s0; sim.State.Runners[0].X = x0; sim.State.Runners[0].Speed = 0; }
+                int since = started < 0 ? -1 : sim.Tick - started;
+                bool react = since >= reaction;
+                int steer = react && sidestep && since < reaction + 12 ? 1 : 0; // 12 тиков × 3 м/с ≈ 1.2 м
+                int tempo = react && sprint ? 1 : 0;
+                sim.Step(TickInputs.Empty.With(0, new PlayerInput(steer, tempo, false)));
+                events += sim.Events.CountOf(Game.Core.Events.RaceEventType.BullCharge);
+                if (started < 0 && sim.State.Charge.Count > 0) started = sim.Tick - 1;
+                if (sim.State.Runners[0].Toss.Tossed > 0) tossed = sim.Tick;
+            }
+            return (sim, tossed, sim.State.Runners[0].Toss.LastCause, events);
+        }
+
         [Fact]
-        public void ChargesIn5Minutes_Between20And30()
+        public void DummyAt6m_SidestepAndSprint_EscapesTheCharge()
+        {
+            for (ulong seed = 4; seed < 9; seed++)
+            {
+                var (sim, tossed, _, events) = RunDodge(seed, stand: false, sidestep: true, sprint: true, reaction: 9);
+                Assert.Equal(-1, tossed);
+                Assert.Equal(1, events);
+                Assert.True(sim.State.Runners[0].S >= sim.State.Bull.S, "бегун позади быка");
+                Assert.Equal(0, sim.State.Charge.ChargeLeft); // рывок кончился промахом
+            }
+        }
+
+        [Fact]
+        public void DummyAt6m_SidestepOnly_EscapesTheCharge()
+        {
+            var (_, tossed, _, _) = RunDodge(4, stand: false, sidestep: true, sprint: false, reaction: 9);
+            Assert.Equal(-1, tossed);
+        }
+
+        [Fact]
+        public void DummyAt6m_StandingStill_IsTossedByTheCharge()
+        {
+            for (ulong seed = 4; seed < 9; seed++)
+            {
+                var (sim, tossed, cause, events) = RunDodge(seed, stand: true, sidestep: false, sprint: false, reaction: 0);
+                Assert.True(tossed > 0, "стоящий манекен не подброшен");
+                Assert.Equal(TossCause.Charge, cause);
+                Assert.Equal(1, events);
+            }
+        }
+
+        [Fact]
+        public void MissEndsChargeAndBullDoesNotPassTheRunner()
+        {
+            var (sim, tossed, _, _) = RunDodge(4, stand: false, sidestep: true, sprint: true, reaction: 9);
+            Assert.Equal(-1, tossed);
+            for (int t = 0; t < 120; t++)
+            {
+                for (int i = 1; i < 4; i++) sim.State.Runners[i].S = sim.State.Bull.S + Fx(500 + i * 10).Raw;
+                sim.Step(TickInputs.Empty.With(0, new PlayerInput(0, 1, false)));
+                Assert.True(sim.State.Runners[0].S >= sim.State.Bull.S);
+                Assert.Equal(0, sim.State.Runners[0].Toss.Tossed);
+            }
+        }
+
+        [Fact]
+        public void BullChargeEvent_OnePerCharge_SeatIsTarget_BotsStillSeeChargeState()
+        {
+            var sim = new Simulation(Cfg(12, SeatKind.Bot, Glamour, Athlete, Grandma, Nerd), Data).Running();
+            int events = 0;
+            for (int t = 0; t < 4500; t++)
+            {
+                sim.Step(TickInputs.Empty);
+                int n = sim.Events.CountOf(Game.Core.Events.RaceEventType.BullCharge);
+                Assert.InRange(n, 0, 1);
+                if (n == 0) continue;
+                events++;
+                for (int k = 0; k < sim.Events.Count; k++)
+                    if (sim.Events[k].Type == Game.Core.Events.RaceEventType.BullCharge)
+                    {
+                        Assert.Equal(sim.State.Charge.LastChargeTarget, sim.Events[k].Seat);
+                        Assert.Equal(sim.Tick - 1, sim.Events[k].Tick);
+                        Assert.Equal(sim.State.Charge.Count, events);
+                    }
+            }
+            Assert.True(events > 5);
+            Assert.Equal(sim.State.Charge.Count, events);
+        }
+
+        [Fact]
+        public void ChargeNumbers_FromF100Section4()
+        {
+            Assert.Equal(2, Data.BullData.ChargeSec);
+            Assert.InRange((double)Data.BullData.ChargeSteer, 0, 1);
+            Assert.Equal(1, Data.BullData.ChargeMissNoSteerSec);
+        }
+
+        [Fact]
+        public void ChargesIn5Minutes_Between18And30()
         {
             var sb = new StringBuilder();
             int bad = 0;
             for (ulong seed = 1; seed <= 20; seed++)
             {
-                var sim = new Simulation(Cfg(seed, SeatKind.Human, (int)(seed % 4), Nerd, Athlete, Glamour), Data).Running();
+                // боты в составе плейтеста (F-100 §3.2 считан по ним): случайный ввод людей подбрасывает контактом и оставляет быка без целей
+                var sim = new Simulation(Game.Sim.RaceRecorder.MakeConfig(seed, Data), Data).Running();
                 var rng = new DetRandom(seed);
                 int ticks = 0;
                 // забег закрыт (F-020) — рывков больше нет, как и после входа быка на арену
@@ -525,9 +643,8 @@ namespace Game.Core.Tests
                 // нормируем на 9000 тиков, если до арены дошли раньше
                 double per5 = n * 9000.0 / System.Math.Max(ticks, 1);
                 sb.AppendLine($"seed {seed}: ticks={ticks} charges={n} per5min={per5:F1} tosses={sim.State.Charge.Tosses}");
-                // F-071: нижняя граница 2 (было 15): лежащий и 30 с охлаждения после подброса не дают быку цели (F-100 §3.1 п.6),
-                // а при случайном входе бык часто подбрасывает контактом; 20–30 рывков вернёт F-072 (рывок 2 с на 11 м/с, F-100 §3.2)
-                if (per5 < 2 || per5 > 30) bad++;
+                // F-100 §3.2: «Рывков ≈ 20–25 за забег (тест — 18–30)» (F-071 временно держала нижнюю границу 2, F-072 вернула)
+                if (per5 < 18 || per5 > 30) bad++;
             }
             _out.WriteLine(sb.ToString());
             Assert.True(bad == 0, sb.ToString());

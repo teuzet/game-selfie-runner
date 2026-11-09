@@ -15,12 +15,13 @@ namespace Game.Core
         public int Timer;     // Pen: тиков до срыва из загона
         public int Mode;      // BullMode
         public int SlowTicks; // оставшиеся тики замедления (ставят другие фичи через BullMovement.Slow)
+        public int NoSteerTicks; // F-100 §3.2 п.3: после промаха рывка бык не доворачивает поперёк (тики)
 
         public ulong Hash(ulong h)
         {
             h = Math.Hashing.Mix(h, (ulong)S); h = Math.Hashing.Mix(h, (ulong)X); h = Math.Hashing.Mix(h, (ulong)Speed);
             h = Math.Hashing.Mix(h, (ulong)Phase); h = Math.Hashing.Mix(h, (ulong)Timer);
-            h = Math.Hashing.Mix(h, (ulong)Mode);
+            h = Math.Hashing.Mix(h, (ulong)Mode); h = Math.Hashing.Mix(h, (ulong)(uint)NoSteerTicks);
             return Math.Hashing.Mix(h, (ulong)SlowTicks);
         }
     }

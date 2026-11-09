@@ -65,6 +65,9 @@ namespace Game.Core.Events
                 }
                 e.SeenTripped = a.Tripped;
 
+                // начало рывка — факт тика в состоянии быка: один старт за тик, своего счётчика «виденного» не нужно
+                if (st.Charge.LastChargeTarget == i && st.Charge.LastChargeTick == tick) ev.Add(RaceEventType.BullCharge, tick, i);
+
                 for (int n = t.Tossed - e.SeenTossed; n > 0; n--)
                 {
                     ev.Add(RaceEventType.Tossed, tick, i, -1, t.LastCause);

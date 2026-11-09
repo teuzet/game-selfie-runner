@@ -122,7 +122,11 @@ namespace Game.Core.Bull
                 if (c.Target < 0 || Shielded(sim, c.Target)) { c.ChargeLeft = 0; c.Target = -1; } // рывок на ставшего защищённым прекращается
             }
             bool rushing = c.ChargeLeft > 0; // причина подброса в этом тике — рывок, даже если он кончится в этом же тике
-            if (rushing) MoveCharging(sim, street, ref b, ref c, prevBullS);
+            if (rushing)
+            {
+                MoveCharging(sim, street, ref b, ref c, prevBullS);
+                if (b.Phase == (int)BullPhase.Charge) Miss(sim, ref b, ref c, prevBullS);
+            }
 
             if (b.Phase != (int)BullPhase.Arena) Contacts(sim, street, ref b, ref c, prevBullS, rushing);
         }
@@ -194,6 +198,32 @@ namespace Game.Core.Bull
             }
             else if (--c.ChargeLeft == 0) c.Target = -1;
             b.S = s.Raw; b.X = x.Raw; b.Speed = speed.Raw;
+        }
+
+        /// <summary>
+        /// F-100 §3.2 п.3 «Промах»: бык в рывке поравнялся по s с бегуном, который дальше chargeReach поперёк, — рывок кончается:
+        /// бык встаёт вровень (не обгоняет, идёт не быстрее него), chargeBullSlowSec идёт медленнее и chargeMissNoSteerSec не доворачивает.
+        /// Достанувшего (≤ chargeReach) подбросит Contacts этого же тика.
+        /// </summary>
+        static void Miss(Simulation sim, ref BullState b, ref BullChargeState c, long prevBullS)
+        {
+            var st = sim.State;
+            var bd = sim.BullData;
+            Fixed reach = bd.ChargeReach;
+            for (int i = 0; i < RaceConfig.SeatCount; i++)
+            {
+                ref RunnerState r = ref st.Runners[i];
+                if (Shielded(sim, i) || r.S > b.S) continue;
+                Fixed dx = Fixed.FromRaw(r.X - b.X);
+                if (dx * dx <= reach * reach) continue;
+                long alongside = r.S < prevBullS ? prevBullS : r.S;
+                if (b.S > alongside) b.S = alongside;
+                if (b.Speed > r.Speed) b.Speed = r.Speed > 0 ? r.Speed : 0;
+                c.ChargeLeft = 0; c.Target = -1;
+                BullMovement.Slow(ref b, bd.ChargeBullSlowSec * Tps);
+                b.NoSteerTicks = bd.ChargeMissNoSteerSec * Tps;
+                return;
+            }
         }
 
         /// <summary>

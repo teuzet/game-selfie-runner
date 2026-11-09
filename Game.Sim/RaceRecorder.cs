@@ -217,8 +217,11 @@ namespace Game.Sim
                     bonus = "+" + sim.EconomyData.TossViewers + " зрителей, +" + sim.EconomyData.TossDonations + " донатов";
                     text = "Бык подбросил: " + Label(rec, seat);
                     break;
+                case RaceEventType.BullCharge:
+                    text = "Бык рвётся на " + Names.CharacterAcc(rec.Seats[seat].Character) + " (" + Names.Temperament(rec.Seats[seat].Temperament) + ")";
+                    break;
                 case RaceEventType.Rose:
-                    text = Label(rec, seat) + " " + Verb(rec, seat, "встал", "встала") + ": сигнал вернулся";
+                    text =Label(rec, seat) + " " + Verb(rec, seat, "встал", "встала") + ": сигнал вернулся";
                     break;
                 case RaceEventType.Shoved:
                     bonus = "+" + sim.EconomyData.ShoveViewers + " зрителей, цель " + sim.EconomyData.GotShovedViewers + " зрителей";
