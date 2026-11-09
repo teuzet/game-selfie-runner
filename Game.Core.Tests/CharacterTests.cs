@@ -24,7 +24,8 @@ namespace Game.Core.Tests
         {
             var c = Data.CharacterData.Characters;
             Assert.Equal(4, c.Length);
-            double[] speed = { 0.92, 1.10, 0.88, 1.00 }, stab = { 0.7, 1.2, 1.6, 0.9 }, view = { 1.4, 0.9, 1.2, 1.0 };
+            // скорость спортсмена 1.05 — design/F-101.md §3.2 (было 1.10)
+            double[] speed = { 0.92, 1.05, 0.88, 1.00 }, stab = { 0.7, 1.2, 1.6, 0.9 }, view = { 1.4, 0.9, 1.2, 1.0 };
             double[] taste = { 1.0, 1.6, 0.6, 1.0 }, nosig = { 3, 2.5, 5, 3 };
             Perk[] perk = { Perk.GlamourLoyalViewers, Perk.AthleteEndurance, Perk.GrandmaBag, Perk.NerdModerator };
             for (int i = 0; i < 4; i++)
@@ -61,9 +62,23 @@ namespace Game.Core.Tests
         public void GlamourSlowerThanAthleteByExpectedTime()
         {
             double glam = TicksTo1800(0), ath = TicksTo1800(1);
-            double expected = 1.10 / 0.92;
+            // design/F-101.md §3.2: «Спортсмен ×1.10 → ×1.05»; гламур 0.92
+            double expected = Dbl(Data.CharacterData.Get(1).Speed) / Dbl(Data.CharacterData.Get(0).Speed); // ≈ 1.05 / 0.92
             Assert.True(glam > ath);
             Assert.InRange(glam / ath, expected * 0.97, expected * 1.03);
+        }
+
+        [Fact]
+        public void JogOfEveryCharacterSlowerThanBullCruise()
+        {
+            // design/F-101.md §3.2: «трусца любого персонажа медленнее крейсера быка»; запас не меньше 0.2 м/с
+            Fixed cruise = Data.BullData.CruiseSpeed;
+            for (int id = 0; id < Data.CharacterData.Characters.Length; id++)
+            {
+                var rd = Characters.ForSeat(Data.RunnerData, Data.CharacterData.Get(id));
+                Assert.True(rd.JogSpeed < cruise, $"персонаж {id}: трусца {Dbl(rd.JogSpeed)} ≥ крейсер {Dbl(cruise)}");
+                Assert.True(Dbl(cruise) - Dbl(rd.JogSpeed) >= 0.2, $"персонаж {id}: запас < 0.2 м/с");
+            }
         }
 
         [Fact]

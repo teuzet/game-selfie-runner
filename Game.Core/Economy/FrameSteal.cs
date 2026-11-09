@@ -53,7 +53,8 @@ namespace Game.Core.Economy
                 long amount = rate.Raw / Simulation.TicksPerSecond;
                 ref ViewerState vv = ref st.Runners[victim].Viewing;
                 ref ViewerState tv = ref st.Runners[thief].Viewing;
-                if (amount > vv.Viewers) amount = vv.Viewers;
+                // пол — подписчики (design/F-101.md §3.1 п.3): вор тянет только то, что жертва потеряла над полом
+                if (amount > vv.Viewers - d.Floor.Raw) amount = vv.Viewers - d.Floor.Raw;
                 if (amount > d.Cap.Raw - tv.Viewers) amount = d.Cap.Raw - tv.Viewers;
                 if (amount < 0) amount = 0;
                 vv.Viewers -= amount;

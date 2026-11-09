@@ -45,13 +45,67 @@ public class ViewersTests
     {
         // Числа зон — ручки плейтеста (playtest/iter-1.md): «эфир пустой» −6/с, «холодно» 20–50 м −2/с.
         var sim = Make();
-        Run(sim, 60, 300); // −6/с × 10 с = −60
-        Assert.InRange((double)Fixed.FromRaw(sim.State.Runners[3].Viewing.Viewers), 39.9, 40.01);
-        Run(sim, 60, 300); // ещё 10 с → пол 0
-        Assert.Equal(0, Viewers.ViewersOf(sim.State, 3));
+        // Набранное сверх пола уходит; ниже пола (F-101 §3.1) — нет.
+        int floor = sim.EconomyData.Floor.ToInt();
+        sim.State.Runners[3].Viewing.Viewers = Fixed.FromInt(floor + 60).Raw;
+        Run(sim, 60, 300); // −6/с × 10 с = −60 → ровно пол
+        Assert.Equal(floor, Viewers.ViewersOf(sim.State, 3));
         var sim2 = Make();
-        Run(sim2, 45, 150); // −2/с × 5 с = −10 (45 м — ещё «холодно», не «эфир пустой»)
-        Assert.InRange((double)Fixed.FromRaw(sim2.State.Runners[3].Viewing.Viewers), 89.9, 90.01);
+        sim2.State.Runners[3].Viewing.Viewers = Fixed.FromInt(floor + 20).Raw;
+        Run(sim2, 45, 150); // −2/с × 5 с = −10 (45 м — «холодно»)
+        Assert.InRange((double)Fixed.FromRaw(sim2.State.Runners[3].Viewing.Viewers), floor + 9.9, floor + 10.01);
+    }
+
+    [Fact]
+    public void RunnerFarFromBullKeepsFloorAndEarns()
+    {
+        // design/F-101.md → «3.1 Доход вдали от быка: пол зрителей = подписчики (вариант А, число 100)»:
+        // «Зрители места никогда не опускаются ниже пола 100 (= старт)»; «Пассивный доход не меняется:
+        // зрители / 100 в секунду, то есть на полу — 1 донат/с».
+        var sim = Make();
+        var d = sim.EconomyData;
+        Assert.Equal(d.Start, d.Floor);
+        Run(sim, 60, 60 * 30); // 60 м от быка, 60 с
+        for (int i = 0; i < 4; i++)
+        {
+            Assert.Equal(d.Floor.ToInt(), Viewers.ViewersOf(sim.State, i));
+            Assert.InRange(Viewers.DonationsOf(sim.State, i), 59, 60);
+        }
+    }
+
+    [Fact]
+    public void NoSignalAndFrameStealDoNotGoBelowFloor()
+    {
+        var sim = Make();
+        sim.State.Runners[3].Toss.NoSignalTicks = 100000;
+        Run(sim, 4, 30 * 20);
+        Assert.Equal(sim.EconomyData.Floor.ToInt(), Viewers.ViewersOf(sim.State, 3));
+        // «Влез в кадр»: вор у жертвы на полу ничего не получает (F-101 §3.1 п.3)
+        var s2 = Make();
+        int floor = s2.EconomyData.Floor.ToInt();
+        s2.State.Runners[0].S = s2.State.Runners[1].S + Fixed.FromInt(1).Raw; // жертва 0 впереди вора 1
+        s2.State.Runners[0].X = s2.State.Runners[1].X;
+        for (int t = 0; t < 30 * 5; t++) { Game.Core.Economy.FrameSteal.Step(s2); s2.State.Tick++; }
+        Assert.Equal(floor, Viewers.ViewersOf(s2.State, 0));
+        Assert.Equal(floor, Viewers.ViewersOf(s2.State, 1));
+    }
+
+    [Fact]
+    public void FewZeroViewerPlacesAtFinishOver40Seeds()
+    {
+        int zero = 0, total = 0;
+        var table = new System.Text.StringBuilder("seed place viewers\n");
+        for (ulong seed = 1; seed <= 40; seed++)
+        {
+            var rec = Game.Sim.RaceRecorder.Run(seed, GameData.Load());
+            foreach (var s in rec.Seats)
+            {
+                total++;
+                if (s.Viewers == 0) zero++;
+                table.Append(seed).Append(' ').Append(s.Place).Append(' ').Append(s.Viewers).Append('\n');
+            }
+        }
+        Assert.True(zero <= 10, $"мест с 0 зрителей {zero} из {total} (≤ 10):\n{table}");
     }
 
     [Fact]
