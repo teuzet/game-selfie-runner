@@ -47,9 +47,11 @@ namespace Game.Core.Bots
             return null;
         }
 
+        public const string FileName = "bots.json";
+
         public static BotData Parse(string json)
         {
-            var j = Json.Parse("bots.json", json);
+            var j = Json.Parse(FileName, json);
             var c = j.Obj("common");
             var t = j.Arr("temperaments");
             var d = new BotData

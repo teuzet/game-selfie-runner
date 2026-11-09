@@ -74,5 +74,15 @@ namespace Game.Core.Events
             SeenGotShoved, SeenGotTripped, SeenZoneChanges;
         public int LaidStamp;   // LastGotShovedTick+1 толчка, за который уже засчитано «уложил»; 0 — нет
         public int Level;       // максимальный достигнутый порог зрителей в шагах по 250 (0 — ни одного)
+
+        public ulong Hash(ulong h)
+        {
+            h = Math.Hashing.Mix(h, (ulong)(uint)SeenCollisions); h = Math.Hashing.Mix(h, (ulong)(uint)SeenWater);
+            h = Math.Hashing.Mix(h, (ulong)(uint)SeenTossed); h = Math.Hashing.Mix(h, (ulong)(uint)SeenRose);
+            h = Math.Hashing.Mix(h, (ulong)(uint)SeenShoved); h = Math.Hashing.Mix(h, (ulong)(uint)SeenTripped);
+            h = Math.Hashing.Mix(h, (ulong)(uint)SeenGotShoved); h = Math.Hashing.Mix(h, (ulong)(uint)SeenGotTripped);
+            h = Math.Hashing.Mix(h, (ulong)(uint)SeenZoneChanges); h = Math.Hashing.Mix(h, (ulong)(uint)LaidStamp);
+            return Math.Hashing.Mix(h, (ulong)(uint)Level);
+        }
     }
 }

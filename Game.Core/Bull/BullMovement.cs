@@ -17,9 +17,11 @@ namespace Game.Core.Bull
         public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec;
         public Fixed ChargeSpeed, ChargeReach, ChargeTargetRange, ChargeTossDistance, ChargeSteer;
 
+        public const string FileName = "bull.json";
+
         public static BullData Parse(string json)
         {
-            var j = Json.Parse("bull.json", json, truncate: true);
+            var j = Json.Parse(FileName, json, truncate: true);
             return new BullData
             {
                 PenOffset = j.Num("penOffset"), LineS = j.Num("lineS"), CountdownSec = j.Num("countdownSec"),

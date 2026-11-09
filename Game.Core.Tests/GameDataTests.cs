@@ -42,13 +42,29 @@ public class GameDataTests
 
     static GameData Parsed()
     {
-        string dir = DataDir();
-        return GameData.Parse(File.ReadAllText(Path.Combine(dir, "runners.json")),
-            File.ReadAllText(Path.Combine(dir, "bull.json")), File.ReadAllText(Path.Combine(dir, "street.json")),
-            File.ReadAllText(Path.Combine(dir, "characters.json")),
-            File.ReadAllText(Path.Combine(dir, "actions.json")),
-            File.ReadAllText(Path.Combine(dir, "economy.json")),
-            File.ReadAllText(Path.Combine(dir, "bots.json")));
+        // Набор «имя файла → текст» собирается вручную из тех же файлов, что читает Load: Parse не знает про диск.
+        var files = new Game.Core.Data.DataFiles();
+        foreach (string path in Directory.GetFiles(DataDir(), "*.json"))
+            files.Add(Path.GetFileName(path), File.ReadAllText(path));
+        return GameData.Parse(files);
+    }
+
+    [Fact]
+    public void ParseNamesTheMissingFile()
+    {
+        var files = new Game.Core.Data.DataFiles().Add("runners.json", GameData.ReadFiles().Get("runners.json"));
+        var e = Assert.Throws<FileNotFoundException>(() => GameData.Parse(files));
+        Assert.Contains("bull.json", e.Message);
+    }
+
+    [Fact]
+    public void EveryModuleFileIsInDataDir()
+    {
+        var files = GameData.ReadFiles();
+        foreach (string name in new[] { Game.Core.Runners.RunnerData.FileName, Game.Core.Bull.BullData.FileName,
+            Game.Core.Street.StreetData.FileName, Game.Core.Runners.CharacterData.FileName, Game.Core.Runners.ActionData.FileName,
+            Game.Core.Economy.EconomyData.FileName, Game.Core.Bots.BotData.FileName })
+            Assert.True(files.Has(name), name);
     }
 
     [Fact]

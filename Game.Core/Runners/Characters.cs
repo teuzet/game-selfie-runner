@@ -36,7 +36,7 @@ namespace Game.Core.Runners
             return Characters[characterId];
         }
 
-        /// <summary>Нейтральные 4 персонажа (всё ×1): для GameData.Parse без characters.json.</summary>
+        /// <summary>Нейтральные 4 персонажа (всё ×1): для тестов, которым нужны персонажи без разброса (GameData собирается вручную).</summary>
         public static CharacterData Neutral()
         {
             var d = new CharacterData { ShoveDistance = Fixed.FromInt(2), ShoveSpeedLoss = Fixed.FromFraction(1, 4) };
@@ -50,9 +50,11 @@ namespace Game.Core.Runners
             return d;
         }
 
+        public const string FileName = "characters.json";
+
         public static CharacterData Parse(string json)
         {
-            var j = Json.Parse("characters.json", json, truncate: true);
+            var j = Json.Parse(FileName, json, truncate: true);
             var d = new CharacterData { ShoveDistance = j.Num("shoveDistance"), ShoveSpeedLoss = j.Num("shoveSpeedLoss") };
             var arr = j.Arr("characters");
             if (arr.Count < RaceConfig.SeatCount) throw new FormatException("characters.json: меньше 4 персонажей");
@@ -97,6 +99,14 @@ namespace Game.Core.Runners
                 StaminaMax = b.StaminaMax, SprintDrain = b.SprintDrain, StaminaRegen = regen, SprintResume = b.SprintResume,
                 Accel = b.Accel, SteerSpeed = b.SteerSpeed, Radius = b.Radius, Separation = b.Separation,
             };
+        }
+
+        /// <summary>RunnerData по местам забега (персонаж места из config.CharacterId). Строится один раз в конструкторе Simulation.</summary>
+        public static RunnerData[] ForSeats(RunnerData b, CharacterData cd, RaceConfig config)
+        {
+            var res = new RunnerData[RaceConfig.SeatCount];
+            for (int i = 0; i < res.Length; i++) res[i] = ForSeat(b, cd.Get(config.GetSeat(i).CharacterId));
+            return res;
         }
 
         /// <summary>Сдвиг цели толчком по x, м: shoveDistance / устойчивость цели, от толкающего не зависит (сумка бабули — дальность, F-015).</summary>

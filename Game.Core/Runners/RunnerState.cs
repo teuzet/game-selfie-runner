@@ -22,5 +22,32 @@ namespace Game.Core
         public Game.Core.Bull.TossState Toss;
         /// <summary>Зрители и донаты (F-018); зона дистанции до быка — факт для F-019.</summary>
         public Game.Core.Economy.ViewerState Viewing;
+
+        /// <summary>Начальное состояние места: бегун на линии старта; подструктуры инициализируют их модули-владельцы.</summary>
+        public static void Init(ref RunnerState r, Game.Core.Runners.RunnerData rd, Game.Core.Runners.CharacterDef character,
+            Game.Core.Economy.EconomyData economy, Game.Core.Math.Fixed lineS)
+        {
+            r = default;
+            Game.Core.Runners.RunnerMovement.InitRunner(rd, ref r);
+            r.S = lineS.Raw;
+            r.Stability = character.Stability.Raw;
+            Game.Core.Runners.Collisions.InitState(ref r.Collision);
+            Game.Core.Runners.Actions.InitState(ref r.Action);
+            Game.Core.Bull.BullCharge.InitToss(ref r.Toss);
+            Game.Core.Economy.Viewers.InitState(economy, ref r.Viewing);
+        }
+
+        /// <summary>Хэш места = движение и устойчивость (Runners) + хэши подструктур в фиксированном порядке.</summary>
+        public ulong Hash(ulong h)
+        {
+            h = Game.Core.Math.Hashing.Mix(h, (ulong)S); h = Game.Core.Math.Hashing.Mix(h, (ulong)X);
+            h = Game.Core.Math.Hashing.Mix(h, (ulong)Speed); h = Game.Core.Math.Hashing.Mix(h, (ulong)Stamina);
+            h = Game.Core.Math.Hashing.Mix(h, (ulong)Exhausted); h = Game.Core.Math.Hashing.Mix(h, (ulong)StunTicks);
+            h = Game.Core.Math.Hashing.Mix(h, (ulong)Stability);
+            h = Collision.Hash(h);
+            h = Action.Hash(h);
+            h = Toss.Hash(h);
+            return Viewing.Hash(h);
+        }
     }
 }

@@ -13,6 +13,14 @@ namespace Game.Core.Economy
         public int ZoneChanges;     // сколько раз зона менялась (факт для F-019: горячо/холодно)
         public int LastZoneTick;    // тик последней смены, -1 — не было
         public int FinishTick;      // тик финиша (F-020), -1 — ещё бежит; после финиша зрители и донаты заморожены
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, (ulong)Viewers); h = Hashing.Mix(h, (ulong)Donations);
+            h = Hashing.Mix(h, (ulong)(uint)Zone); h = Hashing.Mix(h, (ulong)(uint)PrevZone);
+            h = Hashing.Mix(h, (ulong)(uint)ZoneChanges); h = Hashing.Mix(h, (ulong)(uint)LastZoneTick);
+            return Hashing.Mix(h, (ulong)(uint)FinishTick);
+        }
     }
 
     /// <summary>Зоны дистанции до быка: 0 — горячая, 3 — холодная. Для F-019 «горячо/холодно».</summary>
@@ -29,9 +37,11 @@ namespace Game.Core.Economy
 
         public static EconomyData Default() => new EconomyData();
 
+        public const string FileName = "economy.json";
+
         public static EconomyData Parse(string json)
         {
-            var j = Json.Parse("economy.json", json);
+            var j = Json.Parse(FileName, json);
             return new EconomyData
             {
                 HotRange = j.Num("hotRange"), WarmRange = j.Num("warmRange"), CoolRange = j.Num("coolRange"),

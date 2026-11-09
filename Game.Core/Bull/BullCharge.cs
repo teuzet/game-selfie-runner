@@ -13,6 +13,14 @@ namespace Game.Core.Bull
         public int LastTossTick;    // -1 — не было
         public int LastRoseTick;    // -1 — не было
         public long LastTossFromS;  // s бегуна до подброса (raw)
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, (ulong)(uint)NoSignalTicks); h = Hashing.Mix(h, (ulong)(uint)InvulnTicks);
+            h = Hashing.Mix(h, (ulong)(uint)Tossed); h = Hashing.Mix(h, (ulong)(uint)Rose);
+            h = Hashing.Mix(h, (ulong)(uint)LastTossTick); h = Hashing.Mix(h, (ulong)(uint)LastRoseTick);
+            return Hashing.Mix(h, (ulong)LastTossFromS);
+        }
     }
 
     /// <summary>Состояние рывков быка. Входит в RaceState и хэш.</summary>
@@ -25,6 +33,15 @@ namespace Game.Core.Bull
         public int Count;         // начато рывков
         public int Tosses;        // всего подбросов
         public int LastChargeTick, LastChargeTarget; // -1 — не было
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, Rng.State); h = Hashing.Mix(h, Rng.Inc);
+            h = Hashing.Mix(h, (ulong)(uint)Cooldown); h = Hashing.Mix(h, (ulong)(uint)ChargeLeft);
+            h = Hashing.Mix(h, (ulong)(uint)Target); h = Hashing.Mix(h, (ulong)(uint)Count);
+            h = Hashing.Mix(h, (ulong)(uint)Tosses); h = Hashing.Mix(h, (ulong)(uint)LastChargeTick);
+            return Hashing.Mix(h, (ulong)(uint)LastChargeTarget);
+        }
     }
 
     /// <summary>Рывок быка: цель по вкусности, подброс, «нет сигнала» и неуязвимость. Числа — Data/bull.json (BullData.Charge*). Без аллокаций.</summary>
@@ -48,6 +65,14 @@ namespace Game.Core.Bull
         }
 
         public static bool Protected(in TossState t) => t.NoSignalTicks > 0 || t.InvulnTicks > 0;
+
+        /// <summary>Бык за тик (шаг 6 порядка): движение с резинкой, затем рывок и подброс.</summary>
+        public static void StepBull(Simulation sim)
+        {
+            long prevBullS = sim.State.Bull.S;
+            BullMovement.Step(sim.BullData, sim.Street, ref sim.State.Bull, sim.State.Runners);
+            Step(sim, prevBullS);
+        }
 
         /// <summary>После BullMovement.Step; prevBullS — s быка до этого шага (рывок переопределяет движение).</summary>
         public static void Step(Simulation sim, long prevBullS)

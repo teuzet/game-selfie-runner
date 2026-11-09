@@ -22,6 +22,15 @@ namespace Game.Core.Runners
         public int WaterPending; // 1 — после стана вынести к кромке воды
         public int ZoneActive; // 1 — в прошлый тик скорость масштабировалась зоной лестницы
         public long ZoneRaw;   // скорость без множителя зоны
+
+        public ulong Hash(ulong h)
+        {
+            h = Hashing.Mix(h, (ulong)Count); h = Hashing.Mix(h, (ulong)WaterCount); h = Hashing.Mix(h, (ulong)LastKind);
+            h = Hashing.Mix(h, (ulong)LastS); h = Hashing.Mix(h, (ulong)LastX); h = Hashing.Mix(h, (ulong)LastTick);
+            h = Hashing.Mix(h, (ulong)SlowTicks); h = Hashing.Mix(h, (ulong)SlowCap); h = Hashing.Mix(h, (ulong)WaterPending);
+            h = Hashing.Mix(h, (ulong)ZoneActive);
+            return Hashing.Mix(h, (ulong)ZoneRaw);
+        }
     }
 
     /// <summary>Пересечение круга бегуна с препятствиями и эффекты. design/F-003.md §2. Без аллокаций.</summary>
