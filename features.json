@@ -1732,7 +1732,7 @@
         "Оверлей/опрос в конце сессии можно отложить, кнопки вердикта будут в Telegram"
       ],
       "status": "running",
-      "attempts": 0,
+      "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
       "touches": [
