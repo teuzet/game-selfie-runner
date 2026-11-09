@@ -1,4 +1,5 @@
 using Game.Core.Bull;
+using Game.Core.Economy;
 using Game.Core.Math;
 using Game.Core.Runners;
 using Game.Core.Street;
@@ -22,6 +23,7 @@ namespace Game.Core
         public BullData BullData { get; }
         public CharacterData CharacterData { get; }
         public ActionData ActionData { get; }
+        public EconomyData EconomyData { get; }
         /// <summary>RunnerData по местам с применённым персонажем (скорость, перк выносливости).</summary>
         private readonly RunnerData[] _seatData;
 
@@ -39,15 +41,16 @@ namespace Game.Core
             BullData = data.BullData;
             CharacterData = data.CharacterData;
             ActionData = data.ActionData;
+            EconomyData = data.EconomyData;
             _seatData = new RunnerData[RaceConfig.SeatCount];
             for (int i = 0; i < _seatData.Length; i++)
                 _seatData[i] = Characters.ForSeat(RunnerData, CharacterData.Get(config.GetSeat(i).CharacterId));
             Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
-            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData);
+            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street, config, CharacterData, EconomyData);
         }
 
-        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, RunnerData[] seatData)
-        { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
+        private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd, CharacterData cd, ActionData ad, EconomyData ed, RunnerData[] seatData)
+        { EconomyData = ed; Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; CharacterData = cd; ActionData = ad; _seatData = seatData; }
 
         /// <summary>Набор параметров персонажа места (SeatConfig.CharacterId).</summary>
         public CharacterDef CharacterOf(int seat) => CharacterData.Get(Config.GetSeat(seat).CharacterId);
@@ -55,7 +58,7 @@ namespace Game.Core
         /// <summary>RunnerData места с применённым персонажем.</summary>
         public RunnerData SeatData(int seat) => _seatData[seat];
 
-        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, _seatData);
+        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData);
 
         public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
 
@@ -84,6 +87,7 @@ namespace Game.Core
             long prevBullS = st.Bull.S;
             BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
             BullCharge.Step(this, prevBullS);
+            Viewers.Step(this);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
         }
