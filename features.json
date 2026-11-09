@@ -769,7 +769,7 @@
         "Проверка обязательна, хвост лога с итогом — в notes результата: тул `unity` `mode=open` без ошибок компиляции (`errors` пуст, `ok: true`) и `mode=test` (EditMode) зелёный. Имитировать прогон нельзя.",
         "result.json строго по схеме: `decisions` — массив объектов {question, chosen, why, affects, rollback}, где `affects` — JSON-массив строк (пути), а не строка; в попытке 3 `\"affects\": \"Unity/Assets\"` обронило всю попытку. Три решения попытки 3 (назначение URP через QualitySettings.renderPipeline, Unity/UserSettings в .gitignore, файлы редактора DefaultVolumeProfile/GlobalSettings закоммичены) техлид уже записал в decisions.md — повторять их в `decisions` не нужно, оставь `\"decisions\": []`, если новых нет."
       ],
-      "status": "review",
+      "status": "unity_check",
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
@@ -1207,7 +1207,7 @@
         "5–8 гипотез с порогами, проверяемых прогоном ботов (`race-sim`, метрики из F-025): например «самая долгая пауза без событий ≤ 8 с», «смена лидера ≥ 3 за забег», «разрыв донатов 1-го и 2-го ≤ 25%», «каждый характер бота побеждает в 15–45% забегов», «подброс у каждого места 1–4 раза за забег»",
         "Числа, которые плейтест может крутить, помечены «тюнить» с пределами (зоны зрителей, рывок, устойчивость, донаты за события)"
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "gamedesigner-feature",
