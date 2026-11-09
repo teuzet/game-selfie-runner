@@ -1,5 +1,6 @@
 using Game.Core.Bull;
 using Game.Core.Economy;
+using Game.Core.Events;
 using Game.Core.Math;
 using Game.Core.Runners;
 using Game.Core.Street;
@@ -18,6 +19,9 @@ namespace Game.Core
 
         /// <summary>Улица забега: строится из сида при создании, не входит в RaceState (неизменяема, при Clone общая).</summary>
         public StreetMap Street { get; }
+
+        /// <summary>События последнего Step (F-019): очищается в начале Step, в RaceState и хэш не входит.</summary>
+        public RaceEvents Events { get; } = new RaceEvents();
 
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
@@ -58,9 +62,14 @@ namespace Game.Core
         /// <summary>RunnerData места с применённым персонажем.</summary>
         public RunnerData SeatData(int seat) => _seatData[seat];
 
-        public Simulation Clone() => new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData);
+        public Simulation Clone()
+        {
+            var c = new Simulation(Config, State.Clone(), Street, RunnerData, BullData, CharacterData, ActionData, EconomyData, _seatData);
+            c.Events.CopyFrom(Events);
+            return c;
+        }
 
-        public void CopyFrom(Simulation o) => State.CopyFrom(o.State);
+        public void CopyFrom(Simulation o) { State.CopyFrom(o.State); Events.CopyFrom(o.Events); }
 
         public ulong StateHash() => State.StateHash();
 
@@ -68,6 +77,7 @@ namespace Game.Core
         public void Step(TickInputs inputs)
         {
             var st = State;
+            Events.Clear();
             Collisions.BeforeMove(st);
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
@@ -88,6 +98,8 @@ namespace Game.Core
             BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
             BullCharge.Step(this, prevBullS);
             Viewers.Step(this);
+            FrameSteal.Step(this);
+            EventScan.Run(this);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
         }
