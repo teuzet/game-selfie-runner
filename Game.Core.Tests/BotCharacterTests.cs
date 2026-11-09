@@ -122,11 +122,18 @@ public class BotCharacterTests
     }
 
     [Fact]
-    public void AdrenalineStopsSprintingWhenInvulnerableAfterToss()
+    public void AdrenalineSprintsFromBullWhileInvulnerableAfterToss()
     {
+        // design/F-005.md §2.5: «Подброшен: ... пока идут 3 с неуязвимости, бот любого характера спринтует от быка,
+        // пока выносливость выше его «спринт до выносливости» (... адреналинщик 10 ...)» (F-073).
         var b = Brain(Adr);
-        var m = Mem();
-        for (int t = 0; t < 30; t++) { var v = View(t, 2); v.InvulnTicks = 50; Assert.True(b.Decide(v, ref m).Pace <= 0 || t < 0); }
+        var def = Bots.Get(Adr);
+        var m = Mem(); int p = 0;
+        for (int t = 0; t < 30; t++) { var v = View(t, 40, 100); v.InvulnTicks = 80; p = b.Decide(v, ref m).Pace; }
+        Assert.Equal(1, p); // даже при d = 40 и выносливости выше порога (запас 40 не держит)
+        var m2 = Mem();
+        for (int t = 0; t < 30; t++) { var v = View(t, 40, (int)def.SprintUntilStamina); v.InvulnTicks = 80; p = b.Decide(v, ref m2).Pace; }
+        Assert.NotEqual(1, p); // выносливость ≤ порога — не спринтует
     }
 
     // ---- адреналинщик: толчок ----
@@ -586,7 +593,7 @@ public class BotCharacterTests
     }
 
     [Fact]
-    public void TossedBotDropsHuntPlansAndDoesNotSprintFromBull()
+    public void TossedBotDropsHuntPlansAndSprintsFromBullWhileInvulnerable()
     {
         var b = Brain(Trl);
         var m = Mem();
@@ -595,7 +602,13 @@ public class BotCharacterTests
         var down = View(40, 40); down.NoSignalTicks = 60; down.Nb1 = Nb(down, 0, -1.2);
         Assert.Equal(default, b.Decide(down, ref m));
         var m2 = Mem(); int t2 = 0;
-        for (int i = 0; i < 30; i++) { var v = View(t2++, 2, 100); v.InvulnTicks = 80; Assert.True(b.Decide(v, ref m2).Pace <= 0); }
+        // §2.5 (F-073): «пока идут 3 с неуязвимости, бот любого характера спринтует от быка, пока выносливость выше ... (... тролль 20 ...)»
+        int p = 0;
+        for (int i = 0; i < 30; i++) { var v = View(t2++, 40, 100); v.InvulnTicks = 80; p = b.Decide(v, ref m2).Pace; }
+        Assert.Equal(1, p);
+        var m3 = Mem(); p = 1;
+        for (int i = 0; i < 30; i++) { var v = View(i, 40, (int)Bots.Get(Trl).SprintUntilStamina); v.InvulnTicks = 80; p = b.Decide(v, ref m3).Pace; }
+        Assert.NotEqual(1, p);
     }
 
     [Fact]
