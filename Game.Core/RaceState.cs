@@ -2,15 +2,6 @@ using Game.Core.Math;
 
 namespace Game.Core
 {
-    /// <summary>Плоское состояние бегуна (пока минимум каркаса; поля добавляют следующие core-фичи).</summary>
-    public struct RunnerState
-    {
-        public long S;       // Fixed raw, метры вдоль улицы
-        public long X;       // Fixed raw, сдвиг поперёк
-        public long Speed;   // Fixed raw, м/с
-        public long Stamina; // Fixed raw
-    }
-
     /// <summary>Всё состояние забега. Только структуры и массивы фиксированного размера.</summary>
     public sealed class RaceState
     {
@@ -18,11 +9,11 @@ namespace Game.Core
         public DetRandom Rng;
         public readonly RunnerState[] Runners = new RunnerState[RaceConfig.SeatCount];
 
-        public RaceState(ulong seed)
+        public RaceState(ulong seed, Game.Core.Runners.RunnerData runnerData)
         {
             Rng = new DetRandom(seed);
             for (int i = 0; i < Runners.Length; i++)
-                Runners[i].Stamina = Fixed.One.Raw;
+                Game.Core.Runners.RunnerMovement.InitRunner(runnerData, ref Runners[i]);
         }
 
         private RaceState() { }
@@ -54,6 +45,8 @@ namespace Game.Core
                 h = Mix(h, (ulong)Runners[i].X);
                 h = Mix(h, (ulong)Runners[i].Speed);
                 h = Mix(h, (ulong)Runners[i].Stamina);
+                h = Mix(h, (ulong)Runners[i].Exhausted);
+                h = Mix(h, (ulong)Runners[i].StunTicks);
             }
             return h;
         }
