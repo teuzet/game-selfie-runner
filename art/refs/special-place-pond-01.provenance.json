@@ -1,0 +1,14 @@
+{
+  "tool": "image-gen",
+  "provider": "codex",
+  "model": "codex:$imagegen",
+  "request": {
+    "size": "1536x1024",
+    "n": 1,
+    "prompt": "A small sunlit pond with a stone embankment in the middle of a Mediterranean town, the cobblestone street runs along the water, charming low yellow houses with blue shutters around, a few palm trees, strong midday sun. Stylized low-poly 3D render, soft rounded shapes, flat shading with two or three light steps, no photo textures, warm sunny palette: ochre, sand, terracotta and cream walls, turquoise and blue shutters, deep blue sky, dark cobblestones with warm highlights, deep blue shadows. Polished, juicy, cartoon-like but elegant, like a high-end animated film about a Mediterranean resort town. No text, no UI. Camera: third-person view at head height along the street.",
+    "name": "special-place-pond-01"
+  },
+  "request_hash": "2a17a079eacab65e",
+  "created_at": "2026-11-09T02:26:51Z",
+  "usd": 0.0
+}

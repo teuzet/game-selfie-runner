@@ -1,0 +1,14 @@
+{
+  "tool": "image-gen",
+  "provider": "codex",
+  "model": "codex:$imagegen",
+  "request": {
+    "size": "1024x1024",
+    "n": 1,
+    "prompt": "Portrait of a cartoon runner holding a selfie stick, seen from the front camera of the phone, face fills most of the frame: big round eyes wide with terror, huge open mouth screaming, hair flying back, bright orange t-shirt. Geometric stylization: head built from simple rounded shapes, flat colors, minimal detail, like a stylized 3D avatar. Behind: a blurred sunny Mediterranean street and a dark red bull far behind. Stylized low-poly 3D render, soft rounded shapes, flat shading with two or three light steps, no photo textures, warm sunny palette: ochre, sand, terracotta and cream walls, turquoise and blue shutters, deep blue sky, dark cobblestones with warm highlights, deep blue shadows. Polished, juicy, cartoon-like but elegant, like a high-end animated film about a Mediterranean resort town. No text, no UI.",
+    "name": "face-selfie-geometric-01"
+  },
+  "request_hash": "aa36372bbf5b7d7a",
+  "created_at": "2026-11-09T02:25:57Z",
+  "usd": 0.0
+}
