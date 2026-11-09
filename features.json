@@ -809,7 +809,7 @@
         "EditMode-тесты (Unity/Assets/Tests/EditMode/SimTests.cs): Advance(1.0) даёт ровно 30 шагов и 60 × Advance(1/60) тоже 30; долг 20 тиков за один кадр даёт 8 шагов и 12 в следующем; при вводе игрока (руль +1) LastInputs.Get(место игрока) равен этому вводу, а Get остальных мест — default; X игрока через 30 тиков больше 2 м; CoreDataLoader читает все JSON из Data/ (список файлов — тот, что ждёт GameData после F-070 и F-021) и Simulation создаётся. Не сравнивать состояние ботов между прогонами: расталкивание связывает бегунов.",
         "Проверка как в F-040: batch-компиляция без ошибок и `-runTests -testPlatform EditMode` зелёный, хвост лога в notes; Play Mode глазами не требуется."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 2,
       "budget_tokens": 500000,
       "owner_role": "developer-unity",
