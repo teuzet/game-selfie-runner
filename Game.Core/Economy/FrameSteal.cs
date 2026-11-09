@@ -17,9 +17,7 @@ namespace Game.Core.Economy
     /// У жертвы с перком GlamourLoyalViewers × perkValue. Зрители переливаются от жертвы вору. Без аллокаций.</summary>
     public static class FrameSteal
     {
-        public static readonly Fixed Range = Fixed.FromInt(2);   // ≤2 м (евклидово расстояние, вор позади жертвы по s)
-        public const int HoldTicks = Simulation.TicksPerSecond;  // дольше 1 с
-        public static readonly Fixed Rate = Fixed.FromInt(6);    // 6 зрителей/с (тюнить)
+        // дальность, задержка и скорость — economy.json (frameRange, frameHoldSec, frameStealRate)
 
         public static void InitState(ref FrameState f) { f.Victim = -1; f.Ticks = 0; }
 
@@ -27,7 +25,8 @@ namespace Game.Core.Economy
         public static Fixed RateFor(Simulation sim, int victim)
         {
             var c = sim.CharacterOf(victim);
-            return c.Perk == Perk.GlamourLoyalViewers ? Rate * c.PerkValue : Rate;
+            Fixed rate = sim.EconomyData.FrameStealRate;
+            return c.Perk == Perk.GlamourLoyalViewers ? rate * c.PerkValue : rate;
         }
 
         public static void Step(Simulation sim)
@@ -35,17 +34,18 @@ namespace Game.Core.Economy
             var st = sim.State;
             var ev = sim.Events;
             var d = sim.EconomyData;
+            int holdTicks = d.FrameHoldTicks;
             for (int thief = 0; thief < RaceConfig.SeatCount; thief++)
             {
                 ref FrameState f = ref st.Frame[thief];
-                int victim = Find(st, thief);
+                int victim = Find(st, thief, d.FrameRange);
                 if (victim < 0) { f.Victim = -1; f.Ticks = 0; continue; }
                 if (victim != f.Victim) { f.Victim = victim; f.Ticks = 0; }
                 f.Ticks++;
-                if (f.Ticks <= HoldTicks) continue;
+                if (f.Ticks <= holdTicks) continue;
                 if (st.Runners[victim].Viewing.FinishTick >= 0 || st.Runners[thief].Viewing.FinishTick >= 0) continue; // финишировавшие заморожены
                 Fixed rate = RateFor(sim, victim);
-                if (f.Ticks == HoldTicks + 1)
+                if (f.Ticks == holdTicks + 1)
                 {
                     ev.Add(RaceEventType.FramedIn, st.Tick, thief, victim, (int)rate.Raw);
                     ev.Add(RaceEventType.InYourFrame, st.Tick, victim, thief, (int)rate.Raw);
@@ -62,11 +62,11 @@ namespace Game.Core.Economy
         }
 
         /// <summary>Ближайший сосед впереди вора в пределах Range; -1 если нет. Ничья — меньшее место.</summary>
-        static int Find(RaceState st, int thief)
+        static int Find(RaceState st, int thief, Fixed range)
         {
             int best = -1; Fixed bestD = Fixed.Zero;
             Fixed ts = Fixed.FromRaw(st.Runners[thief].S), tx = Fixed.FromRaw(st.Runners[thief].X);
-            Fixed rr = Range * Range;
+            Fixed rr = range * range;
             for (int k = 0; k < RaceConfig.SeatCount; k++)
             {
                 if (k == thief) continue;

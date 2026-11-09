@@ -32,7 +32,7 @@ namespace Game.Core.Events
                     bool isWater = k < water;
                     int kind = isWater ? (int)CollisionKind.Water : (c.LastKind == (int)CollisionKind.Water ? (int)CollisionKind.Other : c.LastKind);
                     ev.Add(RaceEventType.Collision, tick, i, -1, kind);
-                    EventBonuses.Add(d, ref v, EventBonuses.CollisionViewers, isWater ? EventBonuses.WaterDonations : 0);
+                    EventBonuses.Add(d, ref v, d.CollisionViewers, isWater ? d.WaterDonations : 0);
                     // толчок в препятствие: цель столкнулась вскоре после толчка соседа
                     int stamp = a.LastGotShovedTick + 1;
                     if (a.LastShovedBy >= 0 && a.LastGotShovedTick >= 0 && stamp != e.LaidStamp && tick - a.LastGotShovedTick <= LayoutWindow)
@@ -45,7 +45,7 @@ namespace Game.Core.Events
                 for (int n = a.GotShoved - e.SeenGotShoved; n > 0; n--)
                 {
                     ev.Add(RaceEventType.GotShoved, tick, i, a.LastShovedBy);
-                    EventBonuses.Add(d, ref v, EventBonuses.GotShovedViewers, 0);
+                    EventBonuses.Add(d, ref v, d.GotShovedViewers, 0);
                 }
                 e.SeenGotShoved = a.GotShoved;
                 for (int n = a.GotTripped - e.SeenGotTripped; n > 0; n--)
@@ -54,13 +54,13 @@ namespace Game.Core.Events
                 for (int n = a.Shoved - e.SeenShoved; n > 0; n--)
                 {
                     ev.Add(RaceEventType.Shoved, tick, i, a.LastShoveTarget);
-                    EventBonuses.Add(d, ref v, EventBonuses.ShoveViewers, 0);
+                    EventBonuses.Add(d, ref v, d.ShoveViewers, 0);
                 }
                 e.SeenShoved = a.Shoved;
                 for (int n = a.Tripped - e.SeenTripped; n > 0; n--)
                 {
                     ev.Add(RaceEventType.Tripped, tick, i, a.LastTripTarget);
-                    EventBonuses.Add(d, ref v, EventBonuses.TripViewers, 0);
+                    EventBonuses.Add(d, ref v, d.TripViewers, 0);
                     ev.Add(RaceEventType.LaidOut, tick, i, a.LastTripTarget); // подножка тоже «уложил соседа»
                 }
                 e.SeenTripped = a.Tripped;
@@ -68,7 +68,7 @@ namespace Game.Core.Events
                 for (int n = t.Tossed - e.SeenTossed; n > 0; n--)
                 {
                     ev.Add(RaceEventType.Tossed, tick, i);
-                    EventBonuses.Add(d, ref v, EventBonuses.TossViewers, EventBonuses.TossDonations);
+                    EventBonuses.Add(d, ref v, d.TossViewers, d.TossDonations);
                 }
                 e.SeenTossed = t.Tossed;
                 for (int n = t.Rose - e.SeenRose; n > 0; n--) ev.Add(RaceEventType.Rose, tick, i);
@@ -84,11 +84,11 @@ namespace Game.Core.Events
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref EventState e = ref st.Ev[i];
-                int level = (int)(st.Runners[i].Viewing.Viewers >> Fixed.FractionBits) / EventBonuses.ThresholdStep;
+                int level = (int)(st.Runners[i].Viewing.Viewers >> Fixed.FractionBits) / d.RecordStep;
                 while (e.Level < level)
                 {
                     e.Level++;
-                    ev.Add(RaceEventType.ViewerThreshold, tick, i, -1, e.Level * EventBonuses.ThresholdStep);
+                    ev.Add(RaceEventType.ViewerThreshold, tick, i, -1, e.Level * d.RecordStep);
                 }
             }
         }

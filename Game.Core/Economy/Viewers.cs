@@ -35,6 +35,14 @@ namespace Game.Core.Economy
         public Fixed DonationDivisor = Fixed.FromInt(100);
         public Fixed NoSignalLoss = Fixed.FromFraction(1, 10);
 
+        // Событийные бонусы (F-074, design/F-101.md §3.3): зрители/донаты целыми.
+        public int CollisionViewers = 40, TossViewers = 120, TossDonations = 50, ShoveViewers = 50, TripViewers = 80,
+            GotShovedViewers = -30, WaterDonations = 80, RecordStep = 250;
+        // «Влез в кадр»: дальность (м), задержка (с), зрителей/с.
+        public Fixed FrameRange = Fixed.FromInt(2), FrameHoldSec = Fixed.FromInt(1), FrameStealRate = Fixed.FromInt(6);
+        /// <summary>Задержка «влез в кадр» в тиках.</summary>
+        public int FrameHoldTicks => (FrameHoldSec * Fixed.FromInt(Simulation.TicksPerSecond)).ToInt();
+
         public static EconomyData Default() => new EconomyData();
 
         public const string FileName = "economy.json";
@@ -48,6 +56,10 @@ namespace Game.Core.Economy
                 HotRate = j.Num("hotRate"), WarmRate = j.Num("warmRate"), CoolRate = j.Num("coolRate"), ColdRate = j.Num("coldRate"),
                 Start = j.Num("start"), Cap = j.Num("cap"), Floor = j.Num("floor"),
                 DonationDivisor = j.Num("donationDivisor"), NoSignalLoss = j.Num("noSignalLoss"),
+                CollisionViewers = j.Int("collisionViewers"), TossViewers = j.Int("tossViewers"), TossDonations = j.Int("tossDonations"),
+                ShoveViewers = j.Int("shoveViewers"), TripViewers = j.Int("tripViewers"), GotShovedViewers = j.Int("gotShovedViewers"),
+                WaterDonations = j.Int("waterDonations"), RecordStep = j.Int("recordStep"),
+                FrameRange = j.Num("frameRange"), FrameHoldSec = j.Num("frameHoldSec"), FrameStealRate = j.Num("frameStealRate"),
             };
         }
     }

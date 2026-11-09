@@ -71,6 +71,23 @@ namespace Game.Core.Tests
         }
 
         [Fact]
+        public void ChangingJsonNumbersChangesTheJumps()
+        {
+            var files = GameData.ReadFiles();
+            string json = files.Get("economy.json")
+                .Replace("\"collisionViewers\": 40", "\"collisionViewers\": 25")
+                .Replace("\"tossDonations\": 50", "\"tossDonations\": 70");
+            var data = GameData.Parse(files.Add("economy.json", json));
+            var (sim, ctl) = StepWithFact(new Simulation(Cfg(0, 1, 2, 3), data).Running(), s =>
+            {
+                s.Runners[1].Collision.Count++; s.Runners[1].Collision.LastKind = (int)CollisionKind.Barrels;
+                s.Runners[3].Toss.Tossed++;
+            });
+            Assert.Equal(V(25), DV(sim, ctl, 1));
+            Assert.Equal(V(70), DD(sim, ctl, 3));
+        }
+
+        [Fact]
         public void WaterGivesCollisionPlus40AndDonations80()
         {
             var (sim, ctl) = StepWithFact(Quiet(Cfg(0, 1, 2, 3)), s =>

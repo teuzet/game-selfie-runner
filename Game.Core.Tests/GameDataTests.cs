@@ -78,6 +78,24 @@ public class GameDataTests
         Assert.Contains("shoveCooldown", e.Message);
     }
 
+    [Theory]
+    [InlineData("collisionViewers", 40)] [InlineData("tossViewers", 120)] [InlineData("tossDonations", 50)]
+    [InlineData("shoveViewers", 50)] [InlineData("tripViewers", 80)] [InlineData("gotShovedViewers", -30)]
+    [InlineData("waterDonations", 80)] [InlineData("recordStep", 250)]
+    [InlineData("frameStealRate", 6)] [InlineData("frameRange", 2)] [InlineData("frameHoldSec", 1)]
+    public void EventBonusKeyIsReadFromJsonAndRequired(string key, int expected)
+    {
+        string json = File.ReadAllText(Path.Combine(DataDir(), "economy.json"));
+        var d = Game.Core.Economy.EconomyData.Parse(json);
+        var f = typeof(Game.Core.Economy.EconomyData).GetField(char.ToUpperInvariant(key[0]) + key.Substring(1))!;
+        object v = f.GetValue(d)!;
+        Assert.Equal(expected, v is int i ? i : ((Game.Core.Math.Fixed)v).ToInt());
+        var e = Assert.Throws<FormatException>(() =>
+            Game.Core.Economy.EconomyData.Parse(json.Replace("\"" + key + "\":", "\"" + key + "Gone\":")));
+        Assert.Contains("economy.json", e.Message);
+        Assert.Contains(key, e.Message);
+    }
+
     [Fact]
     public void NotANumberThrowsWithFileAndKey()
     {
