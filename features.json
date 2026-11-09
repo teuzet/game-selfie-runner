@@ -251,7 +251,7 @@
         "Скорость и устойчивость применяются в движении и столкновениях; перк спортсмена (выносливость +50% восстановления) здесь; остальные перки читаются системами F-015, F-018, F-021 по enum.",
         "SeatConfig.CharacterId выбирает набор; тест: гламур медленнее спортсмена на 1800 м на ожидаемое время, бабулю сдвигает толчок на 2/1.6 м, выносливость спортсмена восстанавливается за 3.3 с."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -596,7 +596,7 @@
         "Simulation(RaceConfig config, GameData data, Street? street = null) — основной конструктор, диск не читает, статические кэши _defaultData/_defaultRunnerData/_defaultBullData удалены; прежний Simulation(config, street) остаётся обёрткой над одним статическим кэшем GameData.Load() для тестов; RunnerData.Load/BullData.Load/StreetData.Load не меняются. Причина: Unity-хост (F-049) читает JSON из пакета сам, AppContext.BaseDirectory в редакторе и билде на Game.Core/Data не указывает.",
         "Тесты (Game.Core.Tests/GameDataTests.cs): Simulation из GameData.Parse(тексты трёх файлов, прочитанные тестом) и из GameData.Load() дают равные хэши на 3000 тиках со случайными входами; Step по-прежнему не аллоцирует; все прежние тесты ядра зелёные."
       ],
-      "status": "unity_check",
+      "status": "done",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
