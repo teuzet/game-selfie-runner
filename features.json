@@ -398,7 +398,7 @@
         "«Влез в кадр»: ≤2 м позади соседа дольше 1 с тянет 6 зрителей/с; у жертвы с перком GlamourLoyalViewers (Simulation.CharacterOf(seat).Perk, F-014) × perkValue 0.5 = 3/с; оба получают событие.",
         "Тесты: каждый факт даёт ровно одно событие и один скачок; влез в кадр переливает зрителей; буфер не аллоцирует; детерминизм."
       ],
-      "status": "review",
+      "status": "unity_check",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -738,7 +738,7 @@
         "Проверка обязательна, хвост лога с итогом — в notes результата: тул `unity` `mode=open` без ошибок компиляции (`errors` пуст, `ok: true`) и `mode=test` (EditMode) зелёный. Имитировать прогон нельзя.",
         "result.json строго по схеме: `decisions` — массив объектов {question, chosen, why, affects, rollback}, где `affects` — JSON-массив строк (пути), а не строка; в попытке 3 `\"affects\": \"Unity/Assets\"` обронило всю попытку. Три решения попытки 3 (назначение URP через QualitySettings.renderPipeline, Unity/UserSettings в .gitignore, файлы редактора DefaultVolumeProfile/GlobalSettings закоммичены) техлид уже записал в decisions.md — повторять их в `decisions` не нужно, оставь `\"decisions\": []`, если новых нет."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
