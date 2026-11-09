@@ -202,7 +202,7 @@ namespace Game.Core.Bull
 
         /// <summary>
         /// F-100 §3.2 п.3 «Промах»: бык в рывке поравнялся по s с бегуном, который дальше chargeReach поперёк, — рывок кончается:
-        /// бык встаёт вровень (не обгоняет, идёт не быстрее него), chargeBullSlowSec идёт медленнее и chargeMissNoSteerSec не доворачивает.
+        /// бык встаёт вровень (не обгоняет, идёт не быстрее него), chargeMissSlowSec идёт медленнее и chargeMissNoSteerSec не доворачивает.
         /// Достанувшего (≤ chargeReach) подбросит Contacts этого же тика.
         /// </summary>
         static void Miss(Simulation sim, ref BullState b, ref BullChargeState c, long prevBullS)
@@ -210,20 +210,23 @@ namespace Game.Core.Bull
             var st = sim.State;
             var bd = sim.BullData;
             Fixed reach = bd.ChargeReach;
+            // с кем бык поравнялся в этом тике: бегун с минимальным s в [prevBullS, b.S], дальше reach поперёк
+            int hit = -1;
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 ref RunnerState r = ref st.Runners[i];
-                if (Shielded(sim, i) || r.S > b.S) continue;
+                if (Shielded(sim, i) || r.S < prevBullS || r.S > b.S) continue;
                 Fixed dx = Fixed.FromRaw(r.X - b.X);
                 if (dx * dx <= reach * reach) continue;
-                long alongside = r.S < prevBullS ? prevBullS : r.S;
-                if (b.S > alongside) b.S = alongside;
-                if (b.Speed > r.Speed) b.Speed = r.Speed > 0 ? r.Speed : 0;
-                c.ChargeLeft = 0; c.Target = -1;
-                BullMovement.Slow(ref b, bd.ChargeBullSlowSec * Tps);
-                b.NoSteerTicks = bd.ChargeMissNoSteerSec * Tps;
-                return;
+                if (hit < 0 || r.S < st.Runners[hit].S) hit = i;
             }
+            if (hit < 0) return;
+            ref RunnerState m = ref st.Runners[hit];
+            b.S = m.S;
+            if (b.Speed > m.Speed) b.Speed = m.Speed > 0 ? m.Speed : 0;
+            c.ChargeLeft = 0; c.Target = -1;
+            BullMovement.Slow(ref b, (bd.ChargeMissSlowSec * Fixed.FromInt(Tps)).ToInt());
+            b.NoSteerTicks = (bd.ChargeMissNoSteerSec * Fixed.FromInt(Tps)).ToInt();
         }
 
         /// <summary>

@@ -623,7 +623,8 @@ namespace Game.Core.Tests
         {
             Assert.Equal(2, Data.BullData.ChargeSec);
             Assert.InRange((double)Data.BullData.ChargeSteer, 0, 1);
-            Assert.Equal(1, Data.BullData.ChargeMissNoSteerSec);
+            Assert.Equal(1.0, (double)Data.BullData.ChargeMissNoSteerSec);
+            Assert.Equal(2.0, (double)Data.BullData.ChargeMissSlowSec);
         }
 
         [Fact]

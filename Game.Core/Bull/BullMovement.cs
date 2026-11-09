@@ -17,7 +17,7 @@ namespace Game.Core.Bull
         public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec, TossCooldownSec;
         public Fixed ChargeSpeed, ChargeReach, ChargeTargetRange, ChargeTossDistance, ChargeSteer;
         public Fixed TossWaitGap, CatchUpClear; // F-100 §3.1: отступ от защищённого, порог резинки
-        public int ChargeMissNoSteerSec;        // F-100 §3.2 п.3: после промаха бык столько секунд не доворачивает
+        public Fixed ChargeMissSlowSec, ChargeMissNoSteerSec; // F-100 §4 «промах»: замедление быка и без доворота, секунды (дробные)
 
         public const string FileName = "bull.json";
 
@@ -39,7 +39,7 @@ namespace Game.Core.Bull
                 ChargeInvulnSec = j.Int("chargeInvulnSec"), ChargeTossGapSec = j.Int("chargeTossGapSec"),
                 ChargeBullSlowSec = j.Int("chargeBullSlowSec"), ChargeSteer = j.Num("chargeSteer"),
                 TossWaitGap = j.Num("tossWaitGap"), TossCooldownSec = j.Int("tossCooldownSec"), CatchUpClear = j.Num("catchUpClear"),
-                ChargeMissNoSteerSec = j.Int("chargeMissNoSteerSec"),
+                ChargeMissSlowSec = j.Num("chargeMissSlowSec"), ChargeMissNoSteerSec = j.Num("chargeMissNoSteerSec"),
             };
         }
 
