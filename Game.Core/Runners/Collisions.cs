@@ -32,6 +32,7 @@ namespace Game.Core.Runners
         public static readonly Fixed WaterStun = Fixed.FromFraction(3, 2);
         /// <summary>Зона лестницы ×0.8 (design/F-003.md §3).</summary>
         public static readonly Fixed StairsMul = Fixed.FromFraction(4, 5);
+        static readonly Fixed StepDt = Fixed.FromFraction(1, Simulation.TicksPerSecond);
         static readonly Fixed TicksFx = Fixed.FromInt(Simulation.TicksPerSecond);
 
         /// <summary>Размер массива флагов «уже действовало»: препятствия + по одному фонтану на блок, на каждое место.</summary>
@@ -61,6 +62,22 @@ namespace Game.Core.Runners
             Fixed s = Fixed.FromRaw(r.S);
             int bi = street.BlockIndexAt(s);
             ref readonly PlacedBlock pb = ref street.Blocks[bi];
+
+            // StepRunner прошёл тик на «сырой» скорости: возвращаем s так, будто шли с потолком
+            // замедления бельём и множителем зоны лестницы.
+            {
+                Fixed raw = Fixed.FromRaw(r.Speed);
+                Fixed eff = raw;
+                if (c.SlowTicks > 0 && eff > Fixed.FromRaw(c.SlowCap)) eff = Fixed.FromRaw(c.SlowCap);
+                if (InZone(pb, s)) eff = eff * StairsMul;
+                if (eff < raw && raw > Fixed.Zero)
+                {
+                    s = s - (raw - eff) * StepDt;
+                    r.S = s.Raw;
+                    bi = street.BlockIndexAt(s);
+                    pb = ref street.Blocks[bi];
+                }
+            }
 
             // Вынос к кромке воды после стана.
             if (c.WaterPending != 0 && r.StunTicks == 0)

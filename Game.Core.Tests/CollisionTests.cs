@@ -274,6 +274,36 @@ namespace Game.Core.Tests
         }
 
         [Fact]
+        public void StairsZoneSlowsDistanceByTwentyPercent()
+        {
+            StreetMap? street = null; int bi = -1; ulong seed = 1;
+            for (; seed < 200 && street == null; seed++)
+            {
+                var st = StreetGenerator.Build(seed, Data, StreetPool.CorePlusLater);
+                for (int b = 0; b < st.Blocks.Length; b++)
+                    if (st.Blocks[b].Def.Id.Contains("stairs")) { street = st; bi = b; break; }
+            }
+            Assert.NotNull(street);
+            seed--;
+            var pb = street!.Blocks[bi];
+            // Hit гасим, чтобы препятствия не мешали измерению.
+            double inside = RunClean(seed, street, Dbl(pb.Start) + 2);
+            double outside = RunClean(seed, street, Dbl(pb.Start) - 80);
+            Assert.InRange(inside / outside, 0.77, 0.83);
+        }
+
+        static double RunClean(ulong seed, StreetMap street, double startS)
+        {
+            var sim = new Simulation(Cfg(seed), street);
+            for (int i = 0; i < sim.State.Hit.Length; i++) sim.State.Hit[i] = 1; // препятствия не действуют
+            Place(sim, startS, Fixed.Zero);
+            for (int t = 0; t < 30; t++) sim.Step(default);
+            long s0 = sim.State.Runners[0].S;
+            for (int t = 0; t < 30; t++) sim.Step(default);
+            return (double)Fixed.FromRaw(sim.State.Runners[0].S - s0);
+        }
+
+        [Fact]
         public void FountainActsLikePole()
         {
             ulong seed = 1; StreetMap? street = null; int bi = -1;
