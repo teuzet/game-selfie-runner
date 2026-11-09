@@ -1731,7 +1731,7 @@
         "`Unity.exe -batchmode -quit -projectPath Unity -executeMethod FactoryBuild.Demo -buildTarget Win64` собирает Windows-плеер",
         "Оверлей/опрос в конце сессии можно отложить, кнопки вердикта будут в Telegram"
       ],
-      "status": "running",
+      "status": "testing",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-unity",
