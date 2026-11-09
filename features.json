@@ -244,7 +244,7 @@
       "layer": "core",
       "milestone": "M1",
       "depends_on": [
-        "F-013"
+        "F-027"
       ],
       "acceptance": [
         "Game.Core/Data/characters.json: гламур, спортсмен, бабуля, ботаник с полями скорость, устойчивость, множитель зрителей, вкусность, длительность «нет сигнала», перк (enum); числа из design/overview.md.",
@@ -584,6 +584,30 @@
       "priority": 165
     },
     {
+      "id": "F-027",
+      "title": "GameData: все Data/*.json одним объектом, Simulation без чтения диска",
+      "layer": "core",
+      "milestone": "M1",
+      "depends_on": [
+        "F-013"
+      ],
+      "acceptance": [
+        "Game.Core/GameData.cs: класс GameData с полями RunnerData, BullData, StreetData (каждая следующая core-фича, добавляющая Data/*.json, добавляет сюда своё поле и аргумент Parse); GameData.Parse(runnersJson, bullJson, streetJson) собирает данные из текстов и диск не трогает; GameData.Load(dir = null) читает файлы из Game.Core/Data (поиск вверх от AppContext.BaseDirectory, как сейчас в StreetData.Load) и нужен только тестам и RaceRunner.",
+        "Simulation(RaceConfig config, GameData data, Street? street = null) — основной конструктор, диск не читает, статические кэши _defaultData/_defaultRunnerData/_defaultBullData удалены; прежний Simulation(config, street) остаётся обёрткой над одним статическим кэшем GameData.Load() для тестов; RunnerData.Load/BullData.Load/StreetData.Load не меняются. Причина: Unity-хост (F-049) читает JSON из пакета сам, AppContext.BaseDirectory в редакторе и билде на Game.Core/Data не указывает.",
+        "Тесты (Game.Core.Tests/GameDataTests.cs): Simulation из GameData.Parse(тексты трёх файлов, прочитанные тестом) и из GameData.Load() дают равные хэши на 3000 тиках со случайными входами; Step по-прежнему не аллоцирует; все прежние тесты ядра зелёные."
+      ],
+      "status": "todo",
+      "attempts": 0,
+      "budget_tokens": 400000,
+      "owner_role": "developer-core",
+      "owned_files": [
+        "Game.Core/GameData.cs",
+        "Game.Core/Simulation.cs",
+        "Game.Core.Tests/GameDataTests.cs"
+      ],
+      "priority": 62
+    },
+    {
       "id": "F-030",
       "title": "Game.Net: проект, ITransport, FakeTransport, сериализация пакетов входов",
       "layer": "core",
@@ -659,17 +683,19 @@
     },
     {
       "id": "F-040",
-      "title": "Unity-проект: Unity 6 + URP, Game.Core как локальный пакет, драйвер симуляции, ввод",
+      "title": "Unity-проект: каркас 6000.3 + URP, Game.Core как локальный пакет, проверка в batch-режиме",
       "layer": "unity",
       "milestone": "M1",
       "depends_on": [
         "F-012"
       ],
       "acceptance": [
-        "Unity/ — проект 6000.3 с URP; Game.Core подключён как локальный пакет (manifest: file:../../Game.Core; package.json и asmdef в Game.Core); открывается в batch-режиме без ошибок компиляции.",
-        "SimulationDriver: накапливает время, зовёт Step по 30 тиков/с, собирает A/D, W/S, Space в PlayerInput места игрока; остальные места — боты по RaceConfig (пустой ввод, пока F-023 нет).",
-        "Сцена Race с драйвером и текстом на экране: тик, s, x, скорость, темп своего бегуна.",
-        "EditMode-тест: драйвер делает ровно 30 шагов за 1 с накопленного времени; пакет Game.Core компилируется в Unity (asmdef резолвится)."
+        "Основа — ветка archive/F-040-attempt2 (попытка 2, коммит bbc95f2: Unity/Packages/manifest.json, Game.Core/package.json, Game.Core/Game.Core.asmdef, asmdef-ы скриптов и EditMode-тестов). Драйвер, ввод, HUD и сцену Race из неё не переносить — они ушли в F-049; Game.Core/*.meta тоже не переносить.",
+        "Unity/ — проект 6000.3: Unity/ProjectSettings/*.asset и Unity/Packages/packages-lock.json созданы редактором (не написаны руками) и закоммичены; manifest: com.selfierunner.game-core = file:../../Game.Core, com.unity.render-pipelines.universal, com.unity.test-framework; Game.Core/package.json и Game.Core/Game.Core.asmdef (noEngineReferences: true, без ссылок); Game.Core/csc.rsp с -nullable:enable (ядро написано с Nullable, иначе поток CS8632).",
+        "URP: Unity/Assets/Settings/URP-Asset.asset и URP-Renderer.asset создаёт скрипт редактора Unity/Assets/Editor/ProjectBootstrap.cs (статический метод под -executeMethod, UniversalRenderPipelineAsset.Create), назначает в GraphicsSettings.defaultRenderPipeline и во все уровни QualitySettings; ассеты и изменённые ProjectSettings закоммичены.",
+        ".gitignore: *.meta внутри Game.Core/ и Game.Net/ не коммитятся (Unity пересоздаёт их при импорте, ссылок по GUID на файлы ядра нет); добавлена папка Unity/Assets/StreamingAssets/GameCoreData/ (копия данных для билда, F-046). .meta внутри Unity/Assets коммитятся всегда, у каждого файла и папки.",
+        "Unity/Assets/Tests/EditMode: сборка SelfieRunner.Tests.EditMode (Editor only, UNITY_INCLUDE_TESTS) с одним тестом — typeof(Game.Core.Simulation).Assembly.GetName().Name == \"Game.Core\": пакет резолвится и компилируется.",
+        "Проверка обязательна, хвост лога с итогом — в notes результата: `Unity -batchmode -nographics -quit -projectPath Unity -logFile Unity/Logs/batch.log` без ошибок компиляции и `Unity -batchmode -nographics -projectPath Unity -runTests -testPlatform EditMode -testResults Unity/Logs/editmode.xml -logFile -` зелёный (Unity.exe — из C:/Program Files/Unity/Hub/Editor/6000.3*/Editor/ или переменной UNITY_PATH). Если редактора на машине нет — не имитировать: записать это в notes и остановиться без коммита, фича вернётся техлиду."
       ],
       "status": "escalated",
       "attempts": 3,
@@ -678,9 +704,42 @@
       "owned_files": [
         "Unity/",
         "Game.Core/package.json",
-        "Game.Core/Game.Core.asmdef"
+        "Game.Core/Game.Core.asmdef",
+        "Game.Core/csc.rsp",
+        ".gitignore"
       ],
       "priority": 200
+    },
+    {
+      "id": "F-049",
+      "title": "Драйвер симуляции в Unity: тики 30/с, клавиатура в место игрока, сцена Race с текстом",
+      "layer": "unity",
+      "milestone": "M1",
+      "depends_on": [
+        "F-040",
+        "F-027"
+      ],
+      "acceptance": [
+        "CoreDataLoader (Unity/Assets/Scripts/Sim/): читает тексты Game.Core/Data/*.json из пакета — Path.GetFullPath(\"Packages/com.selfierunner.game-core/Data\") в редакторе, Application.streamingAssetsPath/GameCoreData в билде (копирование туда — строка F-046) — и строит GameData.Parse(...) из F-027; ядро диск не читает, рефлексии в приватные поля ядра нет.",
+        "TickAccumulator — обычный класс без MonoBehaviour: Advance(dt) копит долг в тиках (dt × 30) и возвращает число шагов за этот кадр, не больше 8; остаток долга сохраняется и доигрывается в следующих кадрах (симуляция не выбрасывает тики, а догоняет реальное время). SimulationDriver : MonoBehaviour держит Simulation и в Update зовёт Step столько раз, сколько вернул аккумулятор; хранит последний отправленный TickInputs (LastInputs) и PlayerInput игрока.",
+        "KeyboardInputSource (A/D — руль, W/S — темп, Space — действие) за интерфейсом IPlayerInputSource; вход идёт только в место с SeatKind.Human из RaceConfig, остальные места получают пустой вход (их ведёт ядро; до F-023 стоят).",
+        "Сцена Unity/Assets/Scenes/Race.unity (в EditorBuildSettings): RaceBootstrap собирает драйвер и HUD из кода; RaceHud показывает тик, s, x, скорость, темп своего бегуна — темп по последнему отправленному входу, «sprint» только при RunnerState.Exhausted == 0.",
+        "EditMode-тесты (Unity/Assets/Tests/EditMode/SimTests.cs): Advance(1.0) даёт ровно 30 шагов и 60 × Advance(1/60) тоже 30; долг 20 тиков за один кадр даёт 8 шагов и 12 в следующем; при вводе игрока (руль +1) LastInputs.Get(место игрока) равен этому вводу, а Get остальных мест — default; X игрока через 30 тиков больше 2 м; CoreDataLoader читает все три JSON и Simulation создаётся. Не сравнивать состояние ботов между прогонами: расталкивание связывает бегунов.",
+        "Проверка как в F-040: batch-компиляция без ошибок и `-runTests -testPlatform EditMode` зелёный, хвост лога в notes; Play Mode глазами не требуется."
+      ],
+      "status": "todo",
+      "attempts": 0,
+      "budget_tokens": 500000,
+      "owner_role": "developer-unity",
+      "owned_files": [
+        "Unity/Assets/Scripts/Sim/",
+        "Unity/Assets/Scenes/Race.unity",
+        "Unity/Assets/Scenes/Race.unity.meta",
+        "Unity/Assets/Tests/EditMode/SimTests.cs",
+        "Unity/Assets/Tests/EditMode/SimTests.cs.meta",
+        "Unity/ProjectSettings/EditorBuildSettings.asset"
+      ],
+      "priority": 205
     },
     {
       "id": "F-041",
@@ -688,7 +747,7 @@
       "layer": "unity",
       "milestone": "M1",
       "depends_on": [
-        "F-040",
+        "F-049",
         "F-013"
       ],
       "acceptance": [
@@ -823,7 +882,8 @@
       "acceptance": [
         "Сцена Menu: выбор персонажа с одной строкой размена, язык стрима, старт одиночного забега (3 бота: характеры по кругу, персонажи случайно); сид забега новый каждый раз.",
         "Сцена Race по RaceState.Phase: отсчёт 3 с на экране, забег, «стрим скоро кончится» 15 с, итоговый экран (рейтинг по донатам, 3 лучших момента текстом из F-020), кнопка «ещё раз».",
-        "EditMode-тест: переходы состояний по фазам; итоги строятся из данных ядра без пересчёта. Play Mode глазами Nick: забег с ботами от меню до итогов."
+        "EditMode-тест: переходы состояний по фазам; итоги строятся из данных ядра без пересчёта. Play Mode глазами Nick: забег с ботами от меню до итогов.",
+        "Билд Windows: Unity/Assets/Editor/CopyCoreData.cs (IPreprocessBuildWithReport) копирует Game.Core/Data/*.json в Unity/Assets/StreamingAssets/GameCoreData/ (папка в .gitignore с F-040), CoreDataLoader из F-049 читает оттуда в билде; в редакторе по-прежнему из пакета."
       ],
       "status": "todo",
       "attempts": 0,
@@ -833,6 +893,7 @@
         "Unity/Assets/Scripts/Flow/",
         "Unity/Assets/Scenes/Menu.unity",
         "Unity/Assets/UI/Menu/",
+        "Unity/Assets/Editor/CopyCoreData.cs",
         "Unity/Assets/Tests/FlowTests.cs"
       ],
       "priority": 260
