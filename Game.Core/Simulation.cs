@@ -32,7 +32,7 @@ namespace Game.Core
             RunnerData = _defaultRunnerData ??= RunnerData.Load();
             BullData = _defaultBullData ??= BullData.Load();
             Street = street ?? StreetGenerator.Build(config.Seed, _defaultData ??= StreetData.Load(), StreetPool.Core);
-            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street));
+            State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street);
         }
 
         private Simulation(RaceConfig config, RaceState state, StreetMap street, RunnerData rd, BullData bd) { Config = config; State = state; Street = street; RunnerData = rd; BullData = bd; }
@@ -47,6 +47,7 @@ namespace Game.Core
         public void Step(TickInputs inputs)
         {
             var st = State;
+            Collisions.BeforeMove(st);
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 // Внешний вход бота игнорируется (место ведёт сам Simulation; мозги ботов — позже).
@@ -54,6 +55,8 @@ namespace Game.Core
                 RunnerMovement.StepRunner(RunnerData, Street, ref st.Runners[i], inp);
             }
             RunnerMovement.Separate(RunnerData, Street, st.Runners);
+            MovingObstacles.Step(Street, st.Dyn, st.Runners, st.Tick);
+            Collisions.After(RunnerData, Street, st);
             BullMovement.Step(BullData, Street, ref st.Bull, st.Runners);
             st.Rng.NextUInt(); // поток ГСЧ продвигается каждый тик
             st.Tick++;
