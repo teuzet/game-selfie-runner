@@ -677,9 +677,9 @@ public class BotCharacterTests
     [Fact]
     public void EveryTrollActsDuringRace()
     {
-        // Критерий F-024 «тролль совершает ≥ 10 действий за забег» числами диздока НЕ достигается: на тролля выходит 1–3 действия
-        // (охота стартует в 5–10% поисков — сосед в 3 м и в кадре встречается редко). Вопрос техлиду в result.json; здесь закреплено то,
-        // что поведение живое — каждый тролль толкает/ставит подножку хотя бы раз — и печатается таблица для F-025.
+        // Критерий F-024 «≥ 10 действий» числами диздока §2.4 (3 м, 3 с) не достигается; по ответу техлида критерий снижен до ≥ 2 действий
+        // на тролля за забег (среднее по сидам), цифру уточнит геймдизайнер после плейтеста итерации 1. Таблица печатается при падении.
+        const int MinActionsPerTroll = 2;
         const int seeds = 6;
         int sum = 0, quiet = 0;
         var rows = new List<string>();
@@ -697,7 +697,7 @@ public class BotCharacterTests
             rows.Add($"сид {seed}: {string.Join("+", per)} = {per[0] + per[1] + per[2] + per[3]}");
         }
         string table = $"на тролля {sum / (4.0 * seeds):F1} действий за забег, молчавших троллей {quiet}; " + string.Join("; ", rows);
-        Assert.True(sum >= 4 * seeds, table);
+        Assert.True(sum >= MinActionsPerTroll * 4 * seeds, table);
         Assert.True(quiet <= seeds, table);
     }
 
