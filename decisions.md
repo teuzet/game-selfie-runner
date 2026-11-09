@@ -160,3 +160,15 @@
 - Почему: Пакеты никогда не пустые; ручное время делает тесты детерминированными
 - Затрагивает: Game.Net/ITransport.cs, Game.Net/FakeTransport.cs
 - Откат: Поменять контракт в ITransport и FakeTransport
+
+## F-010: Парсер JSON в рантайме или генерация C#-таблиц?
+- Выбрано: Минимальный парсер в StreetData.Parse(string); Load() ищет Data/street.json вверх от AppContext.BaseDirectory
+- Почему: Без скриптов и сгенерированного кода; csproj не в owned_files, поэтому EmbeddedResource не добавлен. Unity может передать текст в Parse
+- Затрагивает: Game.Core/Street/StreetData.cs
+- Откат: Заменить на генерацию таблиц, API типов не меняется
+
+## F-010: Как записать laundry (0.3 × вся ширина) и профиль прямых?
+- Выбрано: sizeAcross 0 + fullWidth true; у прямых профиль ширины постоянный до 120 м, добавлено length.step 10
+- Почему: Диздок не задаёт формат; генератор (F-011) вправе обрезать профиль до выбранной длины
+- Затрагивает: Game.Core/Data/street.json
+- Откат: Правка JSON и тестов
