@@ -1,0 +1,14 @@
+{
+  "tool": "image-gen",
+  "provider": "codex",
+  "model": "codex:$imagegen",
+  "request": {
+    "size": "1024x1024",
+    "n": 1,
+    "prompt": "A stylized massive bull charging forward, dark red hide with black shading, big curved horns, small angry eyes, dust cloud under hooves, cartoon-like but not scary, menacing and relentless. Stylized low-poly 3D render, soft rounded shapes, flat shading with two or three light steps, no photo textures, warm sunny palette: ochre, sand, terracotta and cream walls, turquoise and blue shutters, deep blue sky, dark cobblestones with warm highlights, deep blue shadows. Polished, juicy, cartoon-like but elegant, like a high-end animated film about a Mediterranean resort town. No text, no UI. Camera: three-quarter view from the front at head height. Background: plain warm grey, no environment.",
+    "name": "bull-charging-01"
+  },
+  "request_hash": "3fd5ff7c39d64abd",
+  "created_at": "2026-11-09T02:24:25Z",
+  "usd": 0.0
+}

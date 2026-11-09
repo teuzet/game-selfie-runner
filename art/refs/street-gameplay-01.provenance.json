@@ -1,0 +1,14 @@
+{
+  "tool": "image-gen",
+  "provider": "codex",
+  "model": "codex:$imagegen",
+  "request": {
+    "size": "1536x1024",
+    "n": 1,
+    "prompt": "A narrow cobblestone street in a small Mediterranean town during a chaotic festival run: four cartoon runners with selfie sticks sprinting toward the camera in panic, one crashing into a fruit stall with oranges flying, laundry lines across the street, barrels and a lamppost as obstacles, a massive dark red cartoon bull charging close behind them in a dust cloud, dense rows of charming yellow houses with turquoise shutters and balconies on both sides, strong midday sun. Runners in caricature stylization: exaggerated proportions, big nose, strong chin, big expressive eyes and mouth, slightly simplified shapes, like a character from a polished animated comedy film. Stylized low-poly 3D render, soft rounded shapes, flat shading with two or three light steps, no photo textures, warm sunny palette: ochre, sand, terracotta and cream walls, turquoise and blue shutters, deep blue sky, dark cobblestones with warm highlights, deep blue shadows. Polished, juicy, cartoon-like but elegant, like a high-end animated film about a Mediterranean resort town. No text, no UI. Camera: low third-person view at head height looking up the street toward the bull.",
+    "name": "street-gameplay-01"
+  },
+  "request_hash": "a1f8a4853b16a57f",
+  "created_at": "2026-11-09T02:36:51Z",
+  "usd": 0.0
+}
