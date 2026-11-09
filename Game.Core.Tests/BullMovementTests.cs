@@ -34,7 +34,7 @@ namespace Game.Core.Tests
         public void DataMatchesDesign()
         {
             Assert.Equal(25, (double)D.PenOffset);
-            Assert.Equal(9.5, (double)D.ChargeSpeed);
+            Assert.Equal(9.5, (double)D.CatchUpSpeed);
             Assert.Equal(6.0, (double)D.CruiseSpeed);
             Assert.Equal(5.0, (double)D.CloseSpeed);
             Assert.Equal(12, (double)D.TargetBehind);
