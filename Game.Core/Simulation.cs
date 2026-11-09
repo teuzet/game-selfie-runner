@@ -21,17 +21,19 @@ namespace Game.Core
         public RunnerData RunnerData { get; }
         public BullData BullData { get; }
 
-        private static StreetData? _defaultData;
-        private static RunnerData? _defaultRunnerData;
-        private static BullData? _defaultBullData;
+        private static GameData? _defaultGameData;
 
-        /// <param name="street">Готовая улица; null — собрать из сида по Data/street.json, пул core.</param>
+        /// <summary>Обёртка для тестов: данные читаются с диска один раз на процесс (GameData.Load()).</summary>
         public Simulation(RaceConfig config, StreetMap? street = null)
+            : this(config, _defaultGameData ??= GameData.Load(), street) { }
+
+        /// <summary>Основной конструктор: диск не читает. street == null — собрать из сида по data.StreetData, пул core.</summary>
+        public Simulation(RaceConfig config, GameData data, StreetMap? street = null)
         {
             Config = config;
-            RunnerData = _defaultRunnerData ??= RunnerData.Load();
-            BullData = _defaultBullData ??= BullData.Load();
-            Street = street ?? StreetGenerator.Build(config.Seed, _defaultData ??= StreetData.Load(), StreetPool.Core);
+            RunnerData = data.RunnerData;
+            BullData = data.BullData;
+            Street = street ?? StreetGenerator.Build(config.Seed, data.StreetData, StreetPool.Core);
             State = new RaceState(config.Seed, RunnerData, BullData, BullMovement.StartLine(BullData, Street), Street);
         }
 
