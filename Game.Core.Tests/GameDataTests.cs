@@ -79,7 +79,8 @@ public class GameDataTests
     }
 
     [Theory]
-    [InlineData("collisionViewers", 40)] [InlineData("tossViewers", 120)] [InlineData("tossDonations", 50)]
+    // tossDonations 20 — ручка плейтеста итерации 2 (playtest/iter-2.md → «Тюнинг»; предел 0–80, design/F-101.md §3.3), было 50.
+    [InlineData("collisionViewers", 40)] [InlineData("tossViewers", 120)] [InlineData("tossDonations", 20)]
     [InlineData("shoveViewers", 50)] [InlineData("tripViewers", 80)] [InlineData("gotShovedViewers", -30)]
     [InlineData("waterDonations", 80)] [InlineData("recordStep", 250)]
     [InlineData("frameStealRate", 6)] [InlineData("frameRange", 2)] [InlineData("frameHoldSec", 1)]
