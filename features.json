@@ -368,7 +368,7 @@
         "Смена зоны записывается как факт для F-019 (горячо/холодно).",
         "Тесты: 10 с в горячей зоне у ботаника даёт 250 зрителей, у гламура 310; убежать на 50 м — зрители падают; за 5 минут при 500 зрителях ≈ 1500 донатов; детерминизм."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 0,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
@@ -736,7 +736,7 @@
         "Unity/Assets/Tests/EditMode: сборка SelfieRunner.Tests.EditMode (Editor only, UNITY_INCLUDE_TESTS, references только Game.Core и TestRunner) с одним тестом — typeof(Game.Core.Simulation).Assembly.GetName().Name == \"Game.Core\": пакет резолвится и компилируется.",
         "Проверка обязательна, хвост лога с итогом — в notes результата: тул `unity` `mode=open` без ошибок компиляции (`errors` пуст, `ok: true`) и `mode=test` (EditMode) зелёный. Имитировать прогон нельзя."
       ],
-      "status": "todo",
+      "status": "running",
       "attempts": 0,
       "budget_tokens": 600000,
       "owner_role": "developer-unity",
