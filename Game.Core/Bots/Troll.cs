@@ -31,7 +31,7 @@ namespace Game.Core.Bots
             if (v.Arena) return 0; // арена: бег до финиша
             if (v.Tick < m.TempoNext) return m.Pace;
             m.TempoNext = v.Tick + Def.TempoPeriod;
-            m.Sprinting = v.InvulnTicks == 0 && Below(m.Sprinting != 0, v.BullDist, Def.SprintBelow, Def.Hysteresis) ? 1 : 0;
+            m.Sprinting = v.InvulnTicks > 0 || Below(m.Sprinting != 0, v.BullDist, Def.SprintBelow, Def.Hysteresis) ? 1 : 0; // подброшен (§2.5): неуязвимость — спринт, пока выносливость > порога
             if (m.Sprinting != 0 && v.Stamina > Def.SprintUntilStamina) m.Pace = 1;
             else if (Quest(v, "overtake") && QuestTargetAhead(v, ref m)) m.Pace = v.Stamina >= Def.OvertakeSprint ? 1 : 0;
             else if (HuntPace(v, ref m, out int hunt)) m.Pace = hunt;

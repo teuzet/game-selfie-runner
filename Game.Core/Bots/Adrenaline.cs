@@ -55,7 +55,7 @@ namespace Game.Core.Bots
             bool chase = Quest(v, "overtake") && QuestTargetAhead(v, ref m);
             if (Quest(v, "stay_hot")) { lo = Data.StayHotMin; hi = Data.StayHotMax; }
             if (chase) hi = Data.OvertakeBand; // коридор расширяется до 15 м: дальше — трусца, бык подходит
-            m.Sprinting = v.InvulnTicks == 0 && Below(m.Sprinting != 0, v.BullDist, Def.SprintBelow, Def.Hysteresis) ? 1 : 0;
+            m.Sprinting = v.InvulnTicks > 0 || Below(m.Sprinting != 0, v.BullDist, Def.SprintBelow, Def.Hysteresis) ? 1 : 0; // подброшен (§2.5): неуязвимость — спринт, пока выносливость > порога
             int pace = m.Pace > 0 ? 0 : m.Pace; // спринт — не состояние коридора
             if (m.Sprinting != 0 && v.Stamina > Def.SprintUntilStamina) pace = 1;
             else if (chase && v.Stamina >= Def.OvertakeSprint && v.BullDist <= hi + Def.Hysteresis) pace = 1; // без угрозы — только из запаса

@@ -13,7 +13,7 @@ namespace Game.Core.Bots
             if (rushOnMe && v.Stamina > Fixed.Zero) return 1;
             if (v.Tick < m.TempoNext) return m.Pace;
             m.TempoNext = v.Tick + Def.TempoPeriod;
-            if (v.InvulnTicks > 0) m.Sprinting = 0; // после «нет сигнала» бык не страшен, бот это знает
+            if (v.InvulnTicks > 0) m.Sprinting = 1; // подброшен (§2.5): неуязвимость — спринт, пока выносливость > порога
             else if (m.Sprinting == 0 && v.BullDist < Def.SprintBelow - Def.Hysteresis) m.Sprinting = 1;
             else if (m.Sprinting != 0 && v.BullDist > Def.SprintBelow + Def.Hysteresis) m.Sprinting = 0;
             m.Pace = m.Sprinting != 0 && v.Stamina > Def.SprintUntilStamina ? 1 : 0;

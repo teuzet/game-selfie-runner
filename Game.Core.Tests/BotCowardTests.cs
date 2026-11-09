@@ -41,6 +41,19 @@ public class BotCowardTests
         new SeatConfig(SeatKind.Bot, 2, 0), new SeatConfig(SeatKind.Bot, 3, 0),
     });
 
+    [Fact]
+    public void CowardSprintsWhileInvulnerableAfterTossIfStaminaAboveFloor()
+    {
+        // design/F-005.md §2.5: «Подброшен: ... пока идут 3 с неуязвимости, бот любого характера спринтует от быка,
+        // пока выносливость выше его «спринт до выносливости» (трус 5 ...)» (F-073).
+        var b = Brain(); var m = Mem(); int p = 0;
+        for (int t = 0; t < 30; t++) { var v = View(t, 40, 100); v.InvulnTicks = 80; p = b.Decide(v, ref m).Pace; }
+        Assert.Equal(1, p);
+        var m2 = Mem();
+        for (int t = 0; t < 30; t++) { var v = View(t, 40, (int)Bots.Get(0).SprintUntilStamina); v.InvulnTicks = 80; p = b.Decide(v, ref m2).Pace; }
+        Assert.NotEqual(1, p);
+    }
+
     // ---- §5 п.1: трус в сценариях ----
 
     [Fact]
