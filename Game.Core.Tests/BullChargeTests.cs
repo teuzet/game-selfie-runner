@@ -91,7 +91,8 @@ namespace Game.Core.Tests
                         int gap = sim.State.Charge.LastChargeTick - prevTick;
                         // F-100 §3.1 п.6: если допустимых целей нет (лежащий, охлаждение 30 с, порог арены), рывок пропускается и
                         // следующий — через новый интервал: пропуск даёт до двух интервалов подряд плюс охлаждение
-                        int slack = (Data.BullData.TossCooldownSec + Data.BullData.ChargeMaxIntervalSec) * 30;
+                        // F-081: рывок стал настоящим, подбросов больше, пропуски без целей длиннее — slack на два пропуска (F-068 вернёт один)
+                        int slack = (Data.BullData.TossCooldownSec + 2 * Data.BullData.ChargeMaxIntervalSec) * 30;
                         Assert.InRange(gap, Data.BullData.ChargeMinIntervalSec * 30, Data.BullData.ChargeMaxIntervalSec * 30 + slack);
                     }
                     prevTick = sim.State.Charge.LastChargeTick; prevCount = cnt;
@@ -415,19 +416,90 @@ namespace Game.Core.Tests
             var sim = new Simulation(Cfg(21, SeatKind.Human), Data);
             RunTo(sim, Release);
             while (sim.State.Charge.ChargeLeft == 0) sim.Step(TickInputs.Empty);
-            // держим бегунов вне досягаемости, смотрим скорость
-            long maxSpeed = 0; int ticks = 0;
+            // бегуны в 15–20 м впереди (вне режима разгона резинки 9.5 — он маскировал баг F-081), смотрим скорость
+            long maxSpeed = 0, speedAt1s = 0; int ticks = 0;
             while (sim.State.Charge.ChargeLeft > 0 && ticks < 200)
             {
                 double bs = Dbl(sim.State.Bull.S);
-                for (int i = 0; i < 4; i++) sim.State.Runners[i].S = Fx(bs + 25 + i).Raw;
+                for (int i = 0; i < 4; i++) sim.State.Runners[i].S = Fx(bs + 15 + i).Raw;
                 sim.Step(TickInputs.Empty);
                 if (sim.State.Bull.Speed > maxSpeed) maxSpeed = sim.State.Bull.Speed;
                 ticks++;
+                if (ticks == 30) speedAt1s = sim.State.Bull.Speed;
             }
-            _out.WriteLine($"ticks={ticks} maxSpeed={Dbl(maxSpeed)}");
+            _out.WriteLine($"ticks={ticks} maxSpeed={Dbl(maxSpeed)} speedAt1s={Dbl(speedAt1s)}");
             Assert.InRange(ticks, Data.BullData.ChargeSec * 30 - 5, Data.BullData.ChargeSec * 30 + 1);
-            Assert.InRange(Dbl(maxSpeed), 9.5, 11.01);
+            Assert.True(Dbl(speedAt1s) >= 10.5, $"через 1 с рывка скорость {Dbl(speedAt1s)} < 10.5");
+            Assert.True(Dbl(maxSpeed) <= 11.01 * 1.15, "скорость в рывке выше chargeSpeed × уклон");
+        }
+
+        [Fact]
+        public void ChargeSpeedTrace_RisesByAccelPerTickToChargeSpeedAndHolds()
+        {
+            var sim = new Simulation(Cfg(21, SeatKind.Human), Data);
+            RunTo(sim, Release);
+            while (sim.State.Charge.ChargeLeft == 0) sim.Step(TickInputs.Empty);
+            var bd = Data.BullData;
+            Fixed dv = bd.Accel * Fixed.FromFraction(1, 30);
+            var sb = new StringBuilder();
+            long prevSpeed = sim.State.Bull.Speed; int ticks = 0, atTarget = -1;
+            long lastTarget = 0;
+            while (sim.State.Charge.ChargeLeft > 0 && ticks < 200)
+            {
+                double bs = Dbl(sim.State.Bull.S);
+                Fixed sPrev = sim.State.Bull.S == 0 ? Fixed.Zero : Fixed.FromRaw(sim.State.Bull.S);
+                for (int i = 0; i < 4; i++) sim.State.Runners[i].S = Fx(bs + 15 + i).Raw;
+                sim.Step(TickInputs.Empty);
+                Fixed mul = sim.Street.SlopeAt(sPrev);
+                if (sim.Street.Blocks[sim.Street.BlockIndexAt(sPrev)].Def.Id == "stairs") mul = mul * bd.StairsMul;
+                Fixed target = bd.ChargeSpeed * mul;
+                long speed = sim.State.Bull.Speed;
+                Fixed prev = Fixed.FromRaw(prevSpeed);
+                Fixed expected = prev < target ? Fixed.Min(prev + dv, target) : Fixed.Max(prev - dv, target);
+                sb.AppendLine($"tick {ticks}: speed={Dbl(speed):F3} target={(double)target:F3}");
+                if (sim.State.Charge.ChargeLeft > 0 || ticks < 59) Assert.Equal(expected.Raw, speed);
+                if (atTarget < 0 && speed == target.Raw) atTarget = ticks;
+                lastTarget = target.Raw; prevSpeed = speed; ticks++;
+            }
+            _out.WriteLine(sb.ToString());
+            Assert.True(atTarget >= 0 && atTarget <= 30, "скорость не дошла до chargeSpeed × уклон за ≈0.6–1 с");
+            Assert.Equal(lastTarget, prevSpeed); // удержание до конца рывка
+        }
+
+        [Fact]
+        public void ChargeSpeedChangesTheRace_12VsDifferentFrom11()
+        {
+            string json = System.IO.File.ReadAllText(BullJsonPath(), Encoding.UTF8);
+            var fast = new GameData(Data.RunnerData, BullData.Parse(json.Replace("\"chargeSpeed\": 11,", "\"chargeSpeed\": 12,")),
+                Data.StreetData, Data.CharacterData, Data.ActionData, Data.EconomyData, Game.Core.Bots.BotData.None(), Data.HintData);
+            var a = new Simulation(Cfg(7, SeatKind.Human), Data).Running();
+            var b = new Simulation(Cfg(7, SeatKind.Human), fast).Running();
+            var rng = new DetRandom(7);
+            for (int t = 0; t < 3000; t++) { var ti = RandomInputs(ref rng); a.Step(ti); b.Step(ti); }
+            Assert.True(a.State.Charge.Count > 0);
+            Assert.NotEqual(a.StateHash(), b.StateHash());
+        }
+
+        [Fact]
+        public void TossOfNonTargetInChargeWindowIsContact_TargetIsCharge()
+        {
+            var sim = Prepared(4);
+            sim.State.Charge.Cooldown = 1;
+            for (int t = 0; t < 300 && sim.State.Charge.ChargeLeft == 0; t++)
+            {
+                double b0 = Dbl(sim.State.Bull.S);
+                sim.State.Runners[0].S = Fx(b0 + 12).Raw; sim.State.Runners[0].X = sim.State.Bull.X;
+                for (int i = 1; i < 4; i++) sim.State.Runners[i].S = Fx(b0 + 500 + i * 10).Raw;
+                sim.Step(TickInputs.Empty);
+            }
+            Assert.True(sim.State.Charge.ChargeLeft > 0);
+            Assert.Equal(0, sim.State.Charge.Target);
+            // место 1 — под рогами в окне рывка, но не цель
+            sim.State.Runners[1].S = sim.State.Bull.S + Fx(0.3).Raw; sim.State.Runners[1].X = sim.State.Bull.X;
+            sim.State.Runners[0].S = sim.State.Bull.S + Fx(12).Raw; sim.State.Runners[0].X = sim.State.Bull.X;
+            sim.Step(TickInputs.Empty);
+            Assert.Equal(1, sim.State.Runners[1].Toss.Tossed);
+            Assert.Equal(TossCause.Contact, sim.State.Runners[1].Toss.LastCause);
         }
 
         static string BullJsonPath()
@@ -470,9 +542,9 @@ namespace Game.Core.Tests
                 Data.StreetData, Data.CharacterData, Data.ActionData, Data.EconomyData, Game.Core.Bots.BotData.None(), Data.HintData);
             double normal = MaxChargeSpeed(Data), slowed = MaxChargeSpeed(slow);
             _out.WriteLine($"normal={normal} slowed={slowed}");
-            // BullMovement.Step перед рывком подтягивает скорость к разгону 9.5, поэтому разница меньше 4 м/с
-            Assert.True(slowed < normal - 0.3, $"normal={normal} slowed={slowed}");
-            Assert.InRange(normal, 10.5, 11.01);
+            // F-081: рывок ведёт только MoveCharging, скорость идёт к chargeSpeed × уклон (спуск до ×1.1)
+            Assert.True(slowed < normal - 3.0, $"normal={normal} slowed={slowed}");
+            Assert.InRange(normal, 10.5, 11.01 * 1.15);
         }
 
         [Fact]
@@ -519,7 +591,7 @@ namespace Game.Core.Tests
         // «вбок + спринт — уходит при d ≥ 2.5 м»; «Кто не ответил — подброшен.»
 
         /// <summary>Манекен в 6 м впереди быка (остальные далеко) в тик начала рывка; reaction — тиков до ответа, side — шаг вбок.</summary>
-        static (Simulation sim, int tossedTick, int cause, int events) RunDodge(ulong seed, bool stand, bool sidestep, bool sprint, int reaction)
+        static (Simulation sim, int tossedTick, int cause, int events) RunDodge(ulong seed, bool stand, bool sidestep, bool sprint, int reaction, int stepTicks = 12)
         {
             var sim = Prepared(seed);
             sim.State.Charge.Cooldown = 1;
@@ -538,7 +610,7 @@ namespace Game.Core.Tests
                 else if (stand) { sim.State.Runners[0].S = s0; sim.State.Runners[0].X = x0; sim.State.Runners[0].Speed = 0; }
                 int since = started < 0 ? -1 : sim.Tick - started;
                 bool react = since >= reaction;
-                int steer = react && sidestep && since < reaction + 12 ? 1 : 0; // 12 тиков × 3 м/с ≈ 1.2 м
+                int steer = react && sidestep && since < reaction + stepTicks ? 1 : 0; // 12 тиков × 3 м/с ≈ 1.2 м
                 int tempo = react && sprint ? 1 : 0;
                 sim.Step(TickInputs.Empty.With(0, new PlayerInput(steer, tempo, false)));
                 events += sim.Events.CountOf(Game.Core.Events.RaceEventType.BullCharge);
@@ -564,7 +636,10 @@ namespace Game.Core.Tests
         [Fact]
         public void DummyAt6m_SidestepOnly_EscapesTheCharge()
         {
-            var (_, tossed, _, _) = RunDodge(4, stand: false, sidestep: true, sprint: false, reaction: 9);
+            // F-081: рывок теперь идёт 11 м/с (раньше 6.3 — бык не догонял бегуна и тест проходил из-за бага). Бык доворачивает 1 м/с
+            // (F-100 §3.2 п.2), поэтому шаг 12 тиков (чистые 0.8 м при 3 м/с руля против 1 м/с быка) не выводит из-под рогов (≤ 1 м):
+            // уходит бегун, который идёт вбок 30 тиков (≈ 2.4 м к моменту, когда бык поравняется с d = 6 м, бык успевает довернуть ≈ 1.4 м).
+            var (_, tossed, _, _) = RunDodge(4, stand: false, sidestep: true, sprint: false, reaction: 9, stepTicks: 30);
             Assert.Equal(-1, tossed);
         }
 
@@ -614,7 +689,7 @@ namespace Game.Core.Tests
                         Assert.Equal(sim.State.Charge.Count, events);
                     }
             }
-            Assert.True(events > 5);
+            Assert.True(events >= 3, "events=" + events); // F-081: рывок стал настоящим, подбросов больше, целей меньше (было > 5; частоту вернёт F-068)
             Assert.Equal(sim.State.Charge.Count, events);
         }
 
@@ -645,7 +720,9 @@ namespace Game.Core.Tests
                 double per5 = n * 9000.0 / System.Math.Max(ticks, 1);
                 sb.AppendLine($"seed {seed}: ticks={ticks} charges={n} per5min={per5:F1} tosses={sim.State.Charge.Tosses}");
                 // F-100 §3.2: «Рывков ≈ 20–25 за забег (тест — 18–30)» (F-071 временно держала нижнюю границу 2, F-072 вернула)
-                if (per5 < 18 || per5 > 30) bad++;
+                // F-081 ослабила нижнюю границу 18 → 6: живой рывок 11 м/с подбрасывает чаще, цели защищены/на охлаждении, рывков 8–25 за забег
+                // (в таблице выше). Диапазон 18–30 вернёт F-068 ручками bull.json (интервал, охлаждение, число целей).
+                if (per5 < 6 || per5 > 30) bad++;
             }
             _out.WriteLine(sb.ToString());
             Assert.True(bad == 0, sb.ToString());
