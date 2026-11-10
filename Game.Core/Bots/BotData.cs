@@ -71,6 +71,7 @@ namespace Game.Core.Bots
             for (int i = 0; i < t.Count; i++)
             {
                 var o = t.Obj(i);
+                bool isCoward = o.Str("id") == "coward"; // F-102 §3.3: у труса ключи трусцы обязательны (нет ключа — FormatException, не тихий 0)
                 var band = o.Arr("band");
                 var react = o.Arr("reaction");
                 var push = o.Arr("pushWindow");
@@ -79,7 +80,8 @@ namespace Game.Core.Bots
                     Id = o.Str("id"),
                     BandMin = band.Num(0), BandMax = band.Num(1),
                     SprintBelow = o.Num("sprintBelow"), Hysteresis = o.Num("hysteresis"),
-                    JogAbove = o.NumOr("jogAbove"), JogHysteresis = o.NumOr("jogHysteresis"),
+                    JogAbove = isCoward ? o.Num("jogAbove") : o.NumOr("jogAbove"),
+                    JogHysteresis = isCoward ? o.Num("jogHysteresis") : o.NumOr("jogHysteresis"),
                     SprintUntilStamina = o.Num("sprintUntilStamina"), ReserveStamina = o.Num("reserveStamina"),
                     TempoPeriod = o.Int("tempoPeriod"), ActionPeriod = o.Int("actionPeriod"),
                     ReactionMin = react.Num(0).ToInt(), ReactionMax = react.Num(1).ToInt(),

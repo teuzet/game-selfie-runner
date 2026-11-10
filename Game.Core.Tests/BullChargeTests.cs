@@ -420,7 +420,10 @@ namespace Game.Core.Tests
         [Fact]
         public void BullAcceleratesTo9_5WhileRunnerAheadWithin8m_LagAboveAnchorLag()
         {
-            Assert.True(MaxBullSpeedWithAnchor(30) > Dbl(Data.BullData.CatchUpSpeed.Raw) - 0.5, "отставание 30 м > порога: якорь не держит, бык рвётся к 9.5");
+            // 22 м: выше anchorLag (20), но ниже lagFar (25) — порог 20, а не 25
+            double lag = Dbl(Data.BullData.AnchorLag.Raw) + 2;
+            Assert.True(lag < Dbl(Data.BullData.LagFar.Raw));
+            Assert.True(MaxBullSpeedWithAnchor(lag) > Dbl(Data.BullData.CatchUpSpeed.Raw) - 0.5, "отставание 22 м > порога: якорь не держит, бык рвётся к 9.5");
         }
 
         // F-083, design/F-102.md → «Достижимая цель рывка» (3.2):

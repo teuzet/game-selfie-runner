@@ -91,8 +91,13 @@ public class GameDataTests
         Assert.Contains("\"anchorLag\": 20,", json);
         var e = Assert.Throws<FormatException>(() => Game.Core.Bull.BullData.Parse(json.Replace("\"anchorLag\": 20,", "")));
         Assert.Contains("anchorLag", e.Message);
-        // jogAbove у труса — число, которое меняет поведение: без ключа порог 0 (трусца всегда) — это ловит тест темпа BotCowardTests
-        Assert.Contains("\"jogAbove\": 30", File.ReadAllText(Path.Combine(DataDir(), "bots.json")));
+        // ключи трусцы труса обязательны: без ключа тихий 0 дал бы трусцу при любом d > 5 м
+        string bots = File.ReadAllText(Path.Combine(DataDir(), "bots.json"));
+        Assert.Contains("\"jogAbove\": 30, \"jogHysteresis\": 5,", bots);
+        e = Assert.Throws<FormatException>(() => Game.Core.Bots.BotData.Parse(bots.Replace("\"jogAbove\": 30,", "")));
+        Assert.Contains("jogAbove", e.Message);
+        e = Assert.Throws<FormatException>(() => Game.Core.Bots.BotData.Parse(bots.Replace("\"jogHysteresis\": 5,", "")));
+        Assert.Contains("jogHysteresis", e.Message);
     }
 
     [Theory]
