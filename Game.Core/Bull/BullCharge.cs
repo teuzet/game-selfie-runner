@@ -83,13 +83,16 @@ namespace Game.Core.Bull
         /// <summary>Бык за тик (шаг 6 порядка): движение с резинкой, затем рывок и подброс.</summary>
         public static void StepBull(Simulation sim)
         {
-            long prevBullS = sim.State.Bull.S;
+            long prevBullS = sim.State.Bull.S, prevSpeed = sim.State.Bull.Speed, prevX = sim.State.Bull.X;
             BullMovement.Step(sim.BullData, sim.Street, ref sim.State.Bull, sim.State.Runners);
-            Step(sim, prevBullS);
+            Step(sim, prevBullS, prevSpeed, prevX);
         }
 
-        /// <summary>После BullMovement.Step; prevBullS — s быка до этого шага (рывок переопределяет движение).</summary>
-        public static void Step(Simulation sim, long prevBullS)
+        /// <summary>
+        /// После BullMovement.Step; prevBullS, prevSpeed и prevX — s, скорость и x быка до этого шага: рывок переопределяет движение
+        /// и стартует от них, а не от скорости и x, уже сдвинутых резинкой (крейсер, доворот 3 м/с) — F-081.
+        /// </summary>
+        public static void Step(Simulation sim, long prevBullS, long prevSpeed, long prevX)
         {
             var st = sim.State;
             var street = sim.Street;
@@ -121,14 +124,15 @@ namespace Game.Core.Bull
             {
                 if (c.Target < 0 || Shielded(sim, c.Target)) { c.ChargeLeft = 0; c.Target = -1; } // рывок на ставшего защищённым прекращается
             }
-            bool rushing = c.ChargeLeft > 0; // причина подброса в этом тике — рывок, даже если он кончится в этом же тике
-            if (rushing)
+            // цель рывка в этом тике (даже если рывок кончится в этом же тике): только её подброс имеет причину «рывок»
+            int chargeTarget = c.ChargeLeft > 0 ? c.Target : -1;
+            if (chargeTarget >= 0)
             {
-                MoveCharging(sim, street, ref b, ref c, prevBullS);
+                MoveCharging(sim, street, ref b, ref c, prevBullS, prevSpeed, prevX);
                 if (b.Phase == (int)BullPhase.Charge) Miss(sim, ref b, ref c, prevBullS);
             }
 
-            if (b.Phase != (int)BullPhase.Arena) Contacts(sim, street, ref b, ref c, prevBullS, rushing);
+            if (b.Phase != (int)BullPhase.Arena) Contacts(sim, street, ref b, ref c, prevBullS, chargeTarget);
         }
 
         static int NextInterval(BullData bd, ref DetRandom rng) => rng.Range(bd.ChargeMinIntervalSec * Tps, bd.ChargeMaxIntervalSec * Tps + 1);
@@ -172,11 +176,11 @@ namespace Game.Core.Bull
             return sim.CharacterOf(seat).Tastiness / (Fixed.One + d / Fixed.FromInt(10));
         }
 
-        static void MoveCharging(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c, long prevBullS)
+        static void MoveCharging(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c, long prevBullS, long prevSpeed, long prevX)
         {
             var st = sim.State;
             var bd = sim.BullData;
-            Fixed s = Fixed.FromRaw(prevBullS), x = Fixed.FromRaw(b.X), speed = Fixed.FromRaw(b.Speed);
+            Fixed s = Fixed.FromRaw(prevBullS), x = Fixed.FromRaw(prevX), speed = Fixed.FromRaw(prevSpeed);
             Fixed mul = street.SlopeAt(s);
             if (street.Blocks[street.BlockIndexAt(s)].Def.Id == "stairs") mul = mul * bd.StairsMul;
             Fixed target = bd.ChargeSpeed * mul;
@@ -233,7 +237,7 @@ namespace Game.Core.Bull
         /// F-100 §3.1: защищённого бык не подбрасывает и держится в tossWaitGap м позади него (не паркуется на его s и не обходит);
         /// достал (≤1 м) или бегун позади быка — подброс: никого позади быка. Защита раньше контактов.
         /// </summary>
-        static void Contacts(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c, long prevBullS, bool rushing)
+        static void Contacts(Simulation sim, StreetMap street, ref BullState b, ref BullChargeState c, long prevBullS, int chargeTarget)
         {
             var st = sim.State;
             Fixed reach = sim.BullData.ChargeReach;
@@ -260,7 +264,7 @@ namespace Game.Core.Bull
                     Fixed ds = Fixed.FromRaw(dsRaw), dx = Fixed.FromRaw(r.X - b.X);
                     hit = ds * ds + dx * dx <= reach * reach;
                 }
-                if (hit) Toss(sim, street, ref b, ref c, i, rushing ? TossCause.Charge : TossCause.Contact);
+                if (hit) Toss(sim, street, ref b, ref c, i, i == chargeTarget ? TossCause.Charge : TossCause.Contact);
             }
         }
 
