@@ -6,6 +6,7 @@ using Game.Core.Bots;
 using Game.Core.Bull;
 using Game.Core.Economy;
 using Game.Core.Events;
+using Game.Core.Hints;
 using Game.Core.Math;
 using Game.Core.Race;
 using Game.Core.Runners;
@@ -56,10 +57,9 @@ namespace Game.Sim
     /// </summary>
     public sealed class SessionTracker
     {
-        // Форки: acceptance F-082, «spread решения — по форку»; выборка «каждое k-е решение» нужна, чтобы уложиться в 5 минут на 40+80 забегов.
+        // Форки: acceptance F-082, «spread решения — по форку»; выборки «каждое k-е решение» нет: форк на каждое решение укладывается в бюджет (замер — в notes).
         const int ForkTicks = 3 * Simulation.TicksPerSecond;      // альтернатива проигрывается ≤ 3 с
         const int SteerWindow = Simulation.TicksPerSecond;        // альтернативный руль/без действия — первая секунда, дальше как обычно
-        // Выборки нет: форк на каждое решение укладывается в бюджет (замер — в notes), поэтому spread есть у всех решений.
 
         // Угроза: бык ≤ 8 м — 0.7..1.0, 8–20 м — 0.7..0.3, дальше не пишется (acceptance F-082).
         const int NearCm = 800, FarCm = 2000;
@@ -81,7 +81,11 @@ namespace Game.Sim
         readonly List<Ev>[] _ev;
         readonly PlayerInput[] _prevIn;
         readonly IBotBrain?[] _brains;
-        readonly Simulation?[] _shadowA, _shadowB;
+        Simulation? _shadowA;
+        readonly Simulation?[] _shadowB;
+
+        /// <summary>Тест: (место, вид решения, тик решения, StateHash варианта A после первого тика форка, StateHash основного прогона после того же тика).</summary>
+        public System.Action<int, int, int, ulong, ulong>? ForkProbe;
 
         /// <param name="seats">Отслеживаемые места; archetype[i] — архетип i-го из них.</param>
         public SessionTracker(Simulation sim, GameData data, RaceConfig cfg, int[] seats, string[] archetype)
@@ -92,7 +96,6 @@ namespace Game.Sim
             for (int i = 0; i < seats.Length; i++) _ev[i] = new List<Ev>();
             _prevIn = new PlayerInput[RaceConfig.SeatCount];
             _brains = BotBrains.CreateAll(data.BotData, cfg);
-            _shadowA = new Simulation?[RaceConfig.SeatCount];
             _shadowB = new Simulation?[RaceConfig.SeatCount];
         }
 
@@ -212,54 +215,83 @@ namespace Game.Sim
         /// </summary>
         int SpreadCenti(int seat, int kind, PlayerInput cur)
         {
-            var a = Shadow(_shadowA, seat);
-            var b = Shadow(_shadowB, seat);
-            int altPace = 0, altSteer = 0;
-            long delta = System.Math.Abs(Play(a, seat, kind, false, cur, ref altPace, ref altSteer) - Play(b, seat, kind, true, cur, ref altPace, ref altSteer));
+            long va = PlayA(seat, kind, cur);
+            long vb = PlayB(seat, kind, cur);
+            long delta = System.Math.Abs(va - vb);
             long don = Viewers.DonationsOf(_prev.State, seat);
             long spread = delta / (don + 100);
             return (int)(spread > 100 ? 100 : spread);
         }
 
-        /// <summary>Тот же забег, но место ведёт Game.Sim (Human): иначе вход бота подменить нельзя. Улица и данные общие.</summary>
-        Simulation Shadow(Simulation?[] pool, int seat)
+        /// <summary>Вариант A: точная копия реальной игры — тот же конфиг (бот остаётся ботом), вход человека удерживается.</summary>
+        long PlayA(int seat, int kind, PlayerInput cur)
         {
-            var s = pool[seat];
-            if (s != null) return s;
-            var sc = _cfg.GetSeat(seat);
-            var seats = new SeatConfig[RaceConfig.SeatCount];
-            for (int k = 0; k < seats.Length; k++) seats[k] = _cfg.GetSeat(k);
-            seats[seat] = new SeatConfig(SeatKind.Human, sc.CharacterId, sc.BotTemperament);
-            s = new Simulation(new RaceConfig(_cfg.Seed, seats), _data, _sim.Street) { BotHints = _sim.BotHints };
-            pool[seat] = s;
-            return s;
-        }
-
-        /// <summary>Играет ForkTicks тиков из снимка тика решения; результат — донаты×100 + зрители места.</summary>
-        long Play(Simulation sh, int seat, int kind, bool alt, PlayerInput cur, ref int altPace, ref int altSteer)
-        {
+            var sh = _shadowA ??= MakeShadow(_cfg);
             sh.CopyFrom(_prev);
-            var brain = _brains[seat];
+            bool bot = _brains[seat] != null;
             for (int k = 0; k < ForkTicks && sh.State.Phase != RacePhase.Over; k++)
             {
-                PlayerInput inp = brain != null
-                    ? BotBrains.Think(brain, sh.State, sh.Street, _data.BotData, seat, sh.BotHints)
-                    : new PlayerInput(cur.Steer, cur.Pace, k == 0 && cur.Action);
+                sh.Step(bot ? TickInputs.Empty : TickInputs.Empty.With(seat, new PlayerInput(cur.Steer, cur.Pace, k == 0 && cur.Action)));
+                if (k == 0) ForkProbe?.Invoke(seat, kind, _prev.Tick, sh.StateHash(), _sim.StateHash());
+            }
+            return Score(sh, seat);
+        }
+
+        /// <summary>
+        /// Вариант B: другой темп / руль / без действия. Бот-место в тени — Human (вход бота подменить нельзя); его вход каждый тик —
+        /// тот же, что дал бы FillInputs: на копии состояния сначала ChatHints.Step (подсказки тика), затем Think. Память бота
+        /// (в т.ч. Rng) переносится обратно в тень. Копией служит Simulation варианта A (он уже доигран).
+        /// </summary>
+        long PlayB(int seat, int kind, PlayerInput cur)
+        {
+            var brain = _brains[seat];
+            var sh = Shadow(seat);
+            sh.CopyFrom(_prev);
+            int altPace = 0, altSteer = 0;
+            for (int k = 0; k < ForkTicks && sh.State.Phase != RacePhase.Over; k++)
+            {
+                PlayerInput inp;
+                if (brain != null)
+                {
+                    var probe = _shadowA!;
+                    probe.CopyFrom(sh);
+                    if (probe.State.Phase != RacePhase.Countdown)
+                    {
+                        ChatHints.Step(probe);
+                        Collisions.BeforeMove(probe.State);
+                    }
+                    inp = BotBrains.Think(brain, probe.State, probe.Street, _data.BotData, seat, probe.BotHints);
+                    sh.State.Bots[seat] = probe.State.Bots[seat];
+                }
+                else inp = new PlayerInput(cur.Steer, cur.Pace, k == 0 && cur.Action);
                 if (k == 0)
                 {
                     altPace = inp.Pace == 0 ? 1 : 0;
                     altSteer = inp.Steer != 0 ? -inp.Steer : (sh.State.Runners[seat].X > 0 ? -1 : 1);
                 }
-                if (alt)
-                {
-                    if (kind == KindPace) inp = new PlayerInput(inp.Steer, altPace, inp.Action);
-                    else if (kind == KindSteer && k < SteerWindow) inp = new PlayerInput(altSteer, inp.Pace, inp.Action);
-                    else if (kind == KindAction && k < SteerWindow) inp = new PlayerInput(inp.Steer, inp.Pace, false);
-                }
+                if (kind == KindPace) inp = new PlayerInput(inp.Steer, altPace, inp.Action);
+                else if (kind == KindSteer && k < SteerWindow) inp = new PlayerInput(altSteer, inp.Pace, inp.Action);
+                else if (kind == KindAction && k < SteerWindow) inp = new PlayerInput(inp.Steer, inp.Pace, false);
                 sh.Step(TickInputs.Empty.With(seat, inp));
             }
-            return (long)Viewers.DonationsOf(sh.State, seat) * 100 + Viewers.ViewersOf(sh.State, seat);
+            return Score(sh, seat);
         }
+
+        /// <summary>Тот же забег, но бот-место ведёт Game.Sim (Human). Улица и данные общие.</summary>
+        Simulation Shadow(int seat)
+        {
+            var s = _shadowB[seat];
+            if (s != null) return s;
+            var seats = new SeatConfig[RaceConfig.SeatCount];
+            for (int k = 0; k < seats.Length; k++) seats[k] = _cfg.GetSeat(k);
+            var sc = seats[seat];
+            if (sc.Kind == SeatKind.Bot) seats[seat] = new SeatConfig(SeatKind.Human, sc.CharacterId, sc.BotTemperament);
+            return _shadowB[seat] = MakeShadow(new RaceConfig(_cfg.Seed, seats));
+        }
+
+        Simulation MakeShadow(RaceConfig cfg) => new Simulation(cfg, _data, _sim.Street) { BotHints = _sim.BotHints };
+
+        static long Score(Simulation sh, int seat) => (long)Viewers.DonationsOf(sh.State, seat) * 100 + Viewers.ViewersOf(sh.State, seat);
 
         // ---------- итог ----------
 

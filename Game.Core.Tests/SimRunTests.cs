@@ -274,6 +274,25 @@ public class SimRunTests
         finally { Directory.Delete(dir, true); }
     }
 
+    /// <summary>Вариант A форка — точная копия игры: после первого тика форка хэш равен хэшу основного прогона (в т.ч. на решении steer бота).</summary>
+    [Fact]
+    public void ForkVariantAMatchesMainRunOnNextTick()
+    {
+        int checkedSteer = 0, checkedAll = 0;
+        for (ulong seed = 1; seed <= 3; seed++)
+        {
+            RaceRecorder.Run(seed, Data, null, (seat, kind, tick, a, main) =>
+            {
+                Assert.Equal(main, a);
+                checkedAll++;
+                if (kind == 1) checkedSteer++;
+            });
+            RaceRecorder.Run(seed, Data, ServiceInput.Random, (seat, kind, tick, a, main) => { Assert.Equal(main, a); checkedAll++; });
+        }
+        Assert.True(checkedSteer > 0, "нет решений steer у ботов за 3 сида");
+        Assert.True(checkedAll > checkedSteer);
+    }
+
     [Fact]
     public void SessionsJsonlIsByteIdenticalForSameSeed()
     {

@@ -88,7 +88,7 @@ namespace Game.Sim
         /// Обычный забег (<paramref name="service"/> == null): 4 бота, в sessions — все четыре места с архетипом = характер бота.
         /// Служебный забег гейта (<see cref="ServiceInput.All"/>): место 0 ведёт Game.Sim, в sessions — одна строка этого места.
         /// </summary>
-        public static RunRecord Run(ulong seed, GameData data, string? service = null)
+        public static RunRecord Run(ulong seed, GameData data, string? service = null, System.Action<int, int, int, ulong, ulong>? forkProbe = null)
         {
             var cfg = MakeConfig(seed, data, service != null);
             var sim = new Simulation(cfg, data);
@@ -99,7 +99,7 @@ namespace Game.Sim
             var archetypes = new string[tracked.Length];
             for (int i = 0; i < tracked.Length; i++)
                 archetypes[i] = service ?? data.BotData.Get(cfg.GetSeat(tracked[i]).BotTemperament).Id;
-            var tracker = new SessionTracker(sim, data, cfg, tracked, archetypes);
+            var tracker = new SessionTracker(sim, data, cfg, tracked, archetypes) { ForkProbe = forkProbe };
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 var sc = cfg.GetSeat(i);

@@ -10,7 +10,7 @@ namespace Game.Sim
     /// <summary>
     /// Консольный прогон забегов 4 ботов без Unity:
     /// <c>dotnet run --project Game.Sim -- --seeds N --from S --out DIR [--data DIR] [--gate-seeds N]</c> → DIR/metrics.json, DIR/chronicle-&lt;seed&gt;.md и DIR/sessions.jsonl
-        /// (F-082: все места обычных забегов + N служебных забегов на архетип idle/random, N по умолчанию = --seeds).
+    /// (F-082: все места обычных забегов + N служебных забегов на архетип idle/random, N по умолчанию = --seeds).
     /// Вывод детерминирован: один сид — побайтово тот же результат.
     /// </summary>
     public static class Program
@@ -37,7 +37,8 @@ namespace Game.Sim
                     }
                 }
                 if (seeds < 1) throw new ArgumentException("--seeds должно быть ≥ 1");
-                if (gateSeeds < 0) gateSeeds = seeds;                if (outDir == null) throw new ArgumentException("нужен --out DIR");
+                if (gateSeeds < 0) gateSeeds = seeds;
+                if (outDir == null) throw new ArgumentException("нужен --out DIR");
             }
             catch (Exception e) when (e is ArgumentException || e is FormatException || e is OverflowException)
             {
