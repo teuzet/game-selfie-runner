@@ -71,7 +71,7 @@ public class BotCowardTests
     }
 
     [Fact]
-    public void CowardNeverJogsAndNeverActsAcrossDistances()
+    public void CowardNeverActsAcrossDistances()
     {
         var brain = Brain();
         var m = Mem();
@@ -79,10 +79,39 @@ public class BotCowardTests
         {
             double d = 5 + (t * 37 % 60);
             var v = View(t, d, stamina: 10 + (t * 13 % 90));
-            var inp = brain.Decide(v, ref m);
-            Assert.True(inp.Pace >= 0);
-            Assert.False(inp.Action);
+            Assert.False(brain.Decide(v, ref m).Action);
         }
+    }
+
+    // F-083, design/F-102.md → «Трус возвращается» (3.3):
+    // «Темп труса по `d` до быка: дальше 30 м — трусца, в 15–30 м — бег, ближе 15 м — спринт, пока выносливость > 5 (как раньше).
+    // Гистерезис трусцы 5 м по правилу F-005 §2.2: трусца включается при `d > 35`, выключается при `d < 25`.»
+    // «„Трусцу не включает никогда“ снимается. Не меняются руль, действие (никогда), квесты (только „Чистый пробег“), спринт от рывка на себя и спринт после подъёма.»
+    [Fact]
+    public void CowardJogsFarRunsInMiddleSprintsClose()
+    {
+        var brain = Brain();
+        var m1 = Mem(); var m2 = Mem(); var m3 = Mem();
+        Assert.Equal(-1, brain.Decide(View(d: 40, stamina: 50), ref m1).Pace);
+        Assert.Equal(0, brain.Decide(View(d: 20, stamina: 50), ref m2).Pace);
+        Assert.Equal(1, brain.Decide(View(d: 12, stamina: 50), ref m3).Pace);
+    }
+
+    [Fact]
+    public void CowardJogHysteresisIs5mAroundThe30mThreshold()
+    {
+        var brain = Brain(); var def = Bots.Get(0);
+        double above = (double)def.JogAbove, hyst = (double)def.JogHysteresis;
+        Assert.Equal(30, above); Assert.Equal(5, hyst);
+        var m = Mem(); int t = 0;
+        int Pace(double d) { var p = brain.Decide(View(t, d), ref m).Pace; t += def.TempoPeriod; return p; }
+        Assert.Equal(0, Pace(32));          // бежал, 30..35 — трусца ещё не включается
+        Assert.Equal(0, Pace(above + hyst - 0.5));
+        Assert.Equal(-1, Pace(above + hyst + 0.5)); // > 35 — включилась
+        Assert.Equal(-1, Pace(32));         // 25..35 — держится
+        Assert.Equal(-1, Pace(above - hyst + 0.5));
+        Assert.Equal(0, Pace(above - hyst - 0.5));  // < 25 — выключилась
+        Assert.Equal(0, Pace(28));          // 25..35 — снова не включается
     }
 
     [Fact]
@@ -351,6 +380,7 @@ public class BotCowardTests
             Assert.Equal(p0, d.PushMin); Assert.Equal(p1, d.PushMax); Assert.Equal(rush, d.DodgeRush);
             Assert.Equal(quests, d.Quests);
         }
+        Assert.Equal(Fx(30), c.JogAbove); Assert.Equal(Fx(5), c.JogHysteresis); // F-102 §5: jogAbove 30, jogHysteresis 5 (строка coward)
         Row(c, 15, 30, 15, 1, 5, 0, 15, 0, 8, 10, 1, 1, 0, 0, 0, 0, 0, false, new[] { "clean_run" });
         Row(a, 4, 8, 2.5, 0.5, 10, 40, 6, 15, 6, 8, 1, 0.5, 0, 0.3, 1.5, 8, 20, true, new[] { "stay_hot", "hit_stall", "floor_neighbor", "overtake" });
         Row(tr, 12, 18, 6, 1, 20, 50, 10, 90, 7, 9, 1, 1, 8, 1.0, 3, 8, 20, true, new[] { "floor_neighbor", "overtake" });

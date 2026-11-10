@@ -84,7 +84,7 @@ namespace Game.Core.Bull
         public static void StepBull(Simulation sim)
         {
             long prevBullS = sim.State.Bull.S, prevSpeed = sim.State.Bull.Speed, prevX = sim.State.Bull.X;
-            BullMovement.Step(sim.BullData, sim.Street, ref sim.State.Bull, sim.State.Runners);
+            BullMovement.Step(sim.BullData, sim.Street, ref sim.State.Bull, sim.State.Runners, sim.State.Tick);
             Step(sim, prevBullS, prevSpeed, prevX);
         }
 
@@ -171,6 +171,9 @@ namespace Game.Core.Bull
             if (lastToss >= 0 && st.Tick - lastToss < sim.BullData.TossCooldownSec * Tps) return Fixed.Zero;
             Fixed ds = Fixed.FromRaw(st.Runners[seat].S) - bs;
             if (ds < Fixed.Zero || ds > sim.BullData.ChargeTargetRange) return Fixed.Zero;
+            // F-102 §3.2 п.1: вес 0, если цель дальше эффективной досягаемости (chargeSpeed − скорость цели) × chargeSec + chargeReach.
+            Fixed reach = (sim.BullData.ChargeSpeed - Fixed.FromRaw(st.Runners[seat].Speed)) * Fixed.FromInt(sim.BullData.ChargeSec) + sim.BullData.ChargeReach;
+            if (ds > reach) return Fixed.Zero;
             Fixed dx = Fixed.FromRaw(st.Runners[seat].X) - bx;
             Fixed d = Fixed.Sqrt(ds * ds + dx * dx);
             return sim.CharacterOf(seat).Tastiness / (Fixed.One + d / Fixed.FromInt(10));

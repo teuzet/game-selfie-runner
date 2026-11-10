@@ -78,6 +78,28 @@ public class GameDataTests
         Assert.Contains("shoveCooldown", e.Message);
     }
 
+    // F-083, design/F-102.md §4–5 (тюнить): bull.json anchorLag 20 (15–30); bots.json coward.jogAbove 30 (22–35) и jogHysteresis 5 (3–5).
+    [Fact]
+    public void F102KeysAreReadFromJsonAndAnchorLagIsRequired()
+    {
+        var data = Parsed();
+        Assert.Equal(20, (double)data.BullData.AnchorLag);
+        var coward = data.BotData.Find("coward")!;
+        Assert.Equal(30, (double)coward.JogAbove);
+        Assert.Equal(5, (double)coward.JogHysteresis);
+        string json = File.ReadAllText(Path.Combine(DataDir(), "bull.json"));
+        Assert.Contains("\"anchorLag\": 20,", json);
+        var e = Assert.Throws<FormatException>(() => Game.Core.Bull.BullData.Parse(json.Replace("\"anchorLag\": 20,", "")));
+        Assert.Contains("anchorLag", e.Message);
+        // ключи трусцы труса обязательны: без ключа тихий 0 дал бы трусцу при любом d > 5 м
+        string bots = File.ReadAllText(Path.Combine(DataDir(), "bots.json"));
+        Assert.Contains("\"jogAbove\": 30, \"jogHysteresis\": 5,", bots);
+        e = Assert.Throws<FormatException>(() => Game.Core.Bots.BotData.Parse(bots.Replace("\"jogAbove\": 30,", "")));
+        Assert.Contains("jogAbove", e.Message);
+        e = Assert.Throws<FormatException>(() => Game.Core.Bots.BotData.Parse(bots.Replace("\"jogHysteresis\": 5,", "")));
+        Assert.Contains("jogHysteresis", e.Message);
+    }
+
     [Theory]
     // tossDonations 20 — ручка плейтеста итерации 2 (playtest/iter-2.md → «Тюнинг»; предел 0–80, design/F-101.md §3.3), было 50.
     [InlineData("collisionViewers", 40)] [InlineData("tossViewers", 120)] [InlineData("tossDonations", 20)]

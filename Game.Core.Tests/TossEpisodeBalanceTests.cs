@@ -73,6 +73,7 @@ namespace Game.Core.Tests
                 var sim = new Simulation(RaceRecorder.MakeConfig(seed, Data), Data);
                 var st = sim.State;
                 var prevTossTick = new int[4]; var prevTossed = new int[4];
+                var wasShielded = new bool[4]; var allowedGap = new long[4];
                 for (int i = 0; i < 4; i++) prevTossTick[i] = -1;
                 int ticks = 0, prevCharges = 0;
                 while (ticks < MaxTicks && st.Phase != RacePhase.Over)
@@ -110,12 +111,18 @@ namespace Game.Core.Tests
                             prevTossTick[i] = st.Tick; prevTossed[i] = r.Toss.Tossed;
                         }
                         // бык не в точке защищённого (лежащий/неуязвимый, порог арены) и держит отступ позади него; финишировавшие и арена — вне инварианта
+                        // F-083: бегун может стать защищённым (порог арены), когда бык уже ближе отступа (трус больше не убегает на 7 м/с, F-102 §3.3):
+                        // бык отступить не может, он держится и не сближается — допустимое расстояние не больше, чем в тик начала защиты.
+                        // Решение Nick (producer, F-083, вопрос 6): правило — «бык держится и не сближается» (F-100 §3.1 п.3), а не «гарантированно 4 м»;
+                        // инвариант ослаблен осознанно, строгий вариант вернёт отдельная фича (отступ быка от защищённого), если она понадобится.
                         if (active && BullCharge.Shielded(sim, i) && r.Viewing.FinishTick < 0 && r.S < sim.ArenaStart.Raw)
                         {
                             long ds = r.S - b.S;
-                            if (ds >= 0 && ds < tossGap - gapEps) failures.AppendLine($"seed {seed} t{st.Tick}: бык в {ds / (double)Fixed.OneRaw:F2} м от защищённого {i}");
+                            if (!wasShielded[i]) { wasShielded[i] = true; allowedGap[i] = System.Math.Min(tossGap, ds); }
+                            if (ds >= 0 && ds < allowedGap[i] - gapEps) failures.AppendLine($"seed {seed} t{st.Tick}: бык в {ds / (double)Fixed.OneRaw:F2} м от защищённого {i}");
                             if (ds < 0) failures.AppendLine($"seed {seed} t{st.Tick}: защищённый {i} позади быка");
                         }
+                        else wasShielded[i] = false;
                         // никто (не финишировавший) позади быка
                         if (active && r.Viewing.FinishTick < 0 && r.S < b.S && !BullCharge.Protected(r.Toss))
                             failures.AppendLine($"seed {seed} t{st.Tick}: бегун {i} позади быка");

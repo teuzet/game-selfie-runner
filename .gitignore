@@ -1,4 +1,5 @@
 .factory/
+TestResults/
 bin/
 obj/
 bin~/
