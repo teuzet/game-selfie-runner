@@ -132,10 +132,11 @@ namespace Game.Core.Bull
             bool running = b.Mode == BullMode.Charge || b.Mode == BullMode.Breakthrough;
             if (running && lag <= d.TargetBehind) b.Mode = BullMode.None;
             else if (b.Mode == BullMode.Close && lag >= d.TargetBehind) b.Mode = BullMode.None;
+            // F-102 §3.1 п.3: прорыв с порога снятия якоря; рывок резинки, дошедший до якоря при lag > порога, тоже переходит в прорыв
+            if ((b.Mode == BullMode.None || b.Mode == BullMode.Charge) && lag > d.AnchorLag && anchor && !fed) b.Mode = BullMode.Breakthrough;
             if (b.Mode == BullMode.None)
             {
-                if (lag > d.AnchorLag && anchor && !fed) b.Mode = BullMode.Breakthrough; // F-102 §3.1 п.3: прорыв с порога снятия якоря
-                else if (lag > d.LagFar) b.Mode = BullMode.Charge;
+                if (lag > d.LagFar) b.Mode = BullMode.Charge;
                 else if (lag < d.LagNear) b.Mode = BullMode.Close;
             }
             Fixed baseSpeed = b.Mode == BullMode.Charge || b.Mode == BullMode.Breakthrough ? d.CatchUpSpeed

@@ -142,7 +142,9 @@ namespace Game.Core.Tests
             // бык разгоняется до 9.5 м/с».
             double cruise = (double)D.CruiseSpeed, lagBelow = (double)D.AnchorLag - 5, lagAbove = (double)D.AnchorLag + 10;
             Assert.Equal(cruise, SpeedWithAnchor(lagBelow, 12), 3);                  // отставание 15 м, бык на крейсере → крейсер
-            Assert.Equal(cruise, SpeedWithAnchor(lagBelow, 12, charge: true), 3);    // обычный рывок резинки (не прорыв) якорь держит
+            // рывок резинки, у которого якорь появился уже при отставании ≤ порога, якорь держит (если якорь появился при
+            // lag > порога — это прорыв, см. ChargeMeetingAnchorAboveAnchorLagBecomesBreakthrough)
+            Assert.Equal(cruise, SpeedWithAnchor(lagBelow, 12, charge: true), 3);
             Assert.True(SpeedWithAnchor(lagAbove, 12) > cruise * 1.2, "отставание 30 м, якорь в 6 м: бык должен разгоняться к 9.5");
             Assert.Equal((double)D.CatchUpSpeed, SpeedWithAnchor(lagAbove, 20), 2);
         }
@@ -181,6 +183,32 @@ namespace Game.Core.Tests
             for (int i = 1; i < 4; i++) r[i].S = Fixed.FromRaw((long)((Dbl(b.S) + (double)D.TargetBehind - 1 + (i == 3 ? 20 : 0)) * Fixed.OneRaw)).Raw;
             BullMovement.Step(D, Street, ref b, r, 0);
             Assert.NotEqual(BullMode.Breakthrough, b.Mode);
+        }
+
+        [Fact]
+        public void ChargeMeetingAnchorAboveAnchorLagBecomesBreakthrough()
+        {
+            // design/F-102.md §3.1 п.3: «Если отставание выросло выше порога, а впереди якорь, бык разгоняется до 9.5 м/с
+            // и держит разгон до отставания 12 м, на соседа не глядит».
+            double lagStart = (double)D.AnchorLag + 10, lagHold = (double)D.AnchorLag - 5;
+            var b = NewBull();
+            b.Phase = (int)BullPhase.Charge; b.Mode = BullMode.Charge; b.Timer = 0; b.S = Fixed.FromInt(10).Raw; b.Speed = Fixed.FromInt(9).Raw;
+            var r = Dummies(0);
+            double[] s = { 16, 10 + lagStart, 10 + lagStart, 10 + lagStart + 20 };
+            for (int i = 0; i < 4; i++) { r[i].S = Fixed.FromRaw((long)(s[i] * Fixed.OneRaw)).Raw; r[i].Toss.LastTossTick = -1; }
+            BullMovement.Step(D, Street, ref b, r, 0);
+            Assert.Equal(BullMode.Breakthrough, b.Mode);
+            for (int t = 0; t < 20; t++)
+            {
+                for (int i = 1; i < 4; i++) r[i].S = Fixed.FromRaw((long)((Dbl(b.S) + lagHold + (i == 3 ? 20 : 0)) * Fixed.OneRaw)).Raw;
+                r[0].S = Fixed.FromRaw(b.S + 6 * Fixed.OneRaw).Raw;
+                BullMovement.Step(D, Street, ref b, r, 0);
+            }
+            Assert.Equal(BullMode.Breakthrough, b.Mode); // lag 15: держит 9.5
+            Assert.Equal((double)D.CatchUpSpeed, Dbl(b.Speed), 2);
+            for (int i = 1; i < 4; i++) r[i].S = Fixed.FromRaw((long)((Dbl(b.S) + (double)D.TargetBehind - 1 + (i == 3 ? 20 : 0)) * Fixed.OneRaw)).Raw;
+            BullMovement.Step(D, Street, ref b, r, 0);
+            Assert.NotEqual(BullMode.Breakthrough, b.Mode); // lag ≤ 12: прорыв снят
         }
 
         [Fact]
