@@ -16,6 +16,13 @@ namespace Game.Sim
             return (t < 0 ? "-" : "") + (a / 10).ToString(CultureInfo.InvariantCulture) + "." + (a % 10).ToString(CultureInfo.InvariantCulture);
         }
 
+        /// <summary>Сотые: 85 → «0.85», 100 → «1.00» (F-082, sessions.jsonl).</summary>
+        public static string Hundredths(long h)
+        {
+            long a = Math.Abs(h);
+            return (h < 0 ? "-" : "") + (a / 100).ToString(CultureInfo.InvariantCulture) + "." + (a % 100).ToString("D2", CultureInfo.InvariantCulture);
+        }
+
         public static long TicksToTenths(long ticks) => ticks * 10 / Simulation.TicksPerSecond;
 
         /// <summary>Медиана в тех же единицах; чётное число — среднее двух средних (целочисленное).</summary>

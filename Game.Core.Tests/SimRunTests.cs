@@ -26,10 +26,12 @@ public class SimRunTests
         return d ?? throw new FileNotFoundException("Game.sln");
     }
 
-    static string Cli(string outDir, int seeds, ulong from)
+    static string Cli(string outDir, int seeds, ulong from, params string[] extra)
     {
         var o = new StringWriter(); var e = new StringWriter();
-        int code = Program.Run(new[] { "--seeds", seeds.ToString(), "--from", from.ToString(), "--out", outDir }, o, e);
+        var args = new System.Collections.Generic.List<string> { "--seeds", seeds.ToString(), "--from", from.ToString(), "--out", outDir };
+        args.AddRange(extra);
+        int code = Program.Run(args.ToArray(), o, e);
         Assert.True(code == 0, e.ToString());
         return o.ToString();
     }
@@ -209,6 +211,122 @@ public class SimRunTests
             Assert.All(chars, c => Assert.True(c));
             Assert.All(temps, c => Assert.True(c));
         }
+    }
+
+    /// <summary>F-082: sessions.jsonl — строка на отслеживаемого участника, формат карты темпа тула sim.</summary>
+    [Fact]
+    public void SessionsJsonlHasRowsInSimToolFormat()
+    {
+        string dir = TempDir();
+        try
+        {
+            const int seeds = 3;
+            Cli(dir, seeds, 1);
+            byte[] raw = File.ReadAllBytes(Path.Combine(dir, "sessions.jsonl"));
+            Assert.False(raw.Length >= 3 && raw[0] == 0xEF && raw[1] == 0xBB && raw[2] == 0xBF, "BOM");
+            string[] lines = System.Text.Encoding.UTF8.GetString(raw).Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            Assert.Equal(4 * seeds + 2 * seeds, lines.Length); // обычные места + служебные забеги idle и random (gate-seeds = seeds)
+
+            using var metrics = JsonDocument.Parse(File.ReadAllText(Path.Combine(dir, "metrics.json")));
+            var durations = new System.Collections.Generic.Dictionary<long, double>();
+            foreach (var run in metrics.RootElement.GetProperty("runs").EnumerateArray())
+                durations[run.GetProperty("seed").GetInt64()] = run.GetProperty("durationSec").GetDouble();
+
+            var wins = new System.Collections.Generic.Dictionary<long, int>();
+            var archetypes = new System.Collections.Generic.Dictionary<string, int>();
+            for (int n = 0; n < lines.Length; n++)
+            {
+                Assert.DoesNotMatch(new Regex(@"\d[eE][+-]?\d|NaN|Infinity"), lines[n]);
+                using var doc = JsonDocument.Parse(lines[n]);
+                var row = doc.RootElement;
+                long seed = row.GetProperty("seed").GetInt64();
+                string arch = row.GetProperty("archetype").GetString()!;
+                archetypes.TryGetValue(arch, out int ac); archetypes[arch] = ac + 1;
+                bool service = arch == "idle" || arch == "random";
+                if (!service) Assert.Contains(arch, new[] { "coward", "adrenaline", "troll" });
+                Assert.Equal(n >= 4 * seeds, service);
+                string outcome = row.GetProperty("outcome").GetString()!;
+                Assert.Contains(outcome, new[] { "win", "loss", "draw" });
+                if (outcome == "win") { long k = seed * 10 + (arch == "idle" ? 1 : arch == "random" ? 2 : 0); wins.TryGetValue(k, out int wc); wins[k] = wc + 1; }
+                // длительность забега совпадает с metrics.json (там же те же сиды: служебные забеги идут тем же ходом)
+                double dur = row.GetProperty("duration_s").GetDouble();
+                Assert.True(dur > 30);
+                if (!service) Assert.Equal(durations[seed], dur);
+                Assert.InRange(row.GetProperty("margin").GetDouble(), 0, 1);
+                foreach (var ev in row.GetProperty("events").EnumerateArray())
+                {
+                    Assert.True(ev.TryGetProperty("t", out var t) && t.GetDouble() >= 0 && t.GetDouble() <= dur + 1);
+                    Assert.True(ev.TryGetProperty("threat", out _) || ev.TryGetProperty("reward", out _) || ev.TryGetProperty("decision", out _) || ev.TryGetProperty("novel", out _), lines[n]);
+                    if (ev.TryGetProperty("threat", out var th)) Assert.InRange(th.GetDouble(), 0, 1);
+                    if (ev.TryGetProperty("reward", out var rw)) Assert.True(rw.GetDouble() > 0);
+                    if (ev.TryGetProperty("decision", out var de))
+                    {
+                        Assert.InRange(de.GetProperty("options").GetInt32(), 2, 3);
+                        Assert.InRange(de.GetProperty("spread").GetDouble(), 0, 1);
+                    }
+                }
+            }
+            Assert.All(wins.Values, w => Assert.Equal(1, w)); // не больше одного win на забег: ключ — сид и вид забега
+            Assert.Equal(seeds, archetypes["idle"]);
+            Assert.Equal(seeds, archetypes["random"]);
+            Assert.Equal(4 * seeds, archetypes["coward"] + archetypes["adrenaline"] + archetypes["troll"]);
+        }
+        finally { Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public void SessionsJsonlIsByteIdenticalForSameSeed()
+    {
+        string a = TempDir(), b = TempDir();
+        try
+        {
+            Cli(a, 2, 5); Cli(b, 2, 5);
+            Assert.Equal(File.ReadAllBytes(Path.Combine(a, "sessions.jsonl")), File.ReadAllBytes(Path.Combine(b, "sessions.jsonl")));
+        }
+        finally { Directory.Delete(a, true); Directory.Delete(b, true); }
+    }
+
+    [Fact]
+    public void GateSeedsKeySetsNumberOfServiceRuns()
+    {
+        string dir = TempDir();
+        try
+        {
+            Cli(dir, 2, 1, "--gate-seeds", "1");
+            Assert.Equal(4 * 2 + 2, File.ReadAllLines(Path.Combine(dir, "sessions.jsonl")).Length);
+            Cli(dir, 1, 1, "--gate-seeds", "0");
+            Assert.Equal(4, File.ReadAllLines(Path.Combine(dir, "sessions.jsonl")).Length);
+        }
+        finally { Directory.Delete(dir, true); }
+    }
+
+    [Fact]
+    public void IdleServiceSeatDoesNothingAndRandomIsDriven()
+    {
+        for (ulong seed = 1; seed <= 3; seed++)
+        {
+            var idle = RaceRecorder.Run(seed, Data, ServiceInput.Idle);
+            Assert.True(idle.Finished);
+            Assert.Equal(SeatKind.Human, RaceRecorder.MakeConfig(seed, Data, true).GetSeat(0).Kind);
+            Assert.Equal(0, idle.Seats[0].Shoves + idle.Seats[0].Trips);
+            Assert.Single(idle.Sessions);
+
+            var rnd = RaceRecorder.Run(seed, Data, ServiceInput.Random);
+            Assert.True(rnd.Finished);
+            Assert.Single(rnd.Sessions);
+            Assert.Contains("\"archetype\":\"random\"", rnd.Sessions[0]);
+            Assert.Contains("\"decision\"", rnd.Sessions[0]); // случайный вход меняет темп
+        }
+    }
+
+    [Fact]
+    public void PlaytestPaceTargetsNamesServiceArchetypes()
+    {
+        using var doc = JsonDocument.Parse(File.ReadAllText(Path.Combine(RepoRoot(), "playtest", "pace-targets.json")));
+        var a = doc.RootElement.GetProperty("archetypes");
+        Assert.Equal("adrenaline", a.GetProperty("smart").GetString());
+        Assert.Equal(ServiceInput.Random, a.GetProperty("random").GetString());
+        Assert.Equal(ServiceInput.Idle, a.GetProperty("idle").GetString());
     }
 
     [Fact]

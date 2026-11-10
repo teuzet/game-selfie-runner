@@ -50,6 +50,8 @@ namespace Game.Sim
         /// <summary>Подбросы уже финишировавших (должно быть 0).</summary>
         public int TossesOfFinished;
         public string Chronicle = "";
+        /// <summary>F-082: строки sessions.jsonl отслеживаемых мест забега (см. <see cref="SessionTracker"/>).</summary>
+        public List<string> Sessions = new List<string>();
     }
 
     /// <summary>
@@ -65,7 +67,8 @@ namespace Game.Sim
         const int MaxTicks = 20 * 60 * Tps;    // предохранитель: нормальный забег ≈ 5 минут
         const int FarBullMeters = 25;          // playtest/iter-1.md, «Предложения» п. 9: доля тиков, когда бык дальше 25 м от медианы толпы
 
-        public static RaceConfig MakeConfig(ulong seed, GameData data)
+        /// <summary>Конфиг забега сида. <paramref name="humanSeat0"/> — служебный забег гейта (F-082): место 0 типа Human, остальные без изменений.</summary>
+        public static RaceConfig MakeConfig(ulong seed, GameData data, bool humanSeat0 = false)
         {
             var rng = new DetRandom(seed ^ 0x5EA7C0F16UL, 77);
             int nc = data.CharacterData.Characters.Length, nt = data.BotData.Temperaments.Length;
@@ -77,16 +80,26 @@ namespace Game.Sim
             for (int i = 0; i < temps.Length; i++) temps[i] = (i + offset) % nt;
             for (int i = temps.Length - 1; i > 0; i--) { int j = rng.Range(0, i + 1); (temps[i], temps[j]) = (temps[j], temps[i]); }
             var seats = new SeatConfig[RaceConfig.SeatCount];
-            for (int i = 0; i < seats.Length; i++) seats[i] = new SeatConfig(SeatKind.Bot, chars[i], temps[i]);
+            for (int i = 0; i < seats.Length; i++) seats[i] = new SeatConfig(i == 0 && humanSeat0 ? SeatKind.Human : SeatKind.Bot, chars[i], temps[i]);
             return new RaceConfig(seed, seats);
         }
 
-        public static RunRecord Run(ulong seed, GameData data)
+        /// <summary>
+        /// Обычный забег (<paramref name="service"/> == null): 4 бота, в sessions — все четыре места с архетипом = характер бота.
+        /// Служебный забег гейта (<see cref="ServiceInput.All"/>): место 0 ведёт Game.Sim, в sessions — одна строка этого места.
+        /// </summary>
+        public static RunRecord Run(ulong seed, GameData data, string? service = null)
         {
-            var cfg = MakeConfig(seed, data);
+            var cfg = MakeConfig(seed, data, service != null);
             var sim = new Simulation(cfg, data);
             var st = sim.State;
             var rec = new RunRecord { Seed = seed };
+            var input = service == null ? null : new ServiceInput(service, seed);
+            int[] tracked = service == null ? new[] { 0, 1, 2, 3 } : new[] { 0 };
+            var archetypes = new string[tracked.Length];
+            for (int i = 0; i < tracked.Length; i++)
+                archetypes[i] = service ?? data.BotData.Get(cfg.GetSeat(tracked[i]).BotTemperament).Id;
+            var tracker = new SessionTracker(sim, data, cfg, tracked, archetypes);
             for (int i = 0; i < RaceConfig.SeatCount; i++)
             {
                 var sc = cfg.GetSeat(i);
@@ -113,7 +126,10 @@ namespace Game.Sim
             for (int n = 0; n < MaxTicks && st.Phase != RacePhase.Over; n++)
             {
                 int stepTick = st.Tick;
-                sim.Step(TickInputs.Empty);
+                var inputs = input == null ? TickInputs.Empty : TickInputs.Empty.With(0, input.Next(stepTick));
+                tracker.BeforeStep();
+                sim.Step(inputs);
+                tracker.AfterStep(stepTick, startTick, inputs);
                 bool chargeStarted = false, chargeToss = false;
                 for (int e = 0; e < events.Count; e++)
                 {
@@ -195,6 +211,7 @@ namespace Game.Sim
             }
             rec.DonationsFirst = rec.Seats[order[0]].Donations;
             rec.DonationsSecond = rec.Seats[order[1]].Donations;
+            rec.Sessions = tracker.Finish(rec, startTick, order);
             Summary(sb, rec, order);
             rec.Chronicle = sb.ToString();
             return rec;

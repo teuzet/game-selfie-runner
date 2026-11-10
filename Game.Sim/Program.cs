@@ -9,7 +9,8 @@ namespace Game.Sim
 {
     /// <summary>
     /// Консольный прогон забегов 4 ботов без Unity:
-    /// <c>dotnet run --project Game.Sim -- --seeds N --from S --out DIR [--data DIR]</c> → DIR/metrics.json и DIR/chronicle-&lt;seed&gt;.md.
+    /// <c>dotnet run --project Game.Sim -- --seeds N --from S --out DIR [--data DIR] [--gate-seeds N]</c> → DIR/metrics.json, DIR/chronicle-&lt;seed&gt;.md и DIR/sessions.jsonl
+        /// (F-082: все места обычных забегов + N служебных забегов на архетип idle/random, N по умолчанию = --seeds).
     /// Вывод детерминирован: один сид — побайтово тот же результат.
     /// </summary>
     public static class Program
@@ -18,7 +19,7 @@ namespace Game.Sim
 
         public static int Run(string[] args, TextWriter log, TextWriter err)
         {
-            int seeds = 40; ulong from = 1; string? outDir = null, dataDir = null;
+            int seeds = 40, gateSeeds = -1; ulong from = 1; string? outDir = null, dataDir = null;
             try
             {
                 for (int i = 0; i < args.Length; i++)
@@ -31,11 +32,12 @@ namespace Game.Sim
                         case "--from": from = ulong.Parse(Next(), CultureInfo.InvariantCulture); break;
                         case "--out": outDir = Next(); break;
                         case "--data": dataDir = Next(); break;
+                        case "--gate-seeds": gateSeeds = int.Parse(Next(), CultureInfo.InvariantCulture); break;
                         default: throw new ArgumentException("неизвестный аргумент " + a);
                     }
                 }
                 if (seeds < 1) throw new ArgumentException("--seeds должно быть ≥ 1");
-                if (outDir == null) throw new ArgumentException("нужен --out DIR");
+                if (gateSeeds < 0) gateSeeds = seeds;                if (outDir == null) throw new ArgumentException("нужен --out DIR");
             }
             catch (Exception e) when (e is ArgumentException || e is FormatException || e is OverflowException)
             {
@@ -58,6 +60,18 @@ namespace Game.Sim
                     Names.Character(rec.Seats[rec.WinnerSeat].Character) + " (" + Names.Temperament(rec.Seats[rec.WinnerSeat].Temperament) + ")");
             }
             File.WriteAllText(Path.Combine(outDir, "metrics.json"), MetricsJson.Build(runs), utf8);
+
+            // sessions.jsonl: все места обычных забегов + служебные забеги гейта (idle, random) на тех же сидах
+            var sessions = new StringBuilder();
+            foreach (var r in runs) foreach (string line in r.Sessions) sessions.Append(line).Append('\n');
+            foreach (string svc in ServiceInput.All)
+                for (int i = 0; i < gateSeeds; i++)
+                {
+                    var rec = RaceRecorder.Run(from + (ulong)i, data, svc);
+                    foreach (string line in rec.Sessions) sessions.Append(line).Append('\n');
+                    log.WriteLine("гейт " + svc + ", сид " + rec.Seed + ": " + (rec.Finished ? "ok" : "НЕ ЗАКРЫТ"));
+                }
+            File.WriteAllText(Path.Combine(outDir, "sessions.jsonl"), sessions.ToString(), utf8);
             log.WriteLine("готово: " + runs.Count + " забегов → " + outDir);
             return 0;
         }
