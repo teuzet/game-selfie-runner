@@ -24,7 +24,7 @@
 | Quests (F-022) | `Quests/` | состояние квестов | `quests.json` | выдача, условия, награды через функцию Economy | Events, Economy, Runners, Bull |
 | Хаб | `Simulation.cs`, `RaceState.cs`, `RaceConfig.cs`, `TickInputs.cs`, `InputLog.cs` | композиция | композиция (`GameData`) | порядок шагов, `Clone`/`CopyFrom`/`StateHash` как сумма хэшей модулей | все модули |
 | `Game.Net` | `Game.Net/` | — | — | rollback-протокол поверх `Simulation` | Хаб (публичный API), Math |
-| `Game.Sim` | `Game.Sim/` | — | — | прогон ботов, метрики и хроника из `RaceEvents` и публичных запросов модулей | Хаб, Events, Economy, Race, Bull (только публичные функции чтения) |
+| `Game.Sim` | `Game.Sim/` | — | — | прогон ботов, метрики, хроника и `sessions.jsonl` (F-082) из `RaceEvents` и публичных запросов модулей | Хаб, Events, Economy, Race, Bull, Runners, Bots (только публичные функции и чтение состояния; Bots — память бота и `BotBrains.Think` на копиях состояния для форков) |
 
 ## Порядок шага (`Simulation.Step`)
 Одна строка — один вызов модуля; порядок фиксирован и меняется только фичей с правкой этого раздела:
@@ -47,4 +47,5 @@ Hints (F-021): `ChatHints.Step` стоит между 1 и 2 (подсказки
 ## История связей
 - 2026-11-09 · F-070 · код приведён к карте: отступлений от неё нет, новых связей нет. Подмена входов ботов — `BotBrains.FillInputs`, глушение входа лежащего — `RunnerMovement.MuteNoSignal`, движение мест — `RunnerMovement.StepAll`, бык за тик — `BullCharge.StepBull`; отсчёт — в `Simulation.StepCountdown` двумя вызовами (`BullMovement.Step`, `Phases.StepCountdown`), чтобы Race не вызывал движение Bull. Хэш забега переснят (порядок композиции).
 - 2026-11-09 · F-071 · новая связь Bull → Economy (чтение FinishTick), одобрена техлидом: защищённых определяет `BullCharge.Shielded` (читает `Viewing.FinishTick`); Bull зовёт `RunnerMovement.Rise` (функцию владельца Runners) при подъёме подброшенного.
+- 2026-11-10 · F-082 · Game.Sim читает `Bots[seat]` (темп, планы увода) и зовёт `BotBrains.Think` на копиях состояния (форки `spread` для `sessions.jsonl`); ядро не менялось, новая строка зависимости только у потребителя.
 - 2026-11-09 · техлид · карта составлена при закрытии итерации 1 по фактическому коду; расхождения с кодом (хэш в `RaceState` по полям чужих структур, 7 позиционных аргументов `GameData.Parse`, логика подмены входов в `Simulation.Step`) исправляет F-070.
