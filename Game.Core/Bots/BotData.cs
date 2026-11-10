@@ -9,6 +9,7 @@ namespace Game.Core.Bots
     {
         public string Id = "";
         public Fixed BandMin, BandMax, SprintBelow, Hysteresis, SprintUntilStamina, ReserveStamina, HuntRadius;
+        public Fixed JogAbove, JogHysteresis; // F-102 §3.3: порог трусцы труса и её гистерезис (0 — у остальных характеров трусцу задаёт коридор)
         public int TempoPeriod, ActionPeriod, ReactionMin, ReactionMax, WaitNeighbor, PushMin, PushMax;
         public Fixed TrustHints, TrustNeighbors, Aggression, OvertakeSprint;
         public bool DodgeRush;
@@ -78,6 +79,7 @@ namespace Game.Core.Bots
                     Id = o.Str("id"),
                     BandMin = band.Num(0), BandMax = band.Num(1),
                     SprintBelow = o.Num("sprintBelow"), Hysteresis = o.Num("hysteresis"),
+                    JogAbove = o.NumOr("jogAbove"), JogHysteresis = o.NumOr("jogHysteresis"),
                     SprintUntilStamina = o.Num("sprintUntilStamina"), ReserveStamina = o.Num("reserveStamina"),
                     TempoPeriod = o.Int("tempoPeriod"), ActionPeriod = o.Int("actionPeriod"),
                     ReactionMin = react.Num(0).ToInt(), ReactionMax = react.Num(1).ToInt(),

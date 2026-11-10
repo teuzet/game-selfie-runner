@@ -116,7 +116,7 @@ namespace Game.Core
         /// <summary>Отсчёт (шаг 1): бегуны стоят, зрители не меняются; бык в загоне только ведёт таймер срыва.</summary>
         private void StepCountdown()
         {
-            BullMovement.Step(BullData, Street, ref State.Bull, State.Runners);
+            BullMovement.Step(BullData, Street, ref State.Bull, State.Runners, State.Tick);
             Phases.StepCountdown(this);
             State.Tick++;
         }

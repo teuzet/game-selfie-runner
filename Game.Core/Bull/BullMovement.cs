@@ -16,7 +16,7 @@ namespace Game.Core.Bull
         // Рывок быка (BullCharge): секунды — целые, дистанции и скорости — Fixed.
         public int ChargeMinIntervalSec, ChargeMaxIntervalSec, ChargeSec, ChargeInvulnSec, ChargeTossGapSec, ChargeBullSlowSec, TossCooldownSec;
         public Fixed ChargeSpeed, ChargeReach, ChargeTargetRange, ChargeTossDistance, ChargeSteer;
-        public Fixed TossWaitGap, CatchUpClear; // F-100 §3.1: отступ от защищённого, порог резинки
+        public Fixed TossWaitGap, CatchUpClear, AnchorLag; // F-100 §3.1: отступ от защищённого, порог резинки
         public Fixed ChargeMissSlowSec, ChargeMissNoSteerSec; // F-100 §4 «промах»: замедление быка и без доворота, секунды (дробные)
 
         public const string FileName = "bull.json";
@@ -38,7 +38,7 @@ namespace Game.Core.Bull
                 ChargeTargetRange = j.Num("chargeTargetRange"), ChargeTossDistance = j.Num("chargeTossDistance"),
                 ChargeInvulnSec = j.Int("chargeInvulnSec"), ChargeTossGapSec = j.Int("chargeTossGapSec"),
                 ChargeBullSlowSec = j.Int("chargeBullSlowSec"), ChargeSteer = j.Num("chargeSteer"),
-                TossWaitGap = j.Num("tossWaitGap"), TossCooldownSec = j.Int("tossCooldownSec"), CatchUpClear = j.Num("catchUpClear"),
+                TossWaitGap = j.Num("tossWaitGap"), TossCooldownSec = j.Int("tossCooldownSec"), CatchUpClear = j.Num("catchUpClear"), AnchorLag = j.Num("anchorLag"),
                 ChargeMissSlowSec = j.Num("chargeMissSlowSec"), ChargeMissNoSteerSec = j.Num("chargeMissNoSteerSec"),
             };
         }
@@ -102,7 +102,8 @@ namespace Game.Core.Bull
             return Fixed.FromRaw(m1 + (m2 - m1) / 2);
         }
 
-        public static void Step(BullData d, StreetMap street, ref BullState b, RunnerState[] runners)
+        /// <param name="tick">Номер тика (для «наелся»: сколько прошло с подброса бегуна).</param>
+        public static void Step(BullData d, StreetMap street, ref BullState b, RunnerState[] runners, int tick)
         {
             if (b.Phase == (int)BullPhase.Arena) { b.Speed = 0; return; }
             if (b.Phase == (int)BullPhase.Pen)
@@ -130,11 +131,16 @@ namespace Game.Core.Bull
             // F-100 §3.1 п.5: резинка не давит бегуна — разгон 9.5 только по пустой улице (никого впереди ближе catchUpClear).
             // Принятое отступление: ограничивается целевая скорость (крейсер), а скорость выше крейсера (после рывка, подъёма)
             // сбрасывается не мгновенно, а через accel — поэтому тест допускает крейсер × 1.2.
+            // F-102 §3.1 п.2–4: якорь держит бык на крейсере, только пока отставание ≤ anchorLag; «наелся» (подброшен меньше
+            // tossCooldownSec назад) бык не продавливает — за ним остаётся крейсер при любом отставании.
             if (b.Mode == BullMode.Charge && baseSpeed > d.CruiseSpeed)
                 for (int i = 0; i < runners.Length; i++)
                 {
                     long ahead = runners[i].S - s.Raw;
-                    if (ahead >= 0 && ahead < d.CatchUpClear.Raw) { baseSpeed = d.CruiseSpeed; break; }
+                    if (ahead < 0 || ahead >= d.CatchUpClear.Raw) continue;
+                    int lastToss = runners[i].Toss.LastTossTick;
+                    bool fed = lastToss >= 0 && tick - lastToss < d.TossCooldownSec * Simulation.TicksPerSecond;
+                    if (lag <= d.AnchorLag || fed) { baseSpeed = d.CruiseSpeed; break; }
                 }
             b.Phase = b.Mode == BullMode.Charge ? (int)BullPhase.Charge : (int)BullPhase.Cruise;
 
