@@ -1789,7 +1789,7 @@
         "`playtest/pace-targets.json`: `archetypes` → `{\"smart\": \"adrenaline\", \"random\": \"random\", \"idle\": \"idle\"}`, `note` обновлён (файл теперь пишется, строка про F-066 снята); коридоры не трогать — их проверяет плейтест F-068. `playtest/sim.json` не меняется (служебные забеги включены по умолчанию).",
         "Тесты (SimRunTests): sessions.jsonl есть, строк = 4 × seeds + служебные, каждая строка парсится, `outcome` у всех из трёх значений и не больше одного `win` на забег, `duration_s` равна длительности забега из metrics.json, у каждого события есть `t` и хотя бы один тег, `threat`/`spread`/`margin` в [0, 1]; два прогона одного сида дают побайтово равный sessions.jsonl; idle-участник за забег не делает ни одного действия (Shoves + Trips = 0). Проверка тулом: `factory tool run sim --set seeds=3` возвращает `pace` и `gate` не null и пишет `pace.md` — хвост ответа в notes."
       ],
-      "status": "testing",
+      "status": "review",
       "attempts": 1,
       "budget_tokens": 400000,
       "owner_role": "developer-core",
