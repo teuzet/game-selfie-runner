@@ -75,7 +75,7 @@ namespace Game.Core.Tests
             Assert.True(first <= Release + Data.BullData.ChargeMaxIntervalSec * 30 + 60, "первый рывок слишком поздно: " + first);
         }
 
-        [Fact(Skip = "F-081: на живом рывке интервалы между рывками вышли за F-100 §3.1 п.6 — ждёт решения техлида (question в result.json F-081), он назовёт фичу, которая вернёт тест")]
+        [Fact(Skip = "F-081: на живом рывке интервалы между рывками вышли за F-100 §3.1 п.6 — F-068 подбирает ручки bull.json и возвращает тест (решение Nick по вопросу F-081)")]
         public void IntervalsBetweenChargesFollowBullData()
         {
             var sim = new Simulation(Cfg(11, SeatKind.Human), Data);
@@ -632,7 +632,7 @@ namespace Game.Core.Tests
             }
         }
 
-        [Fact(Skip = "F-081: на живом рывке 11 м/с шаг вбок 1.2 м не уводит из-под рогов (бык доворачивает 1 м/с) — таблица F-100 §3.2 ждёт решения техлида (question в result.json F-081)")]
+        [Fact(Skip = "F-081: на живом рывке 11 м/с шаг вбок 1.2 м не уводит из-под рогов (бык доворачивает 1 м/с) — таблицу F-100 §3.2 правит геймдизайнер, тест возвращает F-068 (решение Nick по вопросу F-081)")]
         public void DummyAt6m_SidestepOnly_EscapesTheCharge()
         {
             var (_, tossed, _, _) = RunDodge(4, stand: false, sidestep: true, sprint: false, reaction: 9);
@@ -665,7 +665,7 @@ namespace Game.Core.Tests
             }
         }
 
-        [Fact(Skip = "F-081: на живом рывке событий рывка в тесте ≤ 5 — ждёт решения техлида (question в result.json F-081), он назовёт фичу, которая вернёт тест")]
+        [Fact(Skip = "F-081: на живом рывке событий рывка в тесте ≤ 5 — F-068 подбирает ручки bull.json и возвращает тест (решение Nick по вопросу F-081)")]
         public void BullChargeEvent_OnePerCharge_SeatIsTarget_BotsStillSeeChargeState()
         {
             var sim = new Simulation(Cfg(12, SeatKind.Bot, Glamour, Athlete, Grandma, Nerd), Data).Running();
@@ -698,7 +698,7 @@ namespace Game.Core.Tests
             Assert.Equal(2.0, (double)Data.BullData.ChargeMissSlowSec);
         }
 
-        [Fact(Skip = "F-081: на живом рывке рывков за забег 8–25 (<18 на части сидов) — ждёт решения техлида (question в result.json F-081), он назовёт фичу, которая вернёт 18–30")]
+        [Fact(Skip = "F-081: на живом рывке рывков за забег 8–25 (<18 на части сидов) — F-068 подбирает ручки bull.json и возвращает 18–30 (решение Nick по вопросу F-081)")]
         public void ChargesIn5Minutes_Between18And30()
         {
             var sb = new StringBuilder();
